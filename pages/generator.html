@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CasaOS Generator - Multi-App YAML Generator</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
+    <link rel="shortcut icon" type="image/svg+xml" href="../assets/logo.svg">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Shared Base Styles -->
+    <link rel="stylesheet" href="../css/base.css">
+
+    <!-- External Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/yaml/yaml.min.js"></script>
+
+    <style>
+        body {
+            padding: 80px 20px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .service-card {
+            margin-bottom: 20px;
+        }
+
+        .service-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .service-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .preview-section {
+            position: sticky;
+            top: 100px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            color: #c8d0dc;
+            font-size: 0.9rem;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            accent-color: #2b9fd8;
+        }
+
+        .warning-box {
+            background: rgba(240,192,64,0.06);
+            border: 1px solid rgba(240,192,64,0.2);
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 20px;
+        }
+
+        .editor-toolbar {
+            background: #1a2438;
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin-bottom: 14px;
+        }
+
+        .editor-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #9aa5b5;
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #d4a017 0%, #e8962e 100%);
+            color: #1a1a2e;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(212,160,23,0.3);
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .flex-row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .desc-input {
+            width: 100%;
+            margin-top: 4px;
+            padding: 8px 12px;
+            background: #1a2438;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 6px;
+            color: #e8edf5;
+            font-size: 0.8rem;
+            font-family: inherit;
+        }
+
+        .desc-input:focus {
+            outline: none;
+            border-color: #2b9fd8;
+        }
+
+        .desc-input::placeholder {
+            color: rgba(200,208,220,0.3);
+        }
+
+        .text-muted {
+            color: rgba(200,208,220,0.55);
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            .preview-section {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 80px 15px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background System -->
+    <div class="background">
+        <div class="bg-left"></div>
+        <div class="bg-right"></div>
+        <div class="bg-bottom"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <a href="../index.html" class="brand">
+            <div class="brand-logo">
+                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="20" cy="32" r="12" fill="#87CEEB" style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));"/>
+                    <circle cx="32" cy="28" r="18" fill="#1E90FF" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));"/>
+                    <circle cx="44" cy="32" r="12" fill="#87CEEB" style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));"/>
+                </svg>
+            </div>
+            casaos
+        </a>
+        <div style="display:flex; gap:8px; align-items:center;">
+            <a href="../index.html" class="btn btn-ghost btn-sm">← Home</a>
+            <a href="icon.html" class="btn btn-primary btn-sm">Next: Icon →</a>
+        </div>
+    </header>
+
+    <!-- Content Well -->
+    <div class="content-well">
+        <div class="container">
+            <!-- Generator Form -->
+            <div class="panel">
+                <h2 class="panel-title">Multi-App YAML Generator</h2>
+
+                <div id="app">
+                    <!-- Network Configuration -->
+                    <div class="form-group">
+                        <label class="form-label">Network Mode:</label>
+                        <select v-model="multiNetwork" class="form-input">
+                            <option value="bridge">Bridge</option>
+                            <option value="host">Host</option>
+                        </select>
+                    </div>
+
+                    <!-- Services Section -->
+                    <div class="form-group">
+                        <div class="flex-row">
+                            <span class="form-label" style="margin-bottom:0;">Services</span>
+                            <button type="button" @click="addMultiService" class="btn btn-ghost btn-sm">+ Add Service</button>
+                        </div>
+
+                        <div v-for="(service, index) in multiServices" :key="index" class="panel-secondary service-card">
+                            <div class="service-header">
+                                <h4 class="service-title">Service {{ index + 1 }}: {{ service.appId || 'New Service' }}</h4>
+                                <button v-if="index > 0" type="button" @click="removeMultiService(index)" class="btn btn-danger btn-sm">Remove</button>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">AppID:</label>
+                                <input v-model="service.appId" class="form-input form-input-accent" placeholder="lowercase-no-spaces" @input="updateAppId">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Docker Image:</label>
+                                <input v-model="service.image" class="form-input form-input-accent" placeholder="namespace/image:tag">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Command (Optional):</label>
+                                <input v-model="service.command" class="form-input form-input-accent" placeholder="Custom command">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Memory (MB):</label>
+                                <input v-model="service.reservationsMemory" type="number" class="form-input form-input-accent" placeholder="512">
+                            </div>
+
+                            <!-- Ports Section -->
+                            <div class="form-group">
+                                <div class="flex-row">
+                                    <label class="form-label" style="margin-bottom:0;">Ports:</label>
+                                    <button type="button" @click="addMultiPort(service)" class="btn btn-ghost btn-sm">+</button>
+                                </div>
+                                <div v-for="(port, pindex) in service.ports" :key="pindex" class="form-group" style="margin-bottom:12px;">
+                                    <div class="input-group">
+                                        <input v-model="port.published" type="number" placeholder="Host" class="form-input" style="flex:1;">
+                                        <input v-model="port.target" type="number" placeholder="Container" class="form-input" style="flex:1;">
+                                        <select v-model="port.protocol" class="form-input" style="width:auto; min-width:80px;">
+                                            <option value="tcp">TCP</option>
+                                            <option value="udp">UDP</option>
+                                        </select>
+                                        <button type="button" @click="removeMultiPort(service, pindex)" class="btn btn-danger btn-sm">-</button>
+                                    </div>
+                                    <input v-model="port.description" class="desc-input" maxlength="200"
+                                           placeholder="e.g., WebUI HTTP port (describe what this port is for)">
+                                </div>
+                            </div>
+
+                            <!-- Volumes Section -->
+                            <div class="form-group">
+                                <div class="flex-row">
+                                    <label class="form-label" style="margin-bottom:0;">Volumes:</label>
+                                    <button type="button" @click="addMultiVolume(service)" class="btn btn-ghost btn-sm">+</button>
+                                </div>
+                                <div v-for="(volume, vindex) in service.volumes" :key="vindex" class="form-group" style="margin-bottom:12px;">
+                                    <div class="input-group">
+                                        <select v-model="volume.type" class="form-input" style="width:auto; min-width:80px;">
+                                            <option value="bind">Bind</option>
+                                            <option value="volume">Volume</option>
+                                        </select>
+                                        <input v-model="volume.source" :placeholder="volume.type === 'bind' ? '/DATA/AppData/$AppID/config' : 'volume_name'" class="form-input" style="flex:1;">
+                                        <input v-model="volume.target" placeholder="/container/path" class="form-input" style="flex:1;">
+                                        <button type="button" @click="removeMultiVolume(service, vindex)" class="btn btn-danger btn-sm">-</button>
+                                    </div>
+                                    <input v-model="volume.description" class="desc-input" maxlength="200"
+                                           placeholder="e.g., Configuration directory (describe what this volume stores)">
+                                </div>
+                            </div>
+
+                            <!-- Environment Variables -->
+                            <div class="form-group">
+                                <div class="flex-row">
+                                    <label class="form-label" style="margin-bottom:0;">Environment:</label>
+                                    <button type="button" @click="addMultiEnvironment(service)" class="btn btn-ghost btn-sm">+</button>
+                                </div>
+                                <div v-for="(env, eindex) in service.environment" :key="eindex" class="input-group">
+                                    <input v-model="env.key" placeholder="Variable" class="form-input">
+                                    <input v-model="env.value" placeholder="Value" class="form-input">
+                                    <button type="button" @click="removeMultiEnvironment(service, eindex)" class="btn btn-danger btn-sm">-</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CasaOS Metadata (First Service Only) -->
+                    <div v-if="multiServices.length > 0" class="panel-secondary">
+                        <h3 class="form-label" style="font-size:1.1rem; margin-bottom:16px;">CasaOS Metadata</h3>
+
+                        <div class="form-group">
+                            <label class="form-label">Supported Architectures:</label>
+                            <div class="checkbox-group">
+                                <label v-for="arch in ['amd64', 'arm64', 'arm']" :key="arch" class="checkbox-label">
+                                    <input type="checkbox" :value="arch" v-model="multiServices[0].architectures">
+                                    {{ arch }}
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">📝 Title (Main):</label>
+                            <input v-model="multiServices[0].title.en_US" class="form-input form-input-accent" placeholder="App Display Name">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Category:</label>
+                            <select v-model="multiServices[0].category" class="form-input form-input-accent">
+                                <option value="">Select Category</option>
+                                <option value="Analytics">Analytics</option>
+                                <option value="Backup">Backup</option>
+                                <option value="Blog">Blog</option>
+                                <option value="Chat">Chat</option>
+                                <option value="Cloud">Cloud</option>
+                                <option value="Developer">Developer</option>
+                                <option value="CRM">CRM</option>
+                                <option value="Documents">Documents</option>
+                                <option value="Email">Email</option>
+                                <option value="File Sync">File Sync</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Forum">Forum</option>
+                                <option value="Gallery">Gallery</option>
+                                <option value="Games">Games</option>
+                                <option value="Learning">Learning</option>
+                                <option value="Media">Media</option>
+                                <option value="Notes">Notes</option>
+                                <option value="Project Management">Project Management</option>
+                                <option value="VPN">VPN</option>
+                                <option value="WEB">WEB</option>
+                                <option value="WiKi">WiKi</option>
+                                <option value="Dapps">Dapps</option>
+                                <option value="Downloader">Downloader</option>
+                                <option value="Utilities">Utilities</option>
+                                <option value="Home Automation">Home Automation</option>
+                                <option value="Network">Network</option>
+                                <option value="Database">Database</option>
+                                <option value="AI">AI</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Developer:</label>
+                            <input v-model="multiServices[0].developer" class="form-input form-input-accent" placeholder="Software Developer">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Author:</label>
+                            <input v-model="multiServices[0].author" class="form-input form-input-accent" placeholder="YAML Author">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Port Map:</label>
+                            <input v-model="multiServices[0].portMap" type="number" class="form-input form-input-accent" placeholder="Main WebUI Port">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Scheme:</label>
+                            <select v-model="multiServices[0].scheme" class="form-input form-input-accent">
+                                <option value="http">HTTP</option>
+                                <option value="https">HTTPS</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Index:</label>
+                            <input v-model="multiServices[0].index" class="form-input form-input-accent" value="/">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Thumbnail URL (optional):</label>
+                            <input v-model="multiServices[0].thumbnail" class="form-input"
+                                   placeholder="https://example.com/thumbnail.png">
+                            <span class="text-muted">Optional larger preview image URL</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Tagline:</label>
+                            <input v-model="multiServices[0].tagline.en_US" class="form-input form-input-accent" placeholder="Short description">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Description:</label>
+                            <textarea v-model="multiServices[0].description.en_US" class="form-input form-input-accent" rows="4" placeholder="Full app description"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Tips:</label>
+                            <div class="flex-row">
+                                <label class="checkbox-label">
+                                    <input v-model="multiServices[0].tips.enable_before_install" type="checkbox"> before_install
+                                </label>
+                                <label class="checkbox-label">
+                                    <input v-model="multiServices[0].tips.enable_custom" type="checkbox"> custom
+                                </label>
+                            </div>
+                            <div v-if="multiServices[0].tips.enable_before_install" style="margin-top:8px;">
+                                <label class="form-label">Before Install (en_US):</label>
+                                <textarea v-model="multiServices[0].tips.before_install.en_US" class="form-input" rows="3" style="font-family:monospace; margin-bottom:10px;"></textarea>
+                            </div>
+                            <div v-if="multiServices[0].tips.enable_custom" style="margin-top:8px;">
+                                <label class="form-label">Custom Tips (en_US):</label>
+                                <textarea v-model="multiServices[0].tips.custom.en_US" class="form-input" rows="3" style="font-family:monospace; margin-bottom:10px;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- YAML Preview -->
+            <div class="panel preview-section">
+                <div class="preview-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+                    <h3 class="panel-title" style="margin-bottom:0;">docker-compose.yml</h3>
+                    <div class="preview-actions">
+                        <button id="editBtn" class="btn-edit">✏️ Edit</button>
+                        <a href="icon.html" class="btn btn-primary btn-sm">Next: Icon →</a>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <div class="text-warning" style="font-size:0.9rem; line-height:1.4;">
+                        <strong>ℹ️ Note:</strong> You don't need icons and screenshots if you're just adding as a custom app in CasaOS Web UI.
+                        But if you want a full custom store ready app, you should complete the generator wizard.
+                    </div>
+                </div>
+
+                <div class="editor-toolbar">
+                    <div class="editor-info">
+                        <span>YAML Preview — Real-time generation</span>
+                        <span id="editorStatus">Ready</span>
+                    </div>
+                </div>
+
+                <div id="code-editor"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="progress-container">
+        <div class="progress-step completed"></div>
+        <div class="progress-step active"></div>
+        <div class="progress-step"></div>
+        <div class="progress-step"></div>
+        <div class="progress-step"></div>
+        <div class="progress-step"></div>
+    </div>
+
+    <script type="module">
+        import { saveConfig, loadConfig } from '../modules/storage.js';
+        import { generateYamlString } from '../modules/yaml-generator.js';
+
+        new Vue({
+            el: '#app',
+            data: {
+                multiNetwork: 'bridge',
+                multiServices: [{
+                    appId: '',
+                    image: '',
+                    command: '',
+                    reservationsMemory: '',
+                    ports: [],
+                    volumes: [{ type: 'bind', source: '/DATA/AppData/$AppID/config', target: '/config', description: '' }],
+                    environment: [],
+                    architectures: [],
+                    title: { en_US: '' },
+                    category: '',
+                    developer: '',
+                    author: '',
+                    portMap: '',
+                    scheme: 'http',
+                    index: '/',
+                    thumbnail: '',
+                    tagline: { en_US: '' },
+                    description: { en_US: '' },
+                    tips: { enable_before_install: false, enable_custom: false, before_install: { en_US: '' }, custom: { en_US: '' } }
+                }],
+                multiDockerComposeResult: '# Configure your services above to generate YAML...\n# Fields: AppID, Docker Image, Ports, Volumes, Environment variables',
+                isEditing: false,
+                editor: null
+            },
+            watch: {
+                multiNetwork: 'generateMultiCompose',
+                multiServices: {
+                    handler: 'generateMultiCompose',
+                    deep: true
+                },
+                multiDockerComposeResult: 'updateEditor'
+            },
+            methods: {
+                setupEventListeners() {
+                    const editBtn = document.getElementById('editBtn');
+                    if (editBtn) {
+                        editBtn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            this.toggleEditMode();
+                        });
+                    }
+                },
+
+                updateAppId() {
+                    if (this.multiServices[0].appId) {
+                        this.multiServices[0].appId = this.multiServices[0].appId.toLowerCase().replace(/[^a-z0-9-]/g, '');
+                    }
+                    this.$nextTick(() => this.generateMultiCompose());
+                },
+
+                addMultiService() {
+                    this.multiServices.push({
+                        appId: '',
+                        image: '',
+                        command: '',
+                        reservationsMemory: '',
+                        ports: [],
+                        volumes: [{ type: 'bind', source: '/DATA/AppData/$AppID/data', target: '/data', description: '' }],
+                        environment: [],
+                        architectures: [],
+                        title: { en_US: '' },
+                        category: '',
+                        developer: '',
+                        author: '',
+                        portMap: '',
+                        scheme: 'http',
+                        index: '/',
+                        thumbnail: '',
+                        tagline: { en_US: '' },
+                        description: { en_US: '' }
+                    });
+                },
+
+                removeMultiService(index) {
+                    this.multiServices.splice(index, 1);
+                },
+
+                addMultiPort(service) {
+                    service.ports.push({ target: '', published: '', protocol: 'tcp', description: '' });
+                },
+
+                removeMultiPort(service, index) {
+                    service.ports.splice(index, 1);
+                },
+
+                addMultiVolume(service) {
+                    service.volumes.push({ type: 'bind', source: '/DATA/AppData/$AppID/data', target: '/data', description: '' });
+                },
+
+                removeMultiVolume(service, index) {
+                    service.volumes.splice(index, 1);
+                },
+
+                addMultiEnvironment(service) {
+                    service.environment.push({ key: '', value: '' });
+                },
+
+                removeMultiEnvironment(service, index) {
+                    service.environment.splice(index, 1);
+                },
+
+                generateMultiCompose() {
+                    const assets = { icons: [], screenshots: [] };
+                    this.multiDockerComposeResult = generateYamlString(this.multiServices, this.multiNetwork, assets);
+                },
+
+                nextStep() {
+                    const configToSave = {
+                        network: this.multiNetwork,
+                        services: this.multiServices,
+                        yaml: this.multiDockerComposeResult,
+                        timestamp: Date.now()
+                    };
+                    saveConfig(configToSave);
+                    window.location.href = 'icon.html';
+                },
+
+                initializeEditor() {
+                    const editorElement = document.getElementById('code-editor');
+                    if (editorElement && window.CodeMirror) {
+                        this.editor = CodeMirror(editorElement, {
+                            value: this.multiDockerComposeResult,
+                            mode: 'yaml',
+                            lineNumbers: true,
+                            readOnly: true,
+                            theme: 'default',
+                            indentUnit: 2,
+                            tabSize: 2,
+                            lineWrapping: true,
+                            autoCloseBrackets: true,
+                            matchBrackets: true
+                        });
+
+                        this.editor.on('change', (instance) => {
+                            if (this.isEditing) {
+                                this.multiDockerComposeResult = instance.getValue();
+                                this.updateEditorStatus('Modified');
+                            }
+                        });
+                    }
+                },
+
+                toggleEditMode() {
+                    if (!this.editor) return;
+
+                    this.isEditing = !this.isEditing;
+                    const editBtn = document.getElementById('editBtn');
+
+                    if (this.isEditing) {
+                        this.editor.setOption('readOnly', false);
+                        editBtn.innerHTML = '💾 Save';
+                        editBtn.style.background = 'linear-gradient(135deg, #1e8e3e 0%, #28a745 100%)';
+                        this.updateEditorStatus('Editing');
+                    } else {
+                        this.editor.setOption('readOnly', true);
+                        editBtn.innerHTML = '✏️ Edit';
+                        editBtn.style.background = '';
+                        this.updateEditorStatus('Read-only');
+                    }
+                },
+
+                updateEditorStatus(status) {
+                    const statusElement = document.getElementById('editorStatus');
+                    if (statusElement) {
+                        statusElement.textContent = status;
+                    }
+                },
+
+                updateEditor() {
+                    if (this.editor && !this.isEditing) {
+                        this.editor.setValue(this.multiDockerComposeResult);
+                    }
+                }
+            },
+
+            mounted() {
+                const saved = loadConfig();
+                if (saved) {
+                    this.multiNetwork = saved.network;
+                    this.multiServices = saved.services;
+                    this.multiDockerComposeResult = saved.yaml;
+                }
+
+                this.$nextTick(() => {
+                    this.initializeEditor();
+                    this.generateMultiCompose();
+                    this.setupEventListeners();
+                });
+            },
+
+            beforeDestroy() {
+                if (this.editor) {
+                    this.editor.toTextArea();
+                }
+            }
+        });
+
+        // Update progress indicator
+        function updateProgress() {
+            const progressSteps = document.querySelectorAll('.progress-step');
+            progressSteps.forEach((step, index) => {
+                if (index === 0) step.classList.add('completed');
+                if (index === 1) step.classList.add('active');
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', updateProgress);
+    </script>
+</body>
+</html>

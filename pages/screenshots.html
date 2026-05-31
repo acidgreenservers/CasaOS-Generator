@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CasaOS Generator - Screenshot Management</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
+    <link rel="shortcut icon" type="image/svg+xml" href="../assets/logo.svg">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Shared Base Styles -->
+    <link rel="stylesheet" href="../css/base.css">
+
+    <style>
+        body { padding: 80px 20px 20px; }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .upload-area {
+            border: 2px dashed rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .upload-area:hover,
+        .upload-area.dragover {
+            border-color: #2b9fd8;
+            background: rgba(43,159,216,0.08);
+        }
+
+        .upload-icon { font-size: 2.5rem; margin-bottom: 10px; opacity: 0.7; }
+        .upload-text { font-size: 1.1rem; margin-bottom: 5px; }
+        .upload-hint { font-size: 0.9rem; color: #9aa5b5; }
+        .file-input { display: none; }
+
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .screenshot-item {
+            position: relative;
+            background: #1a2438;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.25s ease;
+        }
+
+        .screenshot-item:hover {
+            transform: translateY(-2px);
+            border-color: #2b9fd8;
+        }
+
+        .screenshot-image {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .screenshot-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(7,11,23,0.85));
+            padding: 15px 10px 10px;
+            color: white;
+        }
+
+        .screenshot-name {
+            font-size: 0.8rem;
+            margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .screenshot-size {
+            font-size: 0.7rem;
+            color: #c8d0dc;
+        }
+
+        .screenshot-actions {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .screenshot-item:hover .screenshot-actions { opacity: 1; }
+
+        .preview-section { position: sticky; top: 100px; }
+
+        .asset-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            background: #1a2438;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .asset-icon { width: 24px; height: 24px; border-radius: 4px; object-fit: cover; }
+        .asset-name { flex: 1; font-size: 0.9rem; }
+        .asset-size { font-size: 0.8rem; color: #9aa5b5; }
+
+        .tips-box {
+            background: #1a2438;
+            border: 1px solid rgba(43,159,216,0.15);
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        .tips-box h4 { margin-bottom: 10px; color: #5fe0ff; }
+        .tips-box ul { color: #c8d0dc; font-size: 0.9rem; line-height: 1.6; padding-left: 16px; }
+        .tips-box li { margin-bottom: 4px; }
+
+        @media (max-width: 1024px) {
+            .container { grid-template-columns: 1fr; gap: 30px; }
+            .preview-section { position: static; }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 80px 15px 20px; }
+            .screenshots-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background System -->
+    <div class="background">
+        <div class="bg-left"></div>
+        <div class="bg-right"></div>
+        <div class="bg-bottom"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <a href="../index.html" class="brand">
+            <div class="brand-logo">
+                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="20" cy="32" r="12" fill="#87CEEB" style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));"/>
+                    <circle cx="32" cy="28" r="18" fill="#1E90FF" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));"/>
+                    <circle cx="44" cy="32" r="12" fill="#87CEEB" style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));"/>
+                </svg>
+            </div>
+            casaos
+        </a>
+        <div style="display:flex; gap:8px; align-items:center;">
+            <a href="icon.html" class="btn btn-ghost btn-sm">← Icon</a>
+            <a href="preview.html" class="btn btn-primary btn-sm">Next: Preview →</a>
+        </div>
+    </header>
+
+    <!-- Content Well -->
+    <div class="content-well">
+        <div class="container">
+            <div class="panel">
+                <h2 class="panel-title">Screenshot Management</h2>
+
+                <div class="upload-container" style="margin-bottom:24px;">
+                    <div id="uploadArea" class="upload-area">
+                        <div class="upload-icon">📸</div>
+                        <div class="upload-text">Upload Screenshots</div>
+                        <div class="upload-hint">Drag & drop or click to select multiple images</div>
+                        <input type="file" id="screenshotFile" class="file-input" accept="image/*" multiple>
+                    </div>
+
+                    <div class="form-group" style="margin-top:15px;">
+                        <label class="form-label">Or add screenshot URL:</label>
+                        <div style="display:flex; gap:10px;">
+                            <input type="url" id="screenshotUrl" class="form-input" placeholder="https://example.com/screenshot.png">
+                            <button id="addUrlBtn" class="btn btn-primary">Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="screenshots-grid" id="screenshotsGrid"></div>
+
+                <div class="tips-box">
+                    <h4>💡 Tips:</h4>
+                    <ul>
+                        <li>Upload 2-4 screenshots showing your app's interface</li>
+                        <li>Screenshots will be automatically converted to PNG format</li>
+                        <li>Recommended size: 1280x720px or higher</li>
+                        <li>First screenshot will be used as the main preview</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="panel preview-section">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+                    <h3 class="panel-title" style="margin-bottom:0;">Project Assets</h3>
+                    <button id="nextBtn" class="btn btn-primary btn-sm">Next: Preview →</button>
+                </div>
+
+                <div id="assetsList">
+                    <div class="panel-secondary" style="margin-bottom:12px;">
+                        <h4 class="form-label" style="font-size:1rem;">Icons</h4>
+                        <div id="iconsList"><p class="text-muted" style="padding:12px 0; text-align:center;">No icons uploaded yet</p></div>
+                    </div>
+                    <div class="panel-secondary">
+                        <h4 class="form-label" style="font-size:1rem;">Screenshots</h4>
+                        <div id="screenshotsList"><p class="text-muted" style="padding:12px 0; text-align:center;">No screenshots uploaded yet</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="progress-container">
+        <div class="progress-step completed"></div>
+        <div class="progress-step completed"></div>
+        <div class="progress-step completed"></div>
+        <div class="progress-step active"></div>
+        <div class="progress-step"></div>
+        <div class="progress-step"></div>
+    </div>
+
+    <script type="module">
+        import { getAssets, saveAssets } from '../modules/storage.js';
+        import { processScreenshot } from '../modules/asset-processor.js';
+
+        class ScreenshotManager {
+            constructor() { this.screenshots = []; this.init(); }
+
+            init() { this.setupEventListeners(); this.loadSavedAssets(); this.updateProgress(); }
+
+            setupEventListeners() {
+                const uploadArea = document.getElementById('uploadArea');
+                const fileInput = document.getElementById('screenshotFile');
+                const screenshotUrl = document.getElementById('screenshotUrl');
+                const addUrlBtn = document.getElementById('addUrlBtn');
+                const nextBtn = document.getElementById('nextBtn');
+
+                uploadArea.addEventListener('click', () => fileInput.click());
+                fileInput.addEventListener('change', (e) => { if (e.target.files.length) this.handleMultipleFileUpload(Array.from(e.target.files)); });
+                uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+                uploadArea.addEventListener('dragleave', () => { uploadArea.classList.remove('dragover'); });
+                uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.remove('dragover');
+                    if (e.dataTransfer.files.length) this.handleMultipleFileUpload(Array.from(e.dataTransfer.files));
+                });
+                addUrlBtn.addEventListener('click', () => {
+                    const url = screenshotUrl.value.trim();
+                    if (url) { this.handleUrlUpload(url); screenshotUrl.value = ''; }
+                });
+                screenshotUrl.addEventListener('keypress', (e) => { if (e.key === 'Enter') addUrlBtn.click(); });
+                nextBtn.addEventListener('click', () => this.nextStep());
+            }
+
+            handleMultipleFileUpload(files) { files.forEach(f => { if (f.type.startsWith('image/')) this.processScreenshot(f); }); }
+
+            handleUrlUpload(url) {
+                fetch(url).then(r => { if (!r.ok) throw new Error('Failed'); return r.blob(); })
+                    .then(blob => { blob.name = url.split('/').pop() || 'screenshot.png'; this.processScreenshot(blob); })
+                    .catch(() => alert('Failed to load from URL'));
+            }
+
+            processScreenshot(file) {
+                const reader = new FileReader();
+                reader.onload = (e) => this.convertToPNG(e.target.result, file.name || 'screenshot.png');
+                reader.readAsDataURL(file);
+            }
+
+            async convertToPNG(dataUrl, fileName) {
+                try {
+                    const result = await processScreenshot(dataUrl);
+                    this.addScreenshot({ name: fileName, data: result.dataUrl, size: result.size, dimensions: result.dimensions, type: 'screenshot' });
+                } catch (err) { alert('Failed to process: ' + err.message); }
+            }
+
+            addScreenshot(s) {
+                this.screenshots.push(s);
+                this.saveScreenshots();
+                this.updateScreenshotsGrid();
+                this.updateAssetsList();
+            }
+
+            removeScreenshot(index) { this.screenshots.splice(index, 1); this.saveScreenshots(); this.updateScreenshotsGrid(); this.updateAssetsList(); }
+
+            saveScreenshots() { const a = getAssets(); a.screenshots = this.screenshots; saveAssets(a); }
+
+            loadSavedAssets() {
+                const a = getAssets();
+                this.screenshots = a.screenshots || [];
+                this.updateScreenshotsGrid();
+                this.updateAssetsList();
+            }
+
+            updateScreenshotsGrid() {
+                const grid = document.getElementById('screenshotsGrid');
+                if (!this.screenshots.length) {
+                    grid.innerHTML = '<p class="text-muted" style="text-align:center; padding:20px;">No screenshots uploaded yet</p>';
+                    return;
+                }
+                grid.innerHTML = this.screenshots.map((s, i) => `
+                    <div class="screenshot-item">
+                        <img src="${s.data}" alt="${s.name}" class="screenshot-image">
+                        <div class="screenshot-overlay">
+                            <div class="screenshot-name">${s.name}</div>
+                            <div class="screenshot-size">${s.dimensions}</div>
+                        </div>
+                        <div class="screenshot-actions">
+                            <button class="btn btn-ghost btn-icon" onclick="screenshotManager.viewScreenshot(${i})">👁</button>
+                            <button class="btn btn-danger btn-icon" onclick="screenshotManager.removeScreenshot(${i})">×</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            updateAssetsList() {
+                const a = getAssets();
+                document.getElementById('iconsList').innerHTML = a.icons.length
+                    ? a.icons.map(icon => `<div class="asset-item"><img src="${icon.data}" class="asset-icon"><span class="asset-name">${icon.name}</span><span class="asset-size">${icon.dimensions}</span></div>`).join('')
+                    : '<p class="text-muted" style="padding:12px 0; text-align:center;">No icons uploaded yet</p>';
+                document.getElementById('screenshotsList').innerHTML = a.screenshots.length
+                    ? a.screenshots.map(s => `<div class="asset-item"><img src="${s.data}" class="asset-icon"><span class="asset-name">${s.name}</span><span class="asset-size">${s.dimensions}</span></div>`).join('')
+                    : '<p class="text-muted" style="padding:12px 0; text-align:center;">No screenshots uploaded yet</p>';
+            }
+
+            viewScreenshot(i) { const s = this.screenshots[i]; if (s) window.open(s.data, '_blank'); }
+
+            nextStep() { this.saveScreenshots(); window.location.href = 'preview.html'; }
+
+            updateProgress() { document.querySelectorAll('.progress-step').forEach((s, i) => { if (i <= 3) s.classList.add('completed'); if (i === 3) s.classList.add('active'); }); }
+        }
+
+        let screenshotManager;
+        document.addEventListener('DOMContentLoaded', () => { screenshotManager = new ScreenshotManager(); });
+    </script>
+</body>
+</html>
