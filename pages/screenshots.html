@@ -14,9 +14,7 @@
     <link rel="stylesheet" href="../css/base.css">
 
     <style>
-        body {
-            padding: 80px 20px 20px;
-        }
+        body { padding: 80px 20px 20px; }
 
         .container {
             max-width: 1200px;
@@ -27,69 +25,26 @@
             align-items: start;
         }
 
-        .screenshots-section {
-            background: rgba(255,255,255,0.05);
-            padding: 30px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 25px;
-            color: #ffffff;
-        }
-
-        .upload-container {
-            margin-bottom: 30px;
-        }
-
         .upload-area {
-            border: 2px dashed rgba(255,255,255,0.25);
+            border: 2px dashed rgba(255,255,255,0.15);
             border-radius: 12px;
             padding: 30px;
             text-align: center;
             transition: all 0.3s ease;
             margin-bottom: 15px;
+            cursor: pointer;
         }
 
         .upload-area:hover,
         .upload-area.dragover {
             border-color: #2b9fd8;
-            background: rgba(31, 127, 196, 0.1);
+            background: rgba(43,159,216,0.08);
         }
 
         .upload-icon { font-size: 2.5rem; margin-bottom: 10px; opacity: 0.7; }
         .upload-text { font-size: 1.1rem; margin-bottom: 5px; }
-        .upload-hint { font-size: 0.9rem; color: rgba(255,255,255,0.7); }
+        .upload-hint { font-size: 0.9rem; color: #9aa5b5; }
         .file-input { display: none; }
-
-        .url-input-container {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .url-input {
-            flex: 1;
-            padding: 10px 14px;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 6px;
-            color: white;
-            font-size: 0.9rem;
-        }
-
-        .url-input:focus {
-            outline: none;
-            border-color: #2b9fd8;
-            background: rgba(255,255,255,0.12);
-        }
-
-        .url-input::placeholder { color: rgba(255,255,255,0.5); }
 
         .screenshots-grid {
             display: grid;
@@ -100,11 +55,11 @@
 
         .screenshot-item {
             position: relative;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 8px;
+            background: #1a2438;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
         }
 
         .screenshot-item:hover {
@@ -124,14 +79,14 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            background: linear-gradient(transparent, rgba(7,11,23,0.85));
             padding: 15px 10px 10px;
             color: white;
         }
 
         .screenshot-name {
             font-size: 0.8rem;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -139,128 +94,49 @@
 
         .screenshot-size {
             font-size: 0.7rem;
-            color: rgba(255,255,255,0.7);
+            color: #c8d0dc;
         }
 
         .screenshot-actions {
             position: absolute;
-            top: 5px;
-            right: 5px;
+            top: 6px;
+            right: 6px;
             display: flex;
-            gap: 5px;
+            gap: 4px;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.25s ease;
         }
 
         .screenshot-item:hover .screenshot-actions { opacity: 1; }
 
-        .btn-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 10px;
-        }
-
-        .btn-view { background: #2b9fd8; color: white; }
-        .btn-remove { background: #dc3545; color: white; }
-
-        .form-group { margin-bottom: 20px; }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: rgba(255,255,255,0.9);
-        }
-
-        .preview-section {
-            background: rgba(255,255,255,0.05);
-            padding: 30px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            position: sticky;
-            top: 100px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        }
-
-        .preview-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .preview-title { font-size: 1.5rem; font-weight: 600; }
-        .preview-actions { display: flex; gap: 10px; }
-
-        .asset-preview {
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 15px;
-        }
+        .preview-section { position: sticky; top: 100px; }
 
         .asset-item {
             display: flex;
             align-items: center;
             gap: 12px;
             padding: 10px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 6px;
+            background: #1a2438;
+            border-radius: 8px;
             margin-bottom: 8px;
+            border: 1px solid rgba(255,255,255,0.04);
         }
 
         .asset-icon { width: 24px; height: 24px; border-radius: 4px; object-fit: cover; }
         .asset-name { flex: 1; font-size: 0.9rem; }
-        .asset-size { font-size: 0.8rem; color: rgba(255,255,255,0.7); }
+        .asset-size { font-size: 0.8rem; color: #9aa5b5; }
 
-        .progress-container {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 8px;
-            z-index: 100;
+        .tips-box {
+            background: #1a2438;
+            border: 1px solid rgba(43,159,216,0.15);
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 20px;
         }
 
-        .progress-step {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.3);
-            transition: all 0.3s ease;
-        }
-
-        .progress-step.active { background: #2b9fd8; transform: scale(1.2); }
-        .progress-step.completed { background: #28a745; }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #1f7fc4 0%, #2b9fd8 100%);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #2b9fd8 0%, #5fe0ff 100%);
-            transform: translateY(-1px);
-        }
+        .tips-box h4 { margin-bottom: 10px; color: #5fe0ff; }
+        .tips-box ul { color: #c8d0dc; font-size: 0.9rem; line-height: 1.6; padding-left: 16px; }
+        .tips-box li { margin-bottom: 4px; }
 
         @media (max-width: 1024px) {
             .container { grid-template-columns: 1fr; gap: 30px; }
@@ -269,7 +145,6 @@
 
         @media (max-width: 768px) {
             body { padding: 80px 15px 20px; }
-            .screenshots-section, .preview-section { padding: 20px; }
             .screenshots-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
         }
     </style>
@@ -295,18 +170,18 @@
             casaos
         </a>
         <div style="display:flex; gap:8px; align-items:center;">
-            <a href="icon.html" class="nav-pill">← Icon</a>
-            <a href="preview.html" class="nav-pill nav-pill-primary">Next: Preview →</a>
+            <a href="icon.html" class="btn btn-ghost btn-sm">← Icon</a>
+            <a href="preview.html" class="btn btn-primary btn-sm">Next: Preview →</a>
         </div>
     </header>
 
     <!-- Content Well -->
     <div class="content-well">
         <div class="container">
-            <div class="screenshots-section">
-                <h2 class="section-title">Screenshot Management</h2>
+            <div class="panel">
+                <h2 class="panel-title">Screenshot Management</h2>
 
-                <div class="upload-container">
+                <div class="upload-container" style="margin-bottom:24px;">
                     <div id="uploadArea" class="upload-area">
                         <div class="upload-icon">📸</div>
                         <div class="upload-text">Upload Screenshots</div>
@@ -314,46 +189,42 @@
                         <input type="file" id="screenshotFile" class="file-input" accept="image/*" multiple>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" style="margin-top:15px;">
                         <label class="form-label">Or add screenshot URL:</label>
-                        <div class="url-input-container">
-                            <input type="url" id="screenshotUrl" class="url-input" placeholder="https://example.com/screenshot.png">
-                            <button id="addUrlBtn" class="btn-primary">Add</button>
+                        <div style="display:flex; gap:10px;">
+                            <input type="url" id="screenshotUrl" class="form-input" placeholder="https://example.com/screenshot.png">
+                            <button id="addUrlBtn" class="btn btn-primary">Add</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="screenshots-grid" id="screenshotsGrid"></div>
 
-                <div class="form-group">
-                    <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; margin-top: 20px; border: 1px solid rgba(255,255,255,0.08);">
-                        <h4 style="margin-bottom: 10px; color: #2b9fd8;">💡 Tips:</h4>
-                        <ul style="color: rgba(255,255,255,0.8); font-size: 0.9rem; line-height: 1.5;">
-                            <li>• Upload 2-4 screenshots showing your app's interface</li>
-                            <li>• Screenshots will be automatically converted to PNG format</li>
-                            <li>• Recommended size: 1280x720px or higher</li>
-                            <li>• First screenshot will be used as the main preview</li>
-                        </ul>
-                    </div>
+                <div class="tips-box">
+                    <h4>💡 Tips:</h4>
+                    <ul>
+                        <li>Upload 2-4 screenshots showing your app's interface</li>
+                        <li>Screenshots will be automatically converted to PNG format</li>
+                        <li>Recommended size: 1280x720px or higher</li>
+                        <li>First screenshot will be used as the main preview</li>
+                    </ul>
                 </div>
             </div>
 
-            <div class="preview-section">
-                <div class="preview-header">
-                    <h3 class="preview-title">Project Assets</h3>
-                    <div class="preview-actions">
-                        <button id="nextBtn" class="btn-primary">Next: Preview →</button>
-                    </div>
+            <div class="panel preview-section">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+                    <h3 class="panel-title" style="margin-bottom:0;">Project Assets</h3>
+                    <button id="nextBtn" class="btn btn-primary btn-sm">Next: Preview →</button>
                 </div>
 
                 <div id="assetsList">
-                    <div class="asset-preview">
-                        <h4>Icons</h4>
-                        <div id="iconsList"><p style="color: rgba(255,255,255,0.6);">No icons uploaded yet</p></div>
+                    <div class="panel-secondary" style="margin-bottom:12px;">
+                        <h4 class="form-label" style="font-size:1rem;">Icons</h4>
+                        <div id="iconsList"><p class="text-muted" style="padding:12px 0; text-align:center;">No icons uploaded yet</p></div>
                     </div>
-                    <div class="asset-preview">
-                        <h4>Screenshots</h4>
-                        <div id="screenshotsList"><p style="color: rgba(255,255,255,0.6);">No screenshots uploaded yet</p></div>
+                    <div class="panel-secondary">
+                        <h4 class="form-label" style="font-size:1rem;">Screenshots</h4>
+                        <div id="screenshotsList"><p class="text-muted" style="padding:12px 0; text-align:center;">No screenshots uploaded yet</p></div>
                     </div>
                 </div>
             </div>
@@ -375,16 +246,9 @@
         import { processScreenshot } from '../modules/asset-processor.js';
 
         class ScreenshotManager {
-            constructor() {
-                this.screenshots = [];
-                this.init();
-            }
+            constructor() { this.screenshots = []; this.init(); }
 
-            init() {
-                this.setupEventListeners();
-                this.loadSavedAssets();
-                this.updateProgress();
-            }
+            init() { this.setupEventListeners(); this.loadSavedAssets(); this.updateProgress(); }
 
             setupEventListeners() {
                 const uploadArea = document.getElementById('uploadArea');
@@ -394,62 +258,28 @@
                 const nextBtn = document.getElementById('nextBtn');
 
                 uploadArea.addEventListener('click', () => fileInput.click());
-
-                fileInput.addEventListener('change', (e) => {
-                    if (e.target.files.length > 0) {
-                        this.handleMultipleFileUpload(Array.from(e.target.files));
-                    }
-                });
-
-                uploadArea.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    uploadArea.classList.add('dragover');
-                });
-
-                uploadArea.addEventListener('dragleave', () => {
-                    uploadArea.classList.remove('dragover');
-                });
-
+                fileInput.addEventListener('change', (e) => { if (e.target.files.length) this.handleMultipleFileUpload(Array.from(e.target.files)); });
+                uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+                uploadArea.addEventListener('dragleave', () => { uploadArea.classList.remove('dragover'); });
                 uploadArea.addEventListener('drop', (e) => {
                     e.preventDefault();
                     uploadArea.classList.remove('dragover');
-                    if (e.dataTransfer.files.length > 0) {
-                        this.handleMultipleFileUpload(Array.from(e.dataTransfer.files));
-                    }
+                    if (e.dataTransfer.files.length) this.handleMultipleFileUpload(Array.from(e.dataTransfer.files));
                 });
-
                 addUrlBtn.addEventListener('click', () => {
                     const url = screenshotUrl.value.trim();
-                    if (url) {
-                        this.handleUrlUpload(url);
-                        screenshotUrl.value = '';
-                    }
+                    if (url) { this.handleUrlUpload(url); screenshotUrl.value = ''; }
                 });
-
-                screenshotUrl.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') addUrlBtn.click();
-                });
-
+                screenshotUrl.addEventListener('keypress', (e) => { if (e.key === 'Enter') addUrlBtn.click(); });
                 nextBtn.addEventListener('click', () => this.nextStep());
             }
 
-            handleMultipleFileUpload(files) {
-                files.forEach(file => {
-                    if (file.type.startsWith('image/')) this.processScreenshot(file);
-                });
-            }
+            handleMultipleFileUpload(files) { files.forEach(f => { if (f.type.startsWith('image/')) this.processScreenshot(f); }); }
 
             handleUrlUpload(url) {
-                fetch(url)
-                    .then(response => {
-                        if (!response.ok) throw new Error('Failed to load image');
-                        return response.blob();
-                    })
-                    .then(blob => {
-                        blob.name = url.split('/').pop() || 'screenshot.png';
-                        this.processScreenshot(blob);
-                    })
-                    .catch(error => alert('Failed to load image from URL: ' + error.message));
+                fetch(url).then(r => { if (!r.ok) throw new Error('Failed'); return r.blob(); })
+                    .then(blob => { blob.name = url.split('/').pop() || 'screenshot.png'; this.processScreenshot(blob); })
+                    .catch(() => alert('Failed to load from URL'));
             }
 
             processScreenshot(file) {
@@ -461,51 +291,32 @@
             async convertToPNG(dataUrl, fileName) {
                 try {
                     const result = await processScreenshot(dataUrl);
-                    const screenshot = {
-                        name: fileName,
-                        data: result.dataUrl,
-                        size: result.size,
-                        dimensions: result.dimensions,
-                        type: 'screenshot',
-                    };
-                    this.addScreenshot(screenshot);
-                } catch (err) {
-                    alert('Failed to process screenshot: ' + err.message);
-                }
+                    this.addScreenshot({ name: fileName, data: result.dataUrl, size: result.size, dimensions: result.dimensions, type: 'screenshot' });
+                } catch (err) { alert('Failed to process: ' + err.message); }
             }
 
-            addScreenshot(screenshot) {
-                this.screenshots.push(screenshot);
-                this.saveScreenshots();
-                this.updateScreenshotsGrid();
-                this.updateAssetsList();
-                this.showSuccess(`Added ${screenshot.name}`);
-            }
-
-            removeScreenshot(index) {
-                this.screenshots.splice(index, 1);
+            addScreenshot(s) {
+                this.screenshots.push(s);
                 this.saveScreenshots();
                 this.updateScreenshotsGrid();
                 this.updateAssetsList();
             }
 
-            saveScreenshots() {
-                const assets = getAssets();
-                assets.screenshots = this.screenshots;
-                saveAssets(assets);
-            }
+            removeScreenshot(index) { this.screenshots.splice(index, 1); this.saveScreenshots(); this.updateScreenshotsGrid(); this.updateAssetsList(); }
+
+            saveScreenshots() { const a = getAssets(); a.screenshots = this.screenshots; saveAssets(a); }
 
             loadSavedAssets() {
-                const assets = getAssets();
-                this.screenshots = assets.screenshots || [];
+                const a = getAssets();
+                this.screenshots = a.screenshots || [];
                 this.updateScreenshotsGrid();
                 this.updateAssetsList();
             }
 
             updateScreenshotsGrid() {
                 const grid = document.getElementById('screenshotsGrid');
-                if (this.screenshots.length === 0) {
-                    grid.innerHTML = '<p style="color: rgba(255,255,255,0.6); text-align: center; padding: 20px;">No screenshots uploaded yet</p>';
+                if (!this.screenshots.length) {
+                    grid.innerHTML = '<p class="text-muted" style="text-align:center; padding:20px;">No screenshots uploaded yet</p>';
                     return;
                 }
                 grid.innerHTML = this.screenshots.map((s, i) => `
@@ -516,69 +327,32 @@
                             <div class="screenshot-size">${s.dimensions}</div>
                         </div>
                         <div class="screenshot-actions">
-                            <button class="btn-icon btn-view" onclick="screenshotManager.viewScreenshot(${i})" title="View">👁</button>
-                            <button class="btn-icon btn-remove" onclick="screenshotManager.removeScreenshot(${i})" title="Remove">×</button>
+                            <button class="btn btn-ghost btn-icon" onclick="screenshotManager.viewScreenshot(${i})">👁</button>
+                            <button class="btn btn-danger btn-icon" onclick="screenshotManager.removeScreenshot(${i})">×</button>
                         </div>
                     </div>
                 `).join('');
             }
 
             updateAssetsList() {
-                const assets = getAssets();
-                document.getElementById('iconsList').innerHTML = assets.icons.length > 0
-                    ? assets.icons.map(icon => `
-                        <div class="asset-item">
-                            <img src="${icon.data}" alt="${icon.name}" class="asset-icon">
-                            <span class="asset-name">${icon.name}</span>
-                            <span class="asset-size">${icon.dimensions}</span>
-                        </div>
-                    `).join('')
-                    : '<p style="color: rgba(255,255,255,0.6);">No icons uploaded yet</p>';
-
-                document.getElementById('screenshotsList').innerHTML = assets.screenshots.length > 0
-                    ? assets.screenshots.map(s => `
-                        <div class="asset-item">
-                            <img src="${s.data}" alt="${s.name}" class="asset-icon">
-                            <span class="asset-name">${s.name}</span>
-                            <span class="asset-size">${s.dimensions}</span>
-                        </div>
-                    `).join('')
-                    : '<p style="color: rgba(255,255,255,0.6);">No screenshots uploaded yet</p>';
+                const a = getAssets();
+                document.getElementById('iconsList').innerHTML = a.icons.length
+                    ? a.icons.map(icon => `<div class="asset-item"><img src="${icon.data}" class="asset-icon"><span class="asset-name">${icon.name}</span><span class="asset-size">${icon.dimensions}</span></div>`).join('')
+                    : '<p class="text-muted" style="padding:12px 0; text-align:center;">No icons uploaded yet</p>';
+                document.getElementById('screenshotsList').innerHTML = a.screenshots.length
+                    ? a.screenshots.map(s => `<div class="asset-item"><img src="${s.data}" class="asset-icon"><span class="asset-name">${s.name}</span><span class="asset-size">${s.dimensions}</span></div>`).join('')
+                    : '<p class="text-muted" style="padding:12px 0; text-align:center;">No screenshots uploaded yet</p>';
             }
 
-            viewScreenshot(index) {
-                const s = this.screenshots[index];
-                if (s) window.open(s.data, '_blank');
-            }
+            viewScreenshot(i) { const s = this.screenshots[i]; if (s) window.open(s.data, '_blank'); }
 
-            showSuccess(message) {
-                const hint = document.querySelector('.upload-hint');
-                const originalText = hint.textContent;
-                hint.textContent = '✅ ' + message;
-                hint.style.color = '#28a745';
-                setTimeout(() => {
-                    hint.textContent = originalText;
-                    hint.style.color = '';
-                }, 2000);
-            }
+            nextStep() { this.saveScreenshots(); window.location.href = 'preview.html'; }
 
-            nextStep() {
-                this.saveScreenshots();
-                window.location.href = 'preview.html';
-            }
-
-            updateProgress() {
-                document.querySelectorAll('.progress-step').forEach((step, index) => {
-                    if (index <= 3) step.classList.add('completed');
-                    if (index === 3) step.classList.add('active');
-                });
-            }
+            updateProgress() { document.querySelectorAll('.progress-step').forEach((s, i) => { if (i <= 3) s.classList.add('completed'); if (i === 3) s.classList.add('active'); }); }
         }
 
         let screenshotManager;
-        document.addEventListener('DOMContentLoaded', () => {
-            screenshotManager = new ScreenshotManager();
-        });
+        document.addEventListener('DOMContentLoaded', () => { screenshotManager = new ScreenshotManager(); });
     </script>
 </body>
 </html>

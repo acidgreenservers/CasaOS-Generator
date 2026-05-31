@@ -11,7 +11,7 @@ body {
     font-family: 'Inter', sans-serif;
     background: #070b17;
     min-height: 100vh;
-    color: #ffffff;
+    color: #e8edf5;
     line-height: 1.6;
     overflow-x: hidden;
 }
@@ -88,7 +88,7 @@ body {
     background: linear-gradient(
         180deg,
         rgba(7,11,23,0.95),
-        rgba(7,11,23,0.65)
+        rgba(7,11,23,0.85)
     );
     backdrop-filter: blur(2px);
 }
@@ -153,6 +153,233 @@ body {
 }
 
 /* =========================
+   SHARED PANEL SYSTEM
+   Dark polished panels with strong readability
+========================= */
+
+/* Base card — solid dark with subtle border */
+.panel {
+    background: #0f1524;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+}
+
+.panel-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: #f0f4fc;
+}
+
+/* Section card — slightly lighter for secondary grouping */
+.panel-secondary {
+    background: #141c2e;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+/* Inline card for items within a panel */
+.panel-item {
+    background: #1a2438;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+}
+
+/* =========================
+   SHARED FORM ELEMENTS
+========================= */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #c8d0dc;
+    font-size: 0.9rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 11px 14px;
+    background: #1a2438;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: #e8edf5;
+    font-size: 0.9rem;
+    font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #2b9fd8;
+    background: #1e2a40;
+    box-shadow: 0 0 0 2px rgba(43,159,216,0.15);
+}
+
+.form-input::placeholder {
+    color: rgba(200,208,220,0.35);
+}
+
+.form-input-accent {
+    border-left: 3px solid #1f7fc4;
+}
+
+select.form-input option {
+    background: #0f1524;
+    color: #e8edf5;
+}
+
+textarea.form-input {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* =========================
+   SHARED BUTTONS
+========================= */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    font-family: inherit;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-decoration: none;
+    line-height: 1.2;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #1f7fc4 0%, #2b9fd8 100%);
+    color: white;
+    box-shadow: 0 2px 12px rgba(31,127,196,0.2);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #2b9fd8 0%, #5fe0ff 100%);
+    box-shadow: 0 4px 16px rgba(31,127,196,0.3);
+    transform: translateY(-1px);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #1e8e3e 0%, #28a745 100%);
+    color: white;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #28a745 0%, #34ce57 100%);
+    transform: translateY(-1px);
+}
+
+.btn-ghost {
+    background: rgba(255,255,255,0.06);
+    color: #c8d0dc;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.btn-ghost:hover {
+    background: rgba(255,255,255,0.1);
+    color: #e8edf5;
+}
+
+.btn-danger {
+    background: transparent;
+    color: #e74c5e;
+    border: 1px solid #e74c5e;
+}
+
+.btn-danger:hover {
+    background: #e74c5e;
+    color: white;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    border-radius: 8px;
+}
+
+.btn-icon {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* =========================
+   SHARED TOOLTIP / STATE
+========================= */
+.success-flash {
+    animation: flashGreen 0.3s ease-in-out;
+}
+
+@keyframes flashGreen {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+    100% { transform: scale(1); }
+}
+
+.text-muted {
+    color: rgba(200,208,220,0.55);
+}
+
+.text-warning {
+    color: #f0c040;
+}
+
+.text-accent {
+    color: #5fe0ff;
+}
+
+/* =========================
+   PROGRESS BAR (shared)
+========================= */
+.progress-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+}
+
+.progress-step {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    transition: all 0.3s ease;
+}
+
+.progress-step.active {
+    background: #2b9fd8;
+    transform: scale(1.25);
+    box-shadow: 0 0 8px rgba(43,159,216,0.5);
+}
+
+.progress-step.completed {
+    background: #1e8e3e;
+}
+
+/* =========================
    RESPONSIVE
 ========================= */
 @media (max-width: 768px) {
@@ -167,5 +394,9 @@ body {
     .nav-pill {
         padding: 4px 10px;
         font-size: 12px;
+    }
+
+    .panel {
+        padding: 20px;
     }
 }

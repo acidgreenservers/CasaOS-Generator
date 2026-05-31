@@ -19,41 +19,54 @@ export function buildYamlObject(services, network, assets) {
 
     const firstService = services[0];
 
+    // Build tips only if at least one tip is enabled and has content
+    const tips = {};
+    if (firstService.tips?.enable_before_install && firstService.tips.before_install?.en_US) {
+        tips.before_install = { en_us: firstService.tips.before_install.en_US + '\n' };
+    }
+    if (firstService.tips?.enable_custom && firstService.tips.custom?.en_US) {
+        tips.custom = { en_us: firstService.tips.custom.en_US + '\n' };
+    }
+
+    const rootXCasaos = {
+        architectures: firstService.architectures || [],
+        title: { en_us: firstService.title?.en_US || '' },
+        store_app_id: firstService.appId,
+        main: firstService.appId,
+        category: firstService.category || '',
+        developer: firstService.developer || '',
+        author: firstService.author || '',
+        port_map: firstService.portMap || '',
+        scheme: firstService.scheme || 'http',
+        icon: `https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/${firstService.appId}.png`,
+        thumbnail: firstService.thumbnail || '',
+        screenshot_link: (assets?.screenshots || []).map((_, idx) => `screenshot-${idx + 1}.png`),
+        tagline: { en_us: firstService.tagline?.en_US || '' },
+        description: { en_us: (firstService.description?.en_US || '') + '\n' },
+        index: firstService.index || '/',
+    };
+
+    // Only add tips if non-empty
+    if (Object.keys(tips).length > 0) {
+        rootXCasaos.tips = tips;
+    }
+
     const ymlObject = {
         name: firstService.appId,
         services: {},
-        'x-casaos': {
-            architectures: firstService.architectures || [],
-            title: { en_US: firstService.title?.en_US || '' },
-            store_app_id: firstService.appId,
-            main: firstService.appId,
-            category: firstService.category || '',
-            developer: firstService.developer || '',
-            author: firstService.author || '',
-            port_map: firstService.portMap || '',
-            scheme: firstService.scheme || 'http',
-            icon: `https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/${firstService.appId}.png`,
-            thumbnail: '',
-            screenshot_link: (assets?.screenshots || []).map((_, idx) => `screenshot-${idx + 1}.png`),
-            tagline: { en_US: firstService.tagline?.en_US || '' },
-            description: { en_US: (firstService.description?.en_US || '') + '\n' },
-            tips: {
-                before_install: firstService.tips?.enable_before_install
-                    ? { en_US: (firstService.tips.before_install?.en_US || '') + '\n' }
-                    : null,
-                custom: firstService.tips?.enable_custom
-                    ? { en_US: (firstService.tips.custom?.en_US || '') + '\n' }
-                    : null,
-            },
-            index: firstService.index || '/',
-        },
+        'x-casaos': rootXCasaos,
     };
 
     // Add all services
     services.forEach((service) => {
         if (!service.appId || !service.image) return;
 
-        ymlObject.services[service.appId] = {
+        const filteredPorts = service.ports
+            .filter((port) => port.target && port.published && port.protocol);
+        const filteredVolumes = service.volumes
+            .filter((vol) => vol.type && vol.source && vol.target);
+
+        const serviceObj = {
             container_name: service.appId,
             image: service.image,
             command: service.command || undefined,
@@ -71,22 +84,31 @@ export function buildYamlObject(services, network, assets) {
                     acc[env.key] = env.value;
                     return acc;
                 }, {}),
-            volumes: service.volumes
-                .filter((vol) => vol.type && vol.source && vol.target)
-                .map((vol) => ({
-                    type: vol.type,
-                    source: vol.source,
-                    target: vol.target,
-                })),
-            ports: service.ports
-                .filter((port) => port.target && port.published && port.protocol)
-                .map((port) => ({
-                    target: parseInt(port.target, 10),
-                    published: port.published,
-                    protocol: port.protocol,
-                })),
+            volumes: filteredVolumes.map((vol) => ({
+                type: vol.type,
+                source: vol.source,
+                target: vol.target,
+            })),
+            ports: filteredPorts.map((port) => ({
+                target: parseInt(port.target, 10),
+                published: port.published,
+                protocol: port.protocol,
+            })),
             network_mode: network,
+            // Service-level x-casaos metadata for port/volume descriptions
+            'x-casaos': {
+                ports: filteredPorts.map((port) => ({
+                    container: String(port.target),
+                    description: { en_us: port.description || `Port ${port.target}` },
+                })),
+                volumes: filteredVolumes.map((vol) => ({
+                    container: vol.target,
+                    description: { en_us: vol.description || `Volume at ${vol.target}` },
+                })),
+            },
         };
+
+        ymlObject.services[service.appId] = serviceObj;
     });
 
     return ymlObject;

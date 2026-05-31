@@ -14,11 +14,8 @@
     <link rel="stylesheet" href="../css/base.css">
 
     <style>
-        body {
-            padding: 80px 20px 20px;
-        }
+        body { padding: 80px 20px 20px; }
 
-        /* Main Container */
         .container {
             max-width: 1000px;
             margin: 0 auto;
@@ -28,57 +25,26 @@
             align-items: start;
         }
 
-        /* Icon Management Section */
-        .icon-section {
-            background: rgba(255,255,255,0.05);
-            padding: 30px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 25px;
-            color: #ffffff;
-        }
-
         .upload-area {
-            border: 2px dashed rgba(255,255,255,0.25);
+            border: 2px dashed rgba(255,255,255,0.15);
             border-radius: 12px;
             padding: 40px;
             text-align: center;
             transition: all 0.3s ease;
             margin-bottom: 20px;
+            cursor: pointer;
         }
 
         .upload-area:hover,
         .upload-area.dragover {
             border-color: #2b9fd8;
-            background: rgba(31, 127, 196, 0.1);
+            background: rgba(43,159,216,0.08);
         }
 
-        .upload-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            opacity: 0.7;
-        }
-
-        .upload-text {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-        }
-
-        .upload-hint {
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.7);
-        }
-
-        .file-input {
-            display: none;
-        }
+        .upload-icon { font-size: 3rem; margin-bottom: 15px; opacity: 0.7; }
+        .upload-text { font-size: 1.1rem; margin-bottom: 10px; }
+        .upload-hint { font-size: 0.9rem; color: #9aa5b5; }
+        .file-input { display: none; }
 
         .icon-preview {
             margin-top: 20px;
@@ -89,13 +55,13 @@
             max-width: 120px;
             max-height: 120px;
             border-radius: 12px;
-            border: 2px solid rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.15);
         }
 
         .icon-info {
             margin-top: 10px;
             font-size: 0.9rem;
-            color: rgba(255,255,255,0.8);
+            color: #c8d0dc;
         }
 
         .icon-actions {
@@ -103,79 +69,7 @@
             display: flex;
             gap: 10px;
             justify-content: center;
-        }
-
-        .url-section {
-            margin-top: 30px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: rgba(255,255,255,0.9);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 16px;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 8px;
-            color: white;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #2b9fd8;
-            background: rgba(255,255,255,0.12);
-        }
-
-        .form-control::placeholder {
-            color: rgba(255,255,255,0.5);
-        }
-
-        /* Preview Section */
-        .preview-section {
-            background: rgba(255,255,255,0.05);
-            padding: 30px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            position: sticky;
-            top: 100px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        }
-
-        .preview-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .preview-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        .preview-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .asset-preview {
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 15px;
+            flex-wrap: wrap;
         }
 
         .asset-item {
@@ -183,9 +77,10 @@
             align-items: center;
             gap: 12px;
             padding: 10px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 6px;
+            background: #1a2438;
+            border-radius: 8px;
             margin-bottom: 8px;
+            border: 1px solid rgba(255,255,255,0.04);
         }
 
         .asset-icon {
@@ -195,139 +90,25 @@
             object-fit: cover;
         }
 
-        .asset-name {
-            flex: 1;
-            font-size: 0.9rem;
-        }
+        .asset-name { flex: 1; font-size: 0.9rem; }
+        .asset-size { font-size: 0.8rem; color: #9aa5b5; }
 
-        .asset-size {
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.7);
-        }
+        .asset-actions { display: flex; gap: 5px; }
 
-        .asset-actions {
-            display: flex;
-            gap: 5px;
-        }
+        .url-section { margin-top: 24px; }
 
-        .btn-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .btn-remove {
-            background: #dc3545;
-            color: white;
-        }
-
-        .btn-view {
-            background: #2b9fd8;
-            color: white;
-        }
-
-        /* Progress Indicator */
-        .progress-container {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 8px;
-            z-index: 100;
-        }
-
-        .progress-step {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.3);
-            transition: all 0.3s ease;
-        }
-
-        .progress-step.active {
-            background: #2b9fd8;
-            transform: scale(1.2);
-        }
-
-        .progress-step.completed {
-            background: #28a745;
-        }
-
-        .btn-sec {
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-sec:hover {
-            background: rgba(255,255,255,0.2);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #1f7fc4 0%, #2b9fd8 100%);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #2b9fd8 0%, #5fe0ff 100%);
-            transform: translateY(-1px);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-success:hover {
-            background: linear-gradient(135deg, #20c997 0%, #28a745 100%);
-            transform: translateY(-1px);
+        .preview-section {
+            position: sticky;
+            top: 100px;
         }
 
         @media (max-width: 1024px) {
-            .container {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-            .preview-section {
-                position: static;
-            }
+            .container { grid-template-columns: 1fr; gap: 30px; }
+            .preview-section { position: static; }
         }
 
         @media (max-width: 768px) {
             body { padding: 80px 15px 20px; }
-            .icon-section, .preview-section { padding: 20px; }
         }
     </style>
 </head>
@@ -352,8 +133,8 @@
             casaos
         </a>
         <div style="display:flex; gap:8px; align-items:center;">
-            <a href="generator.html" class="nav-pill">← Generator</a>
-            <a href="screenshots.html" class="nav-pill nav-pill-primary">Next: Screenshots →</a>
+            <a href="generator.html" class="btn btn-ghost btn-sm">← Generator</a>
+            <a href="screenshots.html" class="btn btn-primary btn-sm">Next: Screenshots →</a>
         </div>
     </header>
 
@@ -361,8 +142,8 @@
     <div class="content-well">
         <div class="container">
             <!-- Icon Management -->
-            <div class="icon-section">
-                <h2 class="section-title">Icon Management</h2>
+            <div class="panel">
+                <h2 class="panel-title">Icon Management</h2>
 
                 <div id="uploadArea" class="upload-area">
                     <div class="upload-icon">🖼️</div>
@@ -374,9 +155,11 @@
                 <div class="url-section">
                     <div class="form-group">
                         <label class="form-label">Or use Icon URL:</label>
-                        <input type="url" id="iconUrl" class="form-control" placeholder="https://example.com/icon.png">
+                        <div style="display:flex; gap:10px;">
+                            <input type="url" id="iconUrl" class="form-input" placeholder="https://example.com/icon.png">
+                            <button id="loadUrlBtn" class="btn btn-primary">Load</button>
+                        </div>
                     </div>
-                    <button id="loadUrlBtn" class="btn-primary">Load from URL</button>
                 </div>
 
                 <div id="iconPreview" class="icon-preview" style="display: none;">
@@ -386,32 +169,30 @@
                         <div id="iconDimensions"></div>
                     </div>
                     <div class="icon-actions">
-                        <button id="useIconBtn" class="btn-success">✅ Use This Icon</button>
-                        <button id="clearIconBtn" class="btn-sec">Clear</button>
+                        <button id="useIconBtn" class="btn btn-success">✅ Use This Icon</button>
+                        <button id="clearIconBtn" class="btn btn-ghost">Clear</button>
                     </div>
                 </div>
             </div>
 
             <!-- Assets Preview -->
-            <div class="preview-section">
-                <div class="preview-header">
-                    <h3 class="preview-title">Project Assets</h3>
-                    <div class="preview-actions">
-                        <button id="nextBtn" class="btn-primary">Next: Screenshots →</button>
-                    </div>
+            <div class="panel preview-section">
+                <div class="preview-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+                    <h3 class="panel-title" style="margin-bottom:0;">Project Assets</h3>
+                    <button id="nextBtn" class="btn btn-primary btn-sm">Next: Screenshots →</button>
                 </div>
 
                 <div id="assetsList">
-                    <div class="asset-preview">
-                        <h4>Icons</h4>
+                    <div class="panel-secondary" style="margin-bottom:15px;">
+                        <h4 class="form-label" style="font-size:1rem;">Icons</h4>
                         <div id="iconsList">
-                            <p style="color: rgba(255,255,255,0.6);">No icons uploaded yet</p>
+                            <p class="text-muted" style="padding:16px 0; text-align:center;">No icons uploaded yet</p>
                         </div>
                     </div>
-                    <div class="asset-preview">
-                        <h4>Screenshots</h4>
+                    <div class="panel-secondary">
+                        <h4 class="form-label" style="font-size:1rem;">Screenshots</h4>
                         <div id="screenshotsList">
-                            <p style="color: rgba(255,255,255,0.6);">No screenshots uploaded yet</p>
+                            <p class="text-muted" style="padding:16px 0; text-align:center;">No screenshots uploaded yet</p>
                         </div>
                     </div>
                 </div>
@@ -456,41 +237,27 @@
                 const nextBtn = document.getElementById('nextBtn');
 
                 uploadArea.addEventListener('click', () => fileInput.click());
-
                 fileInput.addEventListener('change', (e) => {
                     if (e.target.files[0]) this.handleFileUpload(e.target.files[0]);
                 });
-
-                uploadArea.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    uploadArea.classList.add('dragover');
-                });
-
-                uploadArea.addEventListener('dragleave', () => {
-                    uploadArea.classList.remove('dragover');
-                });
-
+                uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+                uploadArea.addEventListener('dragleave', () => { uploadArea.classList.remove('dragover'); });
                 uploadArea.addEventListener('drop', (e) => {
                     e.preventDefault();
                     uploadArea.classList.remove('dragover');
                     if (e.dataTransfer.files[0]) this.handleFileUpload(e.dataTransfer.files[0]);
                 });
-
                 loadUrlBtn.addEventListener('click', () => {
                     const url = iconUrl.value.trim();
                     if (url) this.handleUrlUpload(url);
                 });
-
                 useIconBtn.addEventListener('click', () => this.saveIcon());
                 clearIconBtn.addEventListener('click', () => this.clearIcon());
                 nextBtn.addEventListener('click', () => this.nextStep());
             }
 
             handleFileUpload(file) {
-                if (!file.type.startsWith('image/')) {
-                    alert('Please select an image file');
-                    return;
-                }
+                if (!file.type.startsWith('image/')) { alert('Please select an image file'); return; }
                 const reader = new FileReader();
                 reader.onload = (e) => this.processImage(e.target.result, file.name);
                 reader.readAsDataURL(file);
@@ -498,10 +265,7 @@
 
             handleUrlUpload(url) {
                 fetch(url)
-                    .then(response => {
-                        if (!response.ok) throw new Error('Failed to load image');
-                        return response.blob();
-                    })
+                    .then(r => { if (!r.ok) throw new Error('Failed to load image'); return r.blob(); })
                     .then(blob => {
                         const reader = new FileReader();
                         reader.onload = (e) => this.processImage(e.target.result, url.split('/').pop());
@@ -513,17 +277,9 @@
             async processImage(dataUrl, fileName) {
                 try {
                     const result = await processImageToPng(dataUrl);
-                    this.currentIcon = {
-                        name: fileName,
-                        data: result.dataUrl,
-                        size: result.size,
-                        dimensions: result.dimensions,
-                        type: 'icon'
-                    };
+                    this.currentIcon = { name: fileName, data: result.dataUrl, size: result.size, dimensions: result.dimensions, type: 'icon' };
                     this.showPreview(result.dataUrl, fileName, result.dimensions, formatFileSize(result.size));
-                } catch (err) {
-                    alert('Failed to process image: ' + err.message);
-                }
+                } catch (err) { alert('Failed to process image: ' + err.message); }
             }
 
             showPreview(dataUrl, fileName, dimensions, fileSize) {
@@ -550,42 +306,36 @@
                 document.getElementById('iconUrl').value = '';
             }
 
-            loadSavedAssets() {
-                this.updateAssetsList();
-            }
+            loadSavedAssets() { this.updateAssetsList(); }
 
             updateAssetsList() {
                 const assets = getAssets();
-                const iconsList = document.getElementById('iconsList');
-                const screenshotsList = document.getElementById('screenshotsList');
-
-                iconsList.innerHTML = assets.icons.length > 0
+                document.getElementById('iconsList').innerHTML = assets.icons.length > 0
                     ? assets.icons.map(icon => `
                         <div class="asset-item">
                             <img src="${icon.data}" alt="${icon.name}" class="asset-icon">
                             <span class="asset-name">${icon.name}</span>
                             <span class="asset-size">${icon.dimensions}</span>
                             <div class="asset-actions">
-                                <button class="btn-icon btn-view" onclick="iconManager.viewAsset('${icon.data}')">👁</button>
-                                <button class="btn-icon btn-remove" onclick="iconManager.removeAsset('icons', 0)">×</button>
+                                <button class="btn btn-ghost btn-icon" onclick="iconManager.viewAsset('${icon.data}')">👁</button>
+                                <button class="btn btn-danger btn-icon" onclick="iconManager.removeAsset('icons', 0)">×</button>
                             </div>
                         </div>
                     `).join('')
-                    : '<p style="color: rgba(255,255,255,0.6);">No icons uploaded yet</p>';
-
-                screenshotsList.innerHTML = assets.screenshots.length > 0
-                    ? assets.screenshots.map((screenshot, index) => `
+                    : '<p class="text-muted" style="padding:16px 0; text-align:center;">No icons uploaded yet</p>';
+                document.getElementById('screenshotsList').innerHTML = assets.screenshots.length > 0
+                    ? assets.screenshots.map((s, i) => `
                         <div class="asset-item">
-                            <img src="${screenshot.data}" alt="${screenshot.name}" class="asset-icon">
-                            <span class="asset-name">${screenshot.name}</span>
-                            <span class="asset-size">${screenshot.dimensions}</span>
+                            <img src="${s.data}" alt="${s.name}" class="asset-icon">
+                            <span class="asset-name">${s.name}</span>
+                            <span class="asset-size">${s.dimensions}</span>
                             <div class="asset-actions">
-                                <button class="btn-icon btn-view" onclick="iconManager.viewAsset('${screenshot.data}')">👁</button>
-                                <button class="btn-icon btn-remove" onclick="iconManager.removeAsset('screenshots', ${index})">×</button>
+                                <button class="btn btn-ghost btn-icon" onclick="iconManager.viewAsset('${s.data}')">👁</button>
+                                <button class="btn btn-danger btn-icon" onclick="iconManager.removeAsset('screenshots', ${i})">×</button>
                             </div>
                         </div>
                     `).join('')
-                    : '<p style="color: rgba(255,255,255,0.6);">No screenshots uploaded yet</p>';
+                    : '<p class="text-muted" style="padding:16px 0; text-align:center;">No screenshots uploaded yet</p>';
             }
 
             removeAsset(type, index) {
@@ -595,38 +345,25 @@
                 this.updateAssetsList();
             }
 
-            viewAsset(dataUrl) {
-                window.open(dataUrl, '_blank');
-            }
+            viewAsset(dataUrl) { window.open(dataUrl, '_blank'); }
 
             showSuccess(message) {
                 const btn = document.getElementById('useIconBtn');
-                const originalText = btn.innerHTML;
+                const ot = btn.innerHTML;
                 btn.innerHTML = '✅ ' + message;
-                btn.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
-                setTimeout(() => {
-                    btn.innerHTML = originalText;
-                    btn.style.background = '';
-                }, 2000);
+                btn.style.background = 'linear-gradient(135deg, #1e8e3e 0%, #28a745 100%)';
+                setTimeout(() => { btn.innerHTML = ot; btn.style.background = ''; }, 2000);
             }
 
-            nextStep() {
-                saveAssets(getAssets());
-                window.location.href = 'screenshots.html';
-            }
+            nextStep() { saveAssets(getAssets()); window.location.href = 'screenshots.html'; }
 
             updateProgress() {
-                document.querySelectorAll('.progress-step').forEach((step, index) => {
-                    if (index <= 2) step.classList.add('completed');
-                    if (index === 2) step.classList.add('active');
-                });
+                document.querySelectorAll('.progress-step').forEach((s, i) => { if (i <= 2) s.classList.add('completed'); if (i === 2) s.classList.add('active'); });
             }
         }
 
         let iconManager;
-        document.addEventListener('DOMContentLoaded', () => {
-            iconManager = new IconManager();
-        });
+        document.addEventListener('DOMContentLoaded', () => { iconManager = new IconManager(); });
     </script>
 </body>
 </html>

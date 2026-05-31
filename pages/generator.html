@@ -25,7 +25,6 @@
             padding: 80px 20px 20px;
         }
 
-        /* Main Container */
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -35,71 +34,8 @@
             align-items: start;
         }
 
-        /* Form Section */
-        .form-section {
-            background: rgba(255,255,255,0.05);
-            padding: 30px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        }
-
-        .form-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 25px;
-            color: #ffffff;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: rgba(255,255,255,0.9);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 16px;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 8px;
-            color: white;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #2b9fd8;
-            background: rgba(255,255,255,0.12);
-        }
-
-        .form-control::placeholder {
-            color: rgba(255,255,255,0.5);
-        }
-
-        select.form-control option {
-            background: #1a1a2e;
-            color: white;
-        }
-
-        /* Services Section */
-        .services-section {
-            margin-top: 30px;
-        }
-
         .service-card {
-            background: rgba(255,255,255,0.03);
-            padding: 20px;
-            border-radius: 12px;
             margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.08);
         }
 
         .service-header {
@@ -114,52 +50,9 @@
             font-weight: 600;
         }
 
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 0.8rem;
-        }
-
-        .btn-outline-secondary {
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.5);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: all 0.3s ease;
-        }
-
-        .btn-outline-secondary:hover {
-            background: rgba(255,255,255,0.1);
-        }
-
-        .btn-outline-danger {
-            background: transparent;
-            border: 1px solid #dc3545;
-            color: #dc3545;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: all 0.3s ease;
-        }
-
-        .btn-outline-danger:hover {
-            background: #dc3545;
-            color: white;
-        }
-
-        /* Ports, Volumes, Environment Sections */
-        .dynamic-section {
-            margin-top: 15px;
-        }
-
-        .dynamic-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
+        .preview-section {
+            position: sticky;
+            top: 100px;
         }
 
         .input-group {
@@ -169,92 +62,38 @@
             align-items: center;
         }
 
-        .input-group-sm {
-            flex: 1;
-        }
-
-        .form-control-sm {
-            padding: 8px 12px;
-            font-size: 0.85rem;
-        }
-
-        /* Preview Section */
-        .preview-section {
-            background: rgba(255,255,255,0.05);
-            padding: 30px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            position: sticky;
-            top: 100px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        }
-
-        .preview-header {
+        .checkbox-group {
             display: flex;
-            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .checkbox-label {
+            display: flex;
             align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .preview-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        .preview-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        /* Progress Indicator */
-        .progress-container {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 8px;
-            z-index: 100;
-        }
-
-        .progress-step {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.3);
-            transition: all 0.3s ease;
-        }
-
-        .progress-step.active {
-            background: #2b9fd8;
-            transform: scale(1.2);
-        }
-
-        .progress-step.completed {
-            background: #28a745;
-        }
-
-        /* Enhanced Preview Section Styles */
-        .warning-box {
-            background: rgba(255, 193, 7, 0.08);
-            border: 1px solid rgba(255, 193, 7, 0.2);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-
-        .warning-text {
-            color: #ffc107;
+            gap: 6px;
+            cursor: pointer;
+            color: #c8d0dc;
             font-size: 0.9rem;
-            line-height: 1.4;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            accent-color: #2b9fd8;
+        }
+
+        .warning-box {
+            background: rgba(240,192,64,0.06);
+            border: 1px solid rgba(240,192,64,0.2);
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 20px;
         }
 
         .editor-toolbar {
-            background: rgba(0,0,0,0.2);
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 15px;
+            background: #1a2438;
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin-bottom: 14px;
         }
 
         .editor-info {
@@ -262,52 +101,72 @@
             justify-content: space-between;
             align-items: center;
             font-size: 0.85rem;
-            color: rgba(255,255,255,0.8);
+            color: #9aa5b5;
         }
 
         .btn-edit {
-            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
-            color: #212529;
-            border: none;
+            background: linear-gradient(135deg, #d4a017 0%, #e8962e 100%);
+            color: #1a1a2e;
             padding: 8px 16px;
-            border-radius: 20px;
+            border-radius: 10px;
             font-size: 0.9rem;
+            font-weight: 500;
+            border: none;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
         }
 
         .btn-edit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #1f7fc4 0%, #2b9fd8 100%);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #2b9fd8 0%, #5fe0ff 100%);
             transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(212,160,23,0.3);
         }
 
-        /* Responsive Design */
+        .preview-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .flex-row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .desc-input {
+            width: 100%;
+            margin-top: 4px;
+            padding: 8px 12px;
+            background: #1a2438;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 6px;
+            color: #e8edf5;
+            font-size: 0.8rem;
+            font-family: inherit;
+        }
+
+        .desc-input:focus {
+            outline: none;
+            border-color: #2b9fd8;
+        }
+
+        .desc-input::placeholder {
+            color: rgba(200,208,220,0.3);
+        }
+
+        .text-muted {
+            color: rgba(200,208,220,0.55);
+            font-size: 0.8rem;
+        }
+
         @media (max-width: 1024px) {
             .container {
                 grid-template-columns: 1fr;
                 gap: 30px;
             }
-
             .preview-section {
                 position: static;
             }
@@ -316,11 +175,6 @@
         @media (max-width: 768px) {
             body {
                 padding: 80px 15px 20px;
-            }
-
-            .form-section,
-            .preview-section {
-                padding: 20px;
             }
         }
     </style>
@@ -346,8 +200,8 @@
             casaos
         </a>
         <div style="display:flex; gap:8px; align-items:center;">
-            <a href="../index.html" class="nav-pill">← Home</a>
-            <a href="icon.html" class="nav-pill nav-pill-primary">Next: Icon →</a>
+            <a href="../index.html" class="btn btn-ghost btn-sm">← Home</a>
+            <a href="icon.html" class="btn btn-primary btn-sm">Next: Icon →</a>
         </div>
     </header>
 
@@ -355,110 +209,118 @@
     <div class="content-well">
         <div class="container">
             <!-- Generator Form -->
-            <div class="form-section">
-                <h2 class="form-title">Multi-App YAML Generator</h2>
+            <div class="panel">
+                <h2 class="panel-title">Multi-App YAML Generator</h2>
 
                 <div id="app">
                     <!-- Network Configuration -->
                     <div class="form-group">
                         <label class="form-label">Network Mode:</label>
-                        <select v-model="multiNetwork" class="form-control">
+                        <select v-model="multiNetwork" class="form-input">
                             <option value="bridge">Bridge</option>
                             <option value="host">Host</option>
                         </select>
                     </div>
 
                     <!-- Services Section -->
-                    <div class="services-section">
-                        <div class="dynamic-header">
-                            <h3>Services</h3>
-                            <button type="button" @click="addMultiService" class="btn btn-sm btn-outline-secondary">+ Add Service</button>
+                    <div class="form-group">
+                        <div class="flex-row">
+                            <span class="form-label" style="margin-bottom:0;">Services</span>
+                            <button type="button" @click="addMultiService" class="btn btn-ghost btn-sm">+ Add Service</button>
                         </div>
 
-                        <div v-for="(service, index) in multiServices" :key="index" class="service-card">
+                        <div v-for="(service, index) in multiServices" :key="index" class="panel-secondary service-card">
                             <div class="service-header">
                                 <h4 class="service-title">Service {{ index + 1 }}: {{ service.appId || 'New Service' }}</h4>
-                                <button v-if="index > 0" type="button" @click="removeMultiService(index)" class="btn btn-sm btn-outline-danger">Remove</button>
+                                <button v-if="index > 0" type="button" @click="removeMultiService(index)" class="btn btn-danger btn-sm">Remove</button>
                             </div>
 
                             <div class="form-group">
                                 <label class="form-label">AppID:</label>
-                                <input v-model="service.appId" class="form-control" placeholder="lowercase-no-spaces" @input="updateAppId" style="border-left: 4px solid #2b9fd8;">
+                                <input v-model="service.appId" class="form-input form-input-accent" placeholder="lowercase-no-spaces" @input="updateAppId">
                             </div>
 
                             <div class="form-group">
                                 <label class="form-label">Docker Image:</label>
-                                <input v-model="service.image" class="form-control" placeholder="namespace/image:tag" style="border-left: 4px solid #2b9fd8;">
+                                <input v-model="service.image" class="form-input form-input-accent" placeholder="namespace/image:tag">
                             </div>
 
                             <div class="form-group">
                                 <label class="form-label">Command (Optional):</label>
-                                <input v-model="service.command" class="form-control" placeholder="Custom command" style="border-left: 4px solid #2b9fd8;">
+                                <input v-model="service.command" class="form-input form-input-accent" placeholder="Custom command">
                             </div>
 
                             <div class="form-group">
                                 <label class="form-label">Memory (MB):</label>
-                                <input v-model="service.reservationsMemory" type="number" class="form-control" placeholder="512" style="border-left: 4px solid #2b9fd8;">
+                                <input v-model="service.reservationsMemory" type="number" class="form-input form-input-accent" placeholder="512">
                             </div>
 
                             <!-- Ports Section -->
-                            <div class="dynamic-section">
-                                <div class="dynamic-header">
-                                    <label class="form-label">Ports:</label>
-                                    <button type="button" @click="addMultiPort(service)" class="btn btn-sm btn-outline-secondary">+</button>
+                            <div class="form-group">
+                                <div class="flex-row">
+                                    <label class="form-label" style="margin-bottom:0;">Ports:</label>
+                                    <button type="button" @click="addMultiPort(service)" class="btn btn-ghost btn-sm">+</button>
                                 </div>
-                                <div v-for="(port, pindex) in service.ports" :key="pindex" class="input-group">
-                                    <input v-model="port.published" type="number" placeholder="Host" class="form-control form-control-sm" style="border-left: 4px solid #2b9fd8;">
-                                    <input v-model="port.target" type="number" placeholder="Container" class="form-control form-control-sm" style="border-left: 4px solid #2b9fd8;">
-                                    <select v-model="port.protocol" class="form-control form-control-sm">
-                                        <option value="tcp">TCP</option>
-                                        <option value="udp">UDP</option>
-                                    </select>
-                                    <button type="button" @click="removeMultiPort(service, pindex)" class="btn btn-sm btn-outline-danger">-</button>
+                                <div v-for="(port, pindex) in service.ports" :key="pindex" class="form-group" style="margin-bottom:12px;">
+                                    <div class="input-group">
+                                        <input v-model="port.published" type="number" placeholder="Host" class="form-input" style="flex:1;">
+                                        <input v-model="port.target" type="number" placeholder="Container" class="form-input" style="flex:1;">
+                                        <select v-model="port.protocol" class="form-input" style="width:auto; min-width:80px;">
+                                            <option value="tcp">TCP</option>
+                                            <option value="udp">UDP</option>
+                                        </select>
+                                        <button type="button" @click="removeMultiPort(service, pindex)" class="btn btn-danger btn-sm">-</button>
+                                    </div>
+                                    <input v-model="port.description" class="desc-input" maxlength="200"
+                                           placeholder="e.g., WebUI HTTP port (describe what this port is for)">
                                 </div>
                             </div>
 
                             <!-- Volumes Section -->
-                            <div class="dynamic-section">
-                                <div class="dynamic-header">
-                                    <label class="form-label">Volumes:</label>
-                                    <button type="button" @click="addMultiVolume(service)" class="btn btn-sm btn-outline-secondary">+</button>
+                            <div class="form-group">
+                                <div class="flex-row">
+                                    <label class="form-label" style="margin-bottom:0;">Volumes:</label>
+                                    <button type="button" @click="addMultiVolume(service)" class="btn btn-ghost btn-sm">+</button>
                                 </div>
-                                <div v-for="(volume, vindex) in service.volumes" :key="vindex" class="input-group">
-                                    <select v-model="volume.type" class="form-control form-control-sm" style="border-left: 4px solid #2b9fd8;">
-                                        <option value="bind">Bind</option>
-                                        <option value="volume">Volume</option>
-                                    </select>
-                                    <input v-model="volume.source" :placeholder="volume.type === 'bind' ? '/DATA/AppData/$AppID/data' : 'volume_name'" class="form-control form-control-sm" style="border-left: 4px solid #2b9fd8;">
-                                    <input v-model="volume.target" placeholder="/container/path" class="form-control form-control-sm" style="border-left: 4px solid #2b9fd8;">
-                                    <button type="button" @click="removeMultiVolume(service, vindex)" class="btn btn-sm btn-outline-danger">-</button>
+                                <div v-for="(volume, vindex) in service.volumes" :key="vindex" class="form-group" style="margin-bottom:12px;">
+                                    <div class="input-group">
+                                        <select v-model="volume.type" class="form-input" style="width:auto; min-width:80px;">
+                                            <option value="bind">Bind</option>
+                                            <option value="volume">Volume</option>
+                                        </select>
+                                        <input v-model="volume.source" :placeholder="volume.type === 'bind' ? '/DATA/AppData/$AppID/config' : 'volume_name'" class="form-input" style="flex:1;">
+                                        <input v-model="volume.target" placeholder="/container/path" class="form-input" style="flex:1;">
+                                        <button type="button" @click="removeMultiVolume(service, vindex)" class="btn btn-danger btn-sm">-</button>
+                                    </div>
+                                    <input v-model="volume.description" class="desc-input" maxlength="200"
+                                           placeholder="e.g., Configuration directory (describe what this volume stores)">
                                 </div>
                             </div>
 
                             <!-- Environment Variables -->
-                            <div class="dynamic-section">
-                                <div class="dynamic-header">
-                                    <label class="form-label">Environment:</label>
-                                    <button type="button" @click="addMultiEnvironment(service)" class="btn btn-sm btn-outline-secondary">+</button>
+                            <div class="form-group">
+                                <div class="flex-row">
+                                    <label class="form-label" style="margin-bottom:0;">Environment:</label>
+                                    <button type="button" @click="addMultiEnvironment(service)" class="btn btn-ghost btn-sm">+</button>
                                 </div>
                                 <div v-for="(env, eindex) in service.environment" :key="eindex" class="input-group">
-                                    <input v-model="env.key" placeholder="Variable" class="form-control form-control-sm">
-                                    <input v-model="env.value" placeholder="Value" class="form-control form-control-sm">
-                                    <button type="button" @click="removeMultiEnvironment(service, eindex)" class="btn btn-sm btn-outline-danger">-</button>
+                                    <input v-model="env.key" placeholder="Variable" class="form-input">
+                                    <input v-model="env.value" placeholder="Value" class="form-input">
+                                    <button type="button" @click="removeMultiEnvironment(service, eindex)" class="btn btn-danger btn-sm">-</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- CasaOS Metadata (First Service Only) -->
-                    <div v-if="multiServices.length > 0" class="form-section">
-                        <h3>CasaOS Metadata</h3>
+                    <div v-if="multiServices.length > 0" class="panel-secondary">
+                        <h3 class="form-label" style="font-size:1.1rem; margin-bottom:16px;">CasaOS Metadata</h3>
 
                         <div class="form-group">
                             <label class="form-label">Supported Architectures:</label>
-                            <div>
-                                <label v-for="arch in ['amd64', 'arm64', 'arm']" :key="arch" class="form-check-label" style="margin-right: 16px; cursor:pointer;">
-                                    <input type="checkbox" :value="arch" v-model="multiServices[0].architectures" class="form-check-input" style="margin-right: 4px;">
+                            <div class="checkbox-group">
+                                <label v-for="arch in ['amd64', 'arm64', 'arm']" :key="arch" class="checkbox-label">
+                                    <input type="checkbox" :value="arch" v-model="multiServices[0].architectures">
                                     {{ arch }}
                                 </label>
                             </div>
@@ -466,12 +328,12 @@
 
                         <div class="form-group">
                             <label class="form-label">📝 Title (Main):</label>
-                            <input v-model="multiServices[0].title.en_US" class="form-control" placeholder="App Display Name" style="border-left: 4px solid #2b9fd8; background: rgba(31, 127, 196, 0.1);">
+                            <input v-model="multiServices[0].title.en_US" class="form-input form-input-accent" placeholder="App Display Name">
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Category:</label>
-                            <select v-model="multiServices[0].category" class="form-control" style="border-left: 4px solid #2b9fd8;">
+                            <select v-model="multiServices[0].category" class="form-input form-input-accent">
                                 <option value="">Select Category</option>
                                 <option value="Analytics">Analytics</option>
                                 <option value="Backup">Backup</option>
@@ -506,22 +368,22 @@
 
                         <div class="form-group">
                             <label class="form-label">Developer:</label>
-                            <input v-model="multiServices[0].developer" class="form-control" placeholder="Software Developer" style="border-left: 4px solid #2b9fd8;">
+                            <input v-model="multiServices[0].developer" class="form-input form-input-accent" placeholder="Software Developer">
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Author:</label>
-                            <input v-model="multiServices[0].author" class="form-control" placeholder="YAML Author"  style="border-left: 4px solid #2b9fd8;">
+                            <input v-model="multiServices[0].author" class="form-input form-input-accent" placeholder="YAML Author">
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Port Map:</label>
-                            <input v-model="multiServices[0].portMap" type="number" class="form-control" placeholder="Main WebUI Port"  style="border-left: 4px solid #2b9fd8;">
+                            <input v-model="multiServices[0].portMap" type="number" class="form-input form-input-accent" placeholder="Main WebUI Port">
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Scheme:</label>
-                            <select v-model="multiServices[0].scheme" class="form-control" style="border-left: 4px solid #2b9fd8;">
+                            <select v-model="multiServices[0].scheme" class="form-input form-input-accent">
                                 <option value="http">HTTP</option>
                                 <option value="https">HTTPS</option>
                             </select>
@@ -529,38 +391,43 @@
 
                         <div class="form-group">
                             <label class="form-label">Index:</label>
-                            <input v-model="multiServices[0].index" class="form-control" value="/" style="border-left: 4px solid #2b9fd8;">
+                            <input v-model="multiServices[0].index" class="form-input form-input-accent" value="/">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Thumbnail URL (optional):</label>
+                            <input v-model="multiServices[0].thumbnail" class="form-input"
+                                   placeholder="https://example.com/thumbnail.png">
+                            <span class="text-muted">Optional larger preview image URL</span>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Tagline:</label>
-                            <input v-model="multiServices[0].tagline.en_US" class="form-control" placeholder="Short description" style="border-left: 4px solid #2b9fd8;">
+                            <input v-model="multiServices[0].tagline.en_US" class="form-input form-input-accent" placeholder="Short description">
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Description:</label>
-                            <textarea v-model="multiServices[0].description.en_US" class="form-control" rows="4" placeholder="Full app description" style="border-left: 4px solid #2b9fd8;"></textarea>
+                            <textarea v-model="multiServices[0].description.en_US" class="form-input form-input-accent" rows="4" placeholder="Full app description"></textarea>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Tips:</label>
-                            <div class="d-flex align-items-center" style="margin-bottom: 10px; display:flex; gap:16px;">
-                                <div class="form-check form-check-inline" style="display:flex; align-items:center; gap:4px;">
-                                    <input v-model="multiServices[0].tips.enable_before_install" :id="'metaTipsBefore'" class="form-check-input" type="checkbox">
-                                    <label class="form-check-label" :for="'metaTipsBefore'" style="cursor:pointer;">before_install</label>
-                                </div>
-                                <div class="form-check form-check-inline" style="display:flex; align-items:center; gap:4px;">
-                                    <input v-model="multiServices[0].tips.enable_custom" :id="'metaTipsCustom'" class="form-check-input" type="checkbox">
-                                    <label class="form-check-label" :for="'metaTipsCustom'" style="cursor:pointer;">custom</label>
-                                </div>
+                            <div class="flex-row">
+                                <label class="checkbox-label">
+                                    <input v-model="multiServices[0].tips.enable_before_install" type="checkbox"> before_install
+                                </label>
+                                <label class="checkbox-label">
+                                    <input v-model="multiServices[0].tips.enable_custom" type="checkbox"> custom
+                                </label>
                             </div>
-                            <div v-if="multiServices[0].tips.enable_before_install">
-                                <label>Before Install (en_US):</label>
-                                <textarea v-model="multiServices[0].tips.before_install.en_US" class="form-control" rows="3" style="font-family: monospace; margin-bottom: 10px;"></textarea>
+                            <div v-if="multiServices[0].tips.enable_before_install" style="margin-top:8px;">
+                                <label class="form-label">Before Install (en_US):</label>
+                                <textarea v-model="multiServices[0].tips.before_install.en_US" class="form-input" rows="3" style="font-family:monospace; margin-bottom:10px;"></textarea>
                             </div>
-                            <div v-if="multiServices[0].tips.enable_custom">
-                                <label>Custom Tips (en_US):</label>
-                                <textarea v-model="multiServices[0].tips.custom.en_US" class="form-control" rows="3" style="font-family: monospace; margin-bottom: 10px;"></textarea>
+                            <div v-if="multiServices[0].tips.enable_custom" style="margin-top:8px;">
+                                <label class="form-label">Custom Tips (en_US):</label>
+                                <textarea v-model="multiServices[0].tips.custom.en_US" class="form-input" rows="3" style="font-family:monospace; margin-bottom:10px;"></textarea>
                             </div>
                         </div>
                     </div>
@@ -568,17 +435,17 @@
             </div>
 
             <!-- YAML Preview -->
-            <div class="preview-section">
-                <div class="preview-header">
-                    <h3 class="preview-title">docker-compose.yml</h3>
+            <div class="panel preview-section">
+                <div class="preview-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+                    <h3 class="panel-title" style="margin-bottom:0;">docker-compose.yml</h3>
                     <div class="preview-actions">
                         <button id="editBtn" class="btn-edit">✏️ Edit</button>
-                        <a href="icon.html" class="btn-primary" style="display:inline-flex; padding:8px 16px;">Next: Icon →</a>
+                        <a href="icon.html" class="btn btn-primary btn-sm">Next: Icon →</a>
                     </div>
                 </div>
 
                 <div class="warning-box">
-                    <div class="warning-text">
+                    <div class="text-warning" style="font-size:0.9rem; line-height:1.4;">
                         <strong>ℹ️ Note:</strong> You don't need icons and screenshots if you're just adding as a custom app in CasaOS Web UI.
                         But if you want a full custom store ready app, you should complete the generator wizard.
                     </div>
@@ -586,13 +453,12 @@
 
                 <div class="editor-toolbar">
                     <div class="editor-info">
-                        <span>YAML Preview - Real-time generation</span>
+                        <span>YAML Preview — Real-time generation</span>
                         <span id="editorStatus">Ready</span>
                     </div>
                 </div>
 
                 <div id="code-editor"></div>
-
             </div>
         </div>
     </div>
@@ -621,7 +487,7 @@
                     command: '',
                     reservationsMemory: '',
                     ports: [],
-                    volumes: [{ type: 'bind', source: '/DATA/AppData/$AppID/config', target: '/config' }],
+                    volumes: [{ type: 'bind', source: '/DATA/AppData/$AppID/config', target: '/config', description: '' }],
                     environment: [],
                     architectures: [],
                     title: { en_US: '' },
@@ -631,6 +497,7 @@
                     portMap: '',
                     scheme: 'http',
                     index: '/',
+                    thumbnail: '',
                     tagline: { en_US: '' },
                     description: { en_US: '' },
                     tips: { enable_before_install: false, enable_custom: false, before_install: { en_US: '' }, custom: { en_US: '' } }
@@ -672,7 +539,7 @@
                         command: '',
                         reservationsMemory: '',
                         ports: [],
-                        volumes: [{ type: 'bind', source: '/DATA/AppData/$AppID/data', target: '/data' }],
+                        volumes: [{ type: 'bind', source: '/DATA/AppData/$AppID/data', target: '/data', description: '' }],
                         environment: [],
                         architectures: [],
                         title: { en_US: '' },
@@ -682,6 +549,7 @@
                         portMap: '',
                         scheme: 'http',
                         index: '/',
+                        thumbnail: '',
                         tagline: { en_US: '' },
                         description: { en_US: '' }
                     });
@@ -692,7 +560,7 @@
                 },
 
                 addMultiPort(service) {
-                    service.ports.push({ target: '', published: '', protocol: 'tcp' });
+                    service.ports.push({ target: '', published: '', protocol: 'tcp', description: '' });
                 },
 
                 removeMultiPort(service, index) {
@@ -700,7 +568,7 @@
                 },
 
                 addMultiVolume(service) {
-                    service.volumes.push({ type: 'bind', source: '/DATA/AppData/$AppID/data', target: '/data' });
+                    service.volumes.push({ type: 'bind', source: '/DATA/AppData/$AppID/data', target: '/data', description: '' });
                 },
 
                 removeMultiVolume(service, index) {
@@ -765,7 +633,7 @@
                     if (this.isEditing) {
                         this.editor.setOption('readOnly', false);
                         editBtn.innerHTML = '💾 Save';
-                        editBtn.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+                        editBtn.style.background = 'linear-gradient(135deg, #1e8e3e 0%, #28a745 100%)';
                         this.updateEditorStatus('Editing');
                     } else {
                         this.editor.setOption('readOnly', true);
