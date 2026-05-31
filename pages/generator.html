@@ -10,6 +10,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- Shared Base Styles -->
+    <link rel="stylesheet" href="../css/base.css">
+
     <!-- External Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
@@ -18,154 +21,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/yaml/yaml.min.js"></script>
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Inter', sans-serif;
-            background: #070b17;
-            min-height: 100vh;
-            color: #ffffff;
             padding: 80px 20px 20px;
-        }
-
-        /* =========================
-           BACKGROUND SYSTEM (from CasOS-Mockup)
-        ========================= */
-        .background {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .bg-left {
-            position: absolute;
-            width: 1200px;
-            height: 1200px;
-            left: -420px;
-            top: -320px;
-            border-radius: 50%;
-            background: radial-gradient(
-                circle at top left,
-                #1f7fc4 0%,
-                #0b2a4f 55%,
-                #070b17 100%
-            );
-        }
-
-        .bg-right {
-            position: absolute;
-            width: 1000px;
-            height: 1000px;
-            right: -420px;
-            top: -240px;
-            border-radius: 50%;
-            background: linear-gradient(
-                180deg,
-                #5fe0ff 0%,
-                #2b9fd8 100%
-            );
-            opacity: 0.95;
-        }
-
-        .bg-bottom {
-            position: absolute;
-            width: 520px;
-            height: 520px;
-            left: -160px;
-            bottom: -260px;
-            border-radius: 50%;
-            background: linear-gradient(
-                180deg,
-                #2fb3ff,
-                #1584d6
-            );
-            opacity: 0.9;
-        }
-
-        /* =========================
-           HEADER (from CasOS-Mockup)
-        ========================= */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            height: 72px;
-            padding: 0 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: linear-gradient(
-                180deg,
-                rgba(7,11,23,0.95),
-                rgba(7,11,23,0.65)
-            );
-            backdrop-filter: blur(2px);
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 22px;
-            font-weight: 500;
-            letter-spacing: 0.2px;
-            text-decoration: none;
-            color: #ffffff;
-        }
-
-        .brand-logo {
-            width: 34px;
-            height: 20px;
-            position: relative;
-        }
-
-        .brand-logo svg {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-
-        .nav-pill {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 6px 14px;
-            border-radius: 10px;
-            background: #2a2f3a;
-            color: #d1d5db;
-            font-size: 14px;
-            text-decoration: none;
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
-            transition: background 0.3s ease;
-        }
-
-        .nav-pill:hover {
-            background: #3a3f4a;
-        }
-
-        .nav-pill-primary {
-            background: linear-gradient(135deg, #1f7fc4 0%, #2b9fd8 100%);
-            color: white;
-            box-shadow: none;
-        }
-
-        .nav-pill-primary:hover {
-            background: linear-gradient(135deg, #2b9fd8 0%, #5fe0ff 100%);
-        }
-
-        /* =========================
-           CONTENT WELL
-        ========================= */
-        .content-well {
-            position: relative;
-            z-index: 5;
         }
 
         /* Main Container */
@@ -350,21 +207,6 @@
             gap: 10px;
         }
 
-        .code-editor {
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
-            padding: 20px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.85rem;
-            line-height: 1.4;
-            color: #ffffff;
-            white-space: pre-wrap;
-            word-break: break-all;
-            max-height: 500px;
-            overflow-y: auto;
-        }
-
         /* Progress Indicator */
         .progress-container {
             position: fixed;
@@ -480,33 +322,20 @@
             .preview-section {
                 padding: 20px;
             }
-
-            .header {
-                padding: 0 16px;
-            }
-
-            .brand {
-                font-size: 18px;
-            }
-
-            .nav-pill {
-                padding: 4px 10px;
-                font-size: 12px;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- Background System (from CasOS-Mockup) -->
+    <!-- Background System -->
     <div class="background">
         <div class="bg-left"></div>
         <div class="bg-right"></div>
         <div class="bg-bottom"></div>
     </div>
 
-    <!-- Header (from CasOS-Mockup) -->
+    <!-- Header -->
     <header class="header">
-        <a href="index.html" class="brand">
+        <a href="../index.html" class="brand">
             <div class="brand-logo">
                 <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="20" cy="32" r="12" fill="#87CEEB" style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));"/>
@@ -517,14 +346,13 @@
             casaos
         </a>
         <div style="display:flex; gap:8px; align-items:center;">
-            <a href="index.html" class="nav-pill">← Home</a>
-            <a href="javascript:void(0)" onclick="document.querySelector('#app').__vue__ && document.querySelector('#app').__vue__.$emit('next-step')" class="nav-pill nav-pill-primary">Next: Icon →</a>
+            <a href="../index.html" class="nav-pill">← Home</a>
+            <a href="icon.html" class="nav-pill nav-pill-primary">Next: Icon →</a>
         </div>
     </header>
 
     <!-- Content Well -->
     <div class="content-well">
-        <!-- Main Content -->
         <div class="container">
             <!-- Generator Form -->
             <div class="form-section">
@@ -553,7 +381,6 @@
                                 <button v-if="index > 0" type="button" @click="removeMultiService(index)" class="btn btn-sm btn-outline-danger">Remove</button>
                             </div>
 
-                            <!-- Basic Service Info -->
                             <div class="form-group">
                                 <label class="form-label">AppID:</label>
                                 <input v-model="service.appId" class="form-control" placeholder="lowercase-no-spaces" @input="updateAppId" style="border-left: 4px solid #2b9fd8;">
@@ -620,8 +447,6 @@
                                     <button type="button" @click="removeMultiEnvironment(service, eindex)" class="btn btn-sm btn-outline-danger">-</button>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
 
@@ -629,7 +454,6 @@
                     <div v-if="multiServices.length > 0" class="form-section">
                         <h3>CasaOS Metadata</h3>
 
-                        <!-- Architectures FIRST OPTION -->
                         <div class="form-group">
                             <label class="form-label">Supported Architectures:</label>
                             <div>
@@ -640,7 +464,6 @@
                             </div>
                         </div>
 
-                        <!-- Main Title Entry with Emoji -->
                         <div class="form-group">
                             <label class="form-label">📝 Title (Main):</label>
                             <input v-model="multiServices[0].title.en_US" class="form-control" placeholder="App Display Name" style="border-left: 4px solid #2b9fd8; background: rgba(31, 127, 196, 0.1);">
@@ -719,7 +542,6 @@
                             <textarea v-model="multiServices[0].description.en_US" class="form-control" rows="4" placeholder="Full app description" style="border-left: 4px solid #2b9fd8;"></textarea>
                         </div>
 
-                        <!-- Tips -->
                         <div class="form-group">
                             <label class="form-label">Tips:</label>
                             <div class="d-flex align-items-center" style="margin-bottom: 10px; display:flex; gap:16px;">
@@ -755,7 +577,6 @@
                     </div>
                 </div>
 
-                <!-- Disclaimer -->
                 <div class="warning-box">
                     <div class="warning-text">
                         <strong>ℹ️ Note:</strong> You don't need icons and screenshots if you're just adding as a custom app in CasaOS Web UI.
@@ -763,7 +584,6 @@
                     </div>
                 </div>
 
-                <!-- CodeMirror Editor -->
                 <div class="editor-toolbar">
                     <div class="editor-info">
                         <span>YAML Preview - Real-time generation</span>
@@ -772,7 +592,6 @@
                 </div>
 
                 <div id="code-editor"></div>
-
 
             </div>
         </div>
@@ -788,7 +607,10 @@
         <div class="progress-step"></div>
     </div>
 
-    <script>
+    <script type="module">
+        import { saveConfig, loadConfig } from '../modules/storage.js';
+        import { generateYamlString } from '../modules/yaml-generator.js';
+
         new Vue({
             el: '#app',
             data: {
@@ -894,89 +716,8 @@
                 },
 
                 generateMultiCompose() {
-                    try {
-                        if (!this.multiServices[0].appId || !this.multiServices[0].image) {
-                            this.multiDockerComposeResult = '# Please fill in AppID and Docker Image to generate YAML...\n# Required fields: AppID, Docker Image';
-                            return;
-                        }
-
-                        const ymlObject = {
-                            name: this.multiServices[0].appId,
-                            services: {},
-                            'x-casaos': {
-                                architectures: this.multiServices[0].architectures,
-                                title: {
-                                    en_US: this.multiServices[0].title.en_US || ''
-                                },
-                                store_app_id: this.multiServices[0].appId,
-                                main: this.multiServices[0].appId,
-                                category: this.multiServices[0].category,
-                                developer: this.multiServices[0].developer,
-                                author: this.multiServices[0].author,
-                                port_map: this.multiServices[0].portMap,
-                                scheme: this.multiServices[0].scheme,
-                                icon: `https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/${this.multiServices[0].appId}.png`,
-                                thumbnail: "",
-                                screenshot_link: [],
-                                tagline: {
-                                    en_US: this.multiServices[0].tagline.en_US || ''
-                                },
-                                description: {
-                                    en_US: this.multiServices[0].description.en_US + "\n"
-                                },
-                                tips: {
-                                    before_install: this.multiServices[0].tips.enable_before_install ? {
-                                        en_US: this.multiServices[0].tips.before_install.en_US + "\n"
-                                    } : null,
-                                    custom: this.multiServices[0].tips.enable_custom ? {
-                                        en_US: this.multiServices[0].tips.custom.en_US + "\n"
-                                    } : null,
-                                },
-                                index: this.multiServices[0].index,
-                            }
-                        };
-
-                        this.multiServices.forEach(service => {
-                            if (!service.appId || !service.image) return;
-
-                            ymlObject.services[service.appId] = {
-                                container_name: service.appId,
-                                image: service.image,
-                                command: service.command || undefined,
-                                deploy: {
-                                    resources: {
-                                        reservations: {
-                                            memory: service.reservationsMemory ? `${service.reservationsMemory}M` : '0M',
-                                        },
-                                    },
-                                },
-                                restart: 'unless-stopped',
-                                environment: service.environment.filter(env => env.key && env.value).reduce((acc, env) => {
-                                    acc[env.key] = env.value;
-                                    return acc;
-                                }, {}),
-                                volumes: service.volumes.filter(volume => volume.type && volume.source && volume.target).map(volume => ({
-                                    type: volume.type,
-                                    source: volume.source,
-                                    target: volume.target,
-                                })),
-                                ports: service.ports.filter(port => port.target && port.published && port.protocol).map(port => ({
-                                    target: parseInt(port.target),
-                                    published: port.published,
-                                    protocol: port.protocol,
-                                })),
-                                network_mode: this.multiNetwork
-                            };
-                        });
-
-                        let yamlStr = jsyaml.dump(ymlObject, { lineWidth: -1 });
-                        yamlStr = yamlStr.replace(/\|[\+\-]/g, '|');
-                        this.multiDockerComposeResult = yamlStr;
-
-                    } catch (error) {
-                        console.error('Error generating YAML:', error);
-                        this.multiDockerComposeResult = '# Error generating YAML: ' + error.message;
-                    }
+                    const assets = { icons: [], screenshots: [] };
+                    this.multiDockerComposeResult = generateYamlString(this.multiServices, this.multiNetwork, assets);
                 },
 
                 nextStep() {
@@ -986,9 +727,7 @@
                         yaml: this.multiDockerComposeResult,
                         timestamp: Date.now()
                     };
-                    localStorage.setItem('casaos-generator-config', JSON.stringify(configToSave));
-                    console.log('Saved config to localStorage:', configToSave);
-                    console.log('YAML content:', this.multiDockerComposeResult.substring(0, 200) + '...');
+                    saveConfig(configToSave);
                     window.location.href = 'icon.html';
                 },
 
@@ -1051,16 +790,11 @@
             },
 
             mounted() {
-                const saved = localStorage.getItem('casaos-generator-config');
+                const saved = loadConfig();
                 if (saved) {
-                    try {
-                        const config = JSON.parse(saved);
-                        this.multiNetwork = config.network;
-                        this.multiServices = config.services;
-                        this.multiDockerComposeResult = config.yaml;
-                    } catch (e) {
-                        console.log('No valid saved configuration found');
-                    }
+                    this.multiNetwork = saved.network;
+                    this.multiServices = saved.services;
+                    this.multiDockerComposeResult = saved.yaml;
                 }
 
                 this.$nextTick(() => {

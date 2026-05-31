@@ -10,158 +10,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    <!-- Shared Base Styles -->
+    <link rel="stylesheet" href="../css/base.css">
 
+    <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background: #070b17;
-            min-height: 100vh;
-            color: #ffffff;
             padding: 80px 20px 20px;
         }
 
-        /* =========================
-           BACKGROUND SYSTEM (from CasOS-Mockup)
-        ========================= */
-        .background {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .bg-left {
-            position: absolute;
-            width: 1200px;
-            height: 1200px;
-            left: -420px;
-            top: -320px;
-            border-radius: 50%;
-            background: radial-gradient(
-                circle at top left,
-                #1f7fc4 0%,
-                #0b2a4f 55%,
-                #070b17 100%
-            );
-        }
-
-        .bg-right {
-            position: absolute;
-            width: 1000px;
-            height: 1000px;
-            right: -420px;
-            top: -240px;
-            border-radius: 50%;
-            background: linear-gradient(
-                180deg,
-                #5fe0ff 0%,
-                #2b9fd8 100%
-            );
-            opacity: 0.95;
-        }
-
-        .bg-bottom {
-            position: absolute;
-            width: 520px;
-            height: 520px;
-            left: -160px;
-            bottom: -260px;
-            border-radius: 50%;
-            background: linear-gradient(
-                180deg,
-                #2fb3ff,
-                #1584d6
-            );
-            opacity: 0.9;
-        }
-
-        /* =========================
-           HEADER (from CasOS-Mockup)
-        ========================= */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            height: 72px;
-            padding: 0 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: linear-gradient(
-                180deg,
-                rgba(7,11,23,0.95),
-                rgba(7,11,23,0.65)
-            );
-            backdrop-filter: blur(2px);
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 22px;
-            font-weight: 500;
-            letter-spacing: 0.2px;
-            text-decoration: none;
-            color: #ffffff;
-        }
-
-        .brand-logo {
-            width: 34px;
-            height: 20px;
-            position: relative;
-        }
-
-        .brand-logo svg {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-
-        .nav-pill {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 6px 14px;
-            border-radius: 10px;
-            background: #2a2f3a;
-            color: #d1d5db;
-            font-size: 14px;
-            text-decoration: none;
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
-            transition: background 0.3s ease;
-        }
-
-        .nav-pill:hover {
-            background: #3a3f4a;
-        }
-
-        .nav-pill-primary {
-            background: linear-gradient(135deg, #1f7fc4 0%, #2b9fd8 100%);
-            color: white;
-            box-shadow: none;
-        }
-
-        .nav-pill-primary:hover {
-            background: linear-gradient(135deg, #2b9fd8 0%, #5fe0ff 100%);
-        }
-
-        /* =========================
-           CONTENT WELL
-        ========================= */
-        .content-well {
-            position: relative;
-            z-index: 5;
-        }
-
-        /* Main Container */
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -171,7 +27,6 @@
             align-items: start;
         }
 
-        /* Screenshots Management Section */
         .screenshots-section {
             background: rgba(255,255,255,0.05);
             padding: 30px;
@@ -207,25 +62,10 @@
             background: rgba(31, 127, 196, 0.1);
         }
 
-        .upload-icon {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            opacity: 0.7;
-        }
-
-        .upload-text {
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-        }
-
-        .upload-hint {
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.7);
-        }
-
-        .file-input {
-            display: none;
-        }
+        .upload-icon { font-size: 2.5rem; margin-bottom: 10px; opacity: 0.7; }
+        .upload-text { font-size: 1.1rem; margin-bottom: 5px; }
+        .upload-hint { font-size: 0.9rem; color: rgba(255,255,255,0.7); }
+        .file-input { display: none; }
 
         .url-input-container {
             display: flex;
@@ -249,11 +89,8 @@
             background: rgba(255,255,255,0.12);
         }
 
-        .url-input::placeholder {
-            color: rgba(255,255,255,0.5);
-        }
+        .url-input::placeholder { color: rgba(255,255,255,0.5); }
 
-        /* Screenshots Grid */
         .screenshots-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -315,9 +152,7 @@
             transition: opacity 0.3s ease;
         }
 
-        .screenshot-item:hover .screenshot-actions {
-            opacity: 1;
-        }
+        .screenshot-item:hover .screenshot-actions { opacity: 1; }
 
         .btn-icon {
             width: 24px;
@@ -331,20 +166,10 @@
             font-size: 10px;
         }
 
-        .btn-view {
-            background: #2b9fd8;
-            color: white;
-        }
+        .btn-view { background: #2b9fd8; color: white; }
+        .btn-remove { background: #dc3545; color: white; }
 
-        .btn-remove {
-            background: #dc3545;
-            color: white;
-        }
-
-        /* Form Group */
-        .form-group {
-            margin-bottom: 20px;
-        }
+        .form-group { margin-bottom: 20px; }
 
         .form-label {
             display: block;
@@ -353,28 +178,6 @@
             color: rgba(255,255,255,0.9);
         }
 
-        .form-control {
-            width: 100%;
-            padding: 12px 16px;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 8px;
-            color: white;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #2b9fd8;
-            background: rgba(255,255,255,0.12);
-        }
-
-        .form-control::placeholder {
-            color: rgba(255,255,255,0.5);
-        }
-
-        /* Preview Section */
         .preview-section {
             background: rgba(255,255,255,0.05);
             padding: 30px;
@@ -393,15 +196,8 @@
             margin-bottom: 20px;
         }
 
-        .preview-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        .preview-actions {
-            display: flex;
-            gap: 10px;
-        }
+        .preview-title { font-size: 1.5rem; font-weight: 600; }
+        .preview-actions { display: flex; gap: 10px; }
 
         .asset-preview {
             background: rgba(0,0,0,0.3);
@@ -421,24 +217,10 @@
             margin-bottom: 8px;
         }
 
-        .asset-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 4px;
-            object-fit: cover;
-        }
+        .asset-icon { width: 24px; height: 24px; border-radius: 4px; object-fit: cover; }
+        .asset-name { flex: 1; font-size: 0.9rem; }
+        .asset-size { font-size: 0.8rem; color: rgba(255,255,255,0.7); }
 
-        .asset-name {
-            flex: 1;
-            font-size: 0.9rem;
-        }
-
-        .asset-size {
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.7);
-        }
-
-        /* Progress Indicator */
         .progress-container {
             position: fixed;
             bottom: 20px;
@@ -457,14 +239,8 @@
             transition: all 0.3s ease;
         }
 
-        .progress-step.active {
-            background: #2b9fd8;
-            transform: scale(1.2);
-        }
-
-        .progress-step.completed {
-            background: #28a745;
-        }
+        .progress-step.active { background: #2b9fd8; transform: scale(1.2); }
+        .progress-step.completed { background: #28a745; }
 
         .btn-primary {
             background: linear-gradient(135deg, #1f7fc4 0%, #2b9fd8 100%);
@@ -486,58 +262,29 @@
             transform: translateY(-1px);
         }
 
-        /* Responsive Design */
         @media (max-width: 1024px) {
-            .container {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-
-            .preview-section {
-                position: static;
-            }
+            .container { grid-template-columns: 1fr; gap: 30px; }
+            .preview-section { position: static; }
         }
 
         @media (max-width: 768px) {
-            body {
-                padding: 80px 15px 20px;
-            }
-
-            .screenshots-section,
-            .preview-section {
-                padding: 20px;
-            }
-
-            .header {
-                padding: 0 16px;
-            }
-
-            .brand {
-                font-size: 18px;
-            }
-
-            .nav-pill {
-                padding: 4px 10px;
-                font-size: 12px;
-            }
-
-            .screenshots-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            }
+            body { padding: 80px 15px 20px; }
+            .screenshots-section, .preview-section { padding: 20px; }
+            .screenshots-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
         }
     </style>
 </head>
 <body>
-    <!-- Background System (from CasOS-Mockup) -->
+    <!-- Background System -->
     <div class="background">
         <div class="bg-left"></div>
         <div class="bg-right"></div>
         <div class="bg-bottom"></div>
     </div>
 
-    <!-- Header (from CasOS-Mockup) -->
+    <!-- Header -->
     <header class="header">
-        <a href="index.html" class="brand">
+        <a href="../index.html" class="brand">
             <div class="brand-logo">
                 <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="20" cy="32" r="12" fill="#87CEEB" style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));"/>
@@ -555,15 +302,11 @@
 
     <!-- Content Well -->
     <div class="content-well">
-        <!-- Main Content -->
         <div class="container">
-            <!-- Screenshots Management -->
             <div class="screenshots-section">
                 <h2 class="section-title">Screenshot Management</h2>
 
-                <!-- Upload Container -->
                 <div class="upload-container">
-                    <!-- File Upload Area -->
                     <div id="uploadArea" class="upload-area">
                         <div class="upload-icon">📸</div>
                         <div class="upload-text">Upload Screenshots</div>
@@ -571,7 +314,6 @@
                         <input type="file" id="screenshotFile" class="file-input" accept="image/*" multiple>
                     </div>
 
-                    <!-- URL Input -->
                     <div class="form-group">
                         <label class="form-label">Or add screenshot URL:</label>
                         <div class="url-input-container">
@@ -581,12 +323,8 @@
                     </div>
                 </div>
 
-                <!-- Screenshots Grid -->
-                <div class="screenshots-grid" id="screenshotsGrid">
-                    <!-- Screenshots will be added here dynamically -->
-                </div>
+                <div class="screenshots-grid" id="screenshotsGrid"></div>
 
-                <!-- Instructions -->
                 <div class="form-group">
                     <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; margin-top: 20px; border: 1px solid rgba(255,255,255,0.08);">
                         <h4 style="margin-bottom: 10px; color: #2b9fd8;">💡 Tips:</h4>
@@ -600,7 +338,6 @@
                 </div>
             </div>
 
-            <!-- Assets Preview -->
             <div class="preview-section">
                 <div class="preview-header">
                     <h3 class="preview-title">Project Assets</h3>
@@ -612,16 +349,11 @@
                 <div id="assetsList">
                     <div class="asset-preview">
                         <h4>Icons</h4>
-                        <div id="iconsList">
-                            <p style="color: rgba(255,255,255,0.6);">No icons uploaded yet</p>
-                        </div>
+                        <div id="iconsList"><p style="color: rgba(255,255,255,0.6);">No icons uploaded yet</p></div>
                     </div>
-
                     <div class="asset-preview">
                         <h4>Screenshots</h4>
-                        <div id="screenshotsList">
-                            <p style="color: rgba(255,255,255,0.6);">No screenshots uploaded yet</p>
-                        </div>
+                        <div id="screenshotsList"><p style="color: rgba(255,255,255,0.6);">No screenshots uploaded yet</p></div>
                     </div>
                 </div>
             </div>
@@ -638,11 +370,13 @@
         <div class="progress-step"></div>
     </div>
 
-    <script>
+    <script type="module">
+        import { getAssets, saveAssets } from '../modules/storage.js';
+        import { processScreenshot } from '../modules/asset-processor.js';
+
         class ScreenshotManager {
             constructor() {
                 this.screenshots = [];
-                this.currentPreview = null;
                 this.init();
             }
 
@@ -659,19 +393,14 @@
                 const addUrlBtn = document.getElementById('addUrlBtn');
                 const nextBtn = document.getElementById('nextBtn');
 
-                // Upload area click
-                uploadArea.addEventListener('click', () => {
-                    fileInput.click();
-                });
+                uploadArea.addEventListener('click', () => fileInput.click());
 
-                // File input change
                 fileInput.addEventListener('change', (e) => {
                     if (e.target.files.length > 0) {
                         this.handleMultipleFileUpload(Array.from(e.target.files));
                     }
                 });
 
-                // Drag and drop
                 uploadArea.addEventListener('dragover', (e) => {
                     e.preventDefault();
                     uploadArea.classList.add('dragover');
@@ -689,7 +418,6 @@
                     }
                 });
 
-                // URL input
                 addUrlBtn.addEventListener('click', () => {
                     const url = screenshotUrl.value.trim();
                     if (url) {
@@ -698,23 +426,16 @@
                     }
                 });
 
-                // Enter key in URL input
                 screenshotUrl.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        addUrlBtn.click();
-                    }
+                    if (e.key === 'Enter') addUrlBtn.click();
                 });
 
-                nextBtn.addEventListener('click', () => {
-                    this.nextStep();
-                });
+                nextBtn.addEventListener('click', () => this.nextStep());
             }
 
             handleMultipleFileUpload(files) {
                 files.forEach(file => {
-                    if (file.type.startsWith('image/')) {
-                        this.processScreenshot(file);
-                    }
+                    if (file.type.startsWith('image/')) this.processScreenshot(file);
                 });
             }
 
@@ -728,65 +449,29 @@
                         blob.name = url.split('/').pop() || 'screenshot.png';
                         this.processScreenshot(blob);
                     })
-                    .catch(error => {
-                        alert('Failed to load image from URL: ' + error.message);
-                    });
+                    .catch(error => alert('Failed to load image from URL: ' + error.message));
             }
 
             processScreenshot(file) {
                 const reader = new FileReader();
-                reader.onload = (e) => {
-                    this.convertToPNG(e.target.result, file.name || file.name);
-                };
+                reader.onload = (e) => this.convertToPNG(e.target.result, file.name || 'screenshot.png');
                 reader.readAsDataURL(file);
             }
 
-            convertToPNG(dataUrl, fileName) {
-                const img = new Image();
-                img.onload = () => {
-                    // Create canvas for PNG conversion
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-
-                    // Set dimensions (maintain aspect ratio, max 1280px width)
-                    const maxWidth = 1280;
-                    const maxHeight = 720;
-                    let { width, height } = img;
-
-                    if (width > maxWidth) {
-                        height = (height * maxWidth) / width;
-                        width = maxWidth;
-                    }
-
-                    if (height > maxHeight) {
-                        width = (width * maxHeight) / height;
-                        height = maxHeight;
-                    }
-
-                    canvas.width = width;
-                    canvas.height = height;
-
-                    // Draw and convert to PNG
-                    ctx.drawImage(img, 0, 0, width, height);
-
-                    canvas.toBlob((blob) => {
-                        const pngReader = new FileReader();
-                        pngReader.onload = (e) => {
-                            const screenshot = {
-                                name: fileName,
-                                data: e.target.result,
-                                size: blob.size,
-                                dimensions: `${width}x${height}`,
-                                type: 'screenshot',
-                                originalName: fileName
-                            };
-
-                            this.addScreenshot(screenshot);
-                        };
-                        pngReader.readAsDataURL(blob);
-                    }, 'image/png');
-                };
-                img.src = dataUrl;
+            async convertToPNG(dataUrl, fileName) {
+                try {
+                    const result = await processScreenshot(dataUrl);
+                    const screenshot = {
+                        name: fileName,
+                        data: result.dataUrl,
+                        size: result.size,
+                        dimensions: result.dimensions,
+                        type: 'screenshot',
+                    };
+                    this.addScreenshot(screenshot);
+                } catch (err) {
+                    alert('Failed to process screenshot: ' + err.message);
+                }
             }
 
             addScreenshot(screenshot) {
@@ -805,18 +490,13 @@
             }
 
             saveScreenshots() {
-                const assets = this.getAssets();
+                const assets = getAssets();
                 assets.screenshots = this.screenshots;
-                localStorage.setItem('casaos-generator-assets', JSON.stringify(assets));
-            }
-
-            getAssets() {
-                const saved = localStorage.getItem('casaos-generator-assets');
-                return saved ? JSON.parse(saved) : { icons: [], screenshots: [] };
+                saveAssets(assets);
             }
 
             loadSavedAssets() {
-                const assets = this.getAssets();
+                const assets = getAssets();
                 this.screenshots = assets.screenshots || [];
                 this.updateScreenshotsGrid();
                 this.updateAssetsList();
@@ -824,68 +504,54 @@
 
             updateScreenshotsGrid() {
                 const grid = document.getElementById('screenshotsGrid');
-
                 if (this.screenshots.length === 0) {
                     grid.innerHTML = '<p style="color: rgba(255,255,255,0.6); text-align: center; padding: 20px;">No screenshots uploaded yet</p>';
                     return;
                 }
-
-                grid.innerHTML = this.screenshots.map((screenshot, index) => `
+                grid.innerHTML = this.screenshots.map((s, i) => `
                     <div class="screenshot-item">
-                        <img src="${screenshot.data}" alt="${screenshot.name}" class="screenshot-image">
+                        <img src="${s.data}" alt="${s.name}" class="screenshot-image">
                         <div class="screenshot-overlay">
-                            <div class="screenshot-name">${screenshot.name}</div>
-                            <div class="screenshot-size">${screenshot.dimensions}</div>
+                            <div class="screenshot-name">${s.name}</div>
+                            <div class="screenshot-size">${s.dimensions}</div>
                         </div>
                         <div class="screenshot-actions">
-                            <button class="btn-icon btn-view" onclick="screenshotManager.viewScreenshot(${index})" title="View">👁</button>
-                            <button class="btn-icon btn-remove" onclick="screenshotManager.removeScreenshot(${index})" title="Remove">×</button>
+                            <button class="btn-icon btn-view" onclick="screenshotManager.viewScreenshot(${i})" title="View">👁</button>
+                            <button class="btn-icon btn-remove" onclick="screenshotManager.removeScreenshot(${i})" title="Remove">×</button>
                         </div>
                     </div>
                 `).join('');
             }
 
             updateAssetsList() {
-                const assets = this.getAssets();
-                const iconsList = document.getElementById('iconsList');
-                const screenshotsList = document.getElementById('screenshotsList');
-
-                // Update icons list
-                if (assets.icons.length > 0) {
-                    iconsList.innerHTML = assets.icons.map(icon => `
+                const assets = getAssets();
+                document.getElementById('iconsList').innerHTML = assets.icons.length > 0
+                    ? assets.icons.map(icon => `
                         <div class="asset-item">
                             <img src="${icon.data}" alt="${icon.name}" class="asset-icon">
                             <span class="asset-name">${icon.name}</span>
                             <span class="asset-size">${icon.dimensions}</span>
                         </div>
-                    `).join('');
-                } else {
-                    iconsList.innerHTML = '<p style="color: rgba(255,255,255,0.6);">No icons uploaded yet</p>';
-                }
+                    `).join('')
+                    : '<p style="color: rgba(255,255,255,0.6);">No icons uploaded yet</p>';
 
-                // Update screenshots list
-                if (assets.screenshots.length > 0) {
-                    screenshotsList.innerHTML = assets.screenshots.map(screenshot => `
+                document.getElementById('screenshotsList').innerHTML = assets.screenshots.length > 0
+                    ? assets.screenshots.map(s => `
                         <div class="asset-item">
-                            <img src="${screenshot.data}" alt="${screenshot.name}" class="asset-icon">
-                            <span class="asset-name">${screenshot.name}</span>
-                            <span class="asset-size">${screenshot.dimensions}</span>
+                            <img src="${s.data}" alt="${s.name}" class="asset-icon">
+                            <span class="asset-name">${s.name}</span>
+                            <span class="asset-size">${s.dimensions}</span>
                         </div>
-                    `).join('');
-                } else {
-                    screenshotsList.innerHTML = '<p style="color: rgba(255,255,255,0.6);">No screenshots uploaded yet</p>';
-                }
+                    `).join('')
+                    : '<p style="color: rgba(255,255,255,0.6);">No screenshots uploaded yet</p>';
             }
 
             viewScreenshot(index) {
-                const screenshot = this.screenshots[index];
-                if (screenshot) {
-                    window.open(screenshot.data, '_blank');
-                }
+                const s = this.screenshots[index];
+                if (s) window.open(s.data, '_blank');
             }
 
             showSuccess(message) {
-                // Show brief success feedback
                 const hint = document.querySelector('.upload-hint');
                 const originalText = hint.textContent;
                 hint.textContent = '✅ ' + message;
@@ -897,21 +563,18 @@
             }
 
             nextStep() {
-                // Save current state
                 this.saveScreenshots();
                 window.location.href = 'preview.html';
             }
 
             updateProgress() {
-                const progressSteps = document.querySelectorAll('.progress-step');
-                progressSteps.forEach((step, index) => {
+                document.querySelectorAll('.progress-step').forEach((step, index) => {
                     if (index <= 3) step.classList.add('completed');
                     if (index === 3) step.classList.add('active');
                 });
             }
         }
 
-        // Initialize when DOM is loaded
         let screenshotManager;
         document.addEventListener('DOMContentLoaded', () => {
             screenshotManager = new ScreenshotManager();
