@@ -28,8 +28,13 @@
         body { line-height: 1.6; }
 
         .privacy-banner {
+            position: fixed;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
             background: linear-gradient(135deg, rgba(31, 127, 196, 0.15) 0%, rgba(95, 224, 255, 0.1) 100%);
-            border-bottom: 1px solid rgba(95, 224, 255, 0.3);
+            border: 1px solid rgba(95, 224, 255, 0.3);
+            border-radius: 12px;
             padding: 16px 20px;
             display: flex;
             justify-content: space-between;
@@ -38,6 +43,9 @@
             color: rgba(255,255,255,0.9);
             font-size: 0.95rem;
             animation: slideDown 0.3s ease;
+            z-index: 1000;
+            max-width: 600px;
+            width: 90%;
         }
 
         .privacy-banner.hidden {
@@ -47,22 +55,20 @@
         @keyframes slideDown {
             from {
                 opacity: 0;
-                transform: translateY(-10px);
+                transform: translateX(-50%) translateY(-10px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateX(-50%) translateY(0);
             }
         }
 
         .privacy-banner-content {
-            flex: 1;
-            max-width: 1200px;
-            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 20px;
+            width: 100%;
         }
 
         .privacy-banner-text {
@@ -90,6 +96,7 @@
             transition: all 0.2s ease;
             font-size: 0.9rem;
             white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .privacy-banner-close:hover {
@@ -261,9 +268,13 @@
             .hero-subtitle { font-size: 1.2rem; }
             .features-container { grid-template-columns: 1fr; gap: 30px; }
             .nav-dots { right: 20px; }
+            .privacy-banner {
+                flex-direction: column;
+                align-items: center;
+            }
             .privacy-banner-content {
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: center;
             }
             .privacy-banner-close {
                 width: 100%;
