@@ -27,6 +27,76 @@
     <style>
         body { line-height: 1.6; }
 
+        .privacy-banner {
+            background: linear-gradient(135deg, rgba(31, 127, 196, 0.15) 0%, rgba(95, 224, 255, 0.1) 100%);
+            border-bottom: 1px solid rgba(95, 224, 255, 0.3);
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            color: rgba(255,255,255,0.9);
+            font-size: 0.95rem;
+            animation: slideDown 0.3s ease;
+        }
+
+        .privacy-banner.hidden {
+            display: none;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .privacy-banner-content {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .privacy-banner-text {
+            flex: 1;
+        }
+
+        .privacy-banner a {
+            color: #5fe0ff;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .privacy-banner a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        .privacy-banner-close {
+            background: none;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.7);
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .privacy-banner-close:hover {
+            border-color: rgba(255,255,255,0.7);
+            color: rgba(255,255,255,1);
+        }
+
         .hero {
             min-height: 80vh;
             display: flex;
@@ -191,6 +261,13 @@
             .hero-subtitle { font-size: 1.2rem; }
             .features-container { grid-template-columns: 1fr; gap: 30px; }
             .nav-dots { right: 20px; }
+            .privacy-banner-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .privacy-banner-close {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -218,6 +295,16 @@
             <a href="pages/generator.html" class="nav-pill nav-pill-primary">Start Generating →</a>
         </div>
     </header>
+
+    <!-- Privacy Banner -->
+    <div id="privacyBanner" class="privacy-banner">
+        <div class="privacy-banner-content">
+            <div class="privacy-banner-text">
+                🔒 <strong>This tool is 100% client-side.</strong> Your data never leaves your device. <a href="docs/privacy-notice.html" target="_blank">Learn more →</a>
+            </div>
+            <button class="privacy-banner-close" onclick="dismissPrivacyBanner()">Dismiss</button>
+        </div>
+    </div>
 
     <!-- Content Well -->
     <div class="content-well">
@@ -288,13 +375,33 @@
             <p>Made With ❤️ and 🧠 By: acidgreenservers</p>
             <div class="footer-links">
                 <a href="https://github.com/acidgreenservers" class="footer-link" target="_blank">GitHub</a>
-                <a href="http://192.168.1.6:3232/XxZIOIMIBIExX/Homelab-Appstore/src/branch/main/Tools/YAML-Generator.html" class="footer-link" target="_blank">Contribute</a>
+                <a href="https://github.com/acidgreenservers/CasaOS-Generator" class="footer-link" target="_blank">Contribute</a>
+                <a href="docs/privacy-notice.html" class="footer-link" target="_blank">Privacy</a>
                 <a href="pages/generator.html" class="footer-link">Get Started</a>
             </div>
         </div>
     </footer>
 
     <script>
+        // Privacy banner dismissal (localStorage)
+        function initPrivacyBanner() {
+            const banner = document.getElementById('privacyBanner');
+            const isDismissed = localStorage.getItem('privacyBannerDismissed');
+            
+            if (isDismissed === 'true') {
+                banner.classList.add('hidden');
+            }
+        }
+
+        function dismissPrivacyBanner() {
+            const banner = document.getElementById('privacyBanner');
+            localStorage.setItem('privacyBannerDismissed', 'true');
+            banner.classList.add('hidden');
+        }
+
+        // Initialize banner on page load
+        document.addEventListener('DOMContentLoaded', initPrivacyBanner);
+
         // Smooth scrolling for features
         const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
 
