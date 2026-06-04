@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Notice - CasaOS Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/base.css">
+    <style>
+        body { line-height: 1.8; }
+        .container { max-width: 900px; margin: 0 auto; padding: 60px 20px; }
+        h1 { font-size: 2.5rem; margin-bottom: 0.5rem; background: linear-gradient(135deg, #ffffff 0%, #5fe0ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .last-updated { color: rgba(255,255,255,0.6); font-size: 0.95rem; margin-bottom: 40px; }
+        section { margin-bottom: 40px; }
+        h2 { font-size: 1.5rem; margin-top: 40px; margin-bottom: 15px; color: #5fe0ff; }
+        p, li { color: rgba(255,255,255,0.9); font-size: 1.05rem; margin-bottom: 15px; }
+        ul { margin-left: 30px; }
+        li { margin-bottom: 12px; }
+        .highlight { background: rgba(95, 224, 255, 0.1); padding: 20px; border-left: 4px solid #5fe0ff; border-radius: 4px; margin: 20px 0; }
+        .back-link { display: inline-block; margin-top: 30px; color: #2b9fd8; text-decoration: none; transition: color 0.3s ease; }
+        .back-link:hover { color: #5fe0ff; }
+        code { background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <div class="bg-left"></div>
+        <div class="bg-right"></div>
+        <div class="bg-bottom"></div>
+    </div>
+
+    <div class="container">
+        <h1>Privacy Notice</h1>
+        <p class="last-updated">Last updated: June 4, 2026</p>
+
+        <section>
+            <h2>What This Tool Does (And Doesn't Do)</h2>
+            <p>
+                CasaOS Generator is a <strong>100% client-side application</strong>. It runs entirely in your browser. 
+                No data you enter into this tool is sent to any server, stored on our infrastructure, or shared with third parties.
+            </p>
+            <div class="highlight">
+                <strong>🔒 Bottom line:</strong> Your configurations stay on your device. Period.
+            </div>
+        </section>
+
+        <section>
+            <h2>How Your Data Is Handled</h2>
+            <ul>
+                <li><strong>Configuration input:</strong> All YAML configs you create remain in your browser's memory during your session.</li>
+                <li><strong>Downloads:</strong> When you download a ZIP package, the file is generated client-side and sent directly to your device—it never touches our servers.</li>
+                <li><strong>Session persistence:</strong> Your current work is stored in your browser's <code>localStorage</code>—this allows you to return to the tool and find your work, but it's stored locally on your device only.</li>
+                <li><strong>Dismissal state:</strong> When you dismiss notifications on this site, that preference is also saved to your <code>localStorage</code> so you won't see the same notification repeatedly.</li>
+                <li><strong>Clearing data:</strong> Clearing your browser cache or <code>localStorage</code> will remove all stored work. This tool does not sync across devices.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Third-Party Dependencies</h2>
+            <p>
+                This tool loads libraries from external CDNs to function. For complete transparency:
+            </p>
+            <ul>
+                <li><strong>js-yaml</strong> (jsdelivr CDN) — Parses and generates YAML</li>
+                <li><strong>CodeMirror</strong> (cdnjs CDN) — Provides the code editor interface</li>
+                <li><strong>jszip</strong> (jsdelivr CDN) — Generates ZIP packages client-side</li>
+                <li><strong>Google Fonts</strong> — Loads the Inter typeface</li>
+            </ul>
+            <p>
+                These are <strong>functional dependencies only</strong>—they don't collect data about you or your configurations. 
+                You can inspect the network tab in your browser's developer tools to verify this.
+            </p>
+        </section>
+
+        <section>
+            <h2>No Tracking, Analytics, or Telemetry</h2>
+            <p>
+                This tool does <strong>not</strong>:
+            </p>
+            <ul>
+                <li>Track your activity or behavior</li>
+                <li>Send usage analytics anywhere</li>
+                <li>Use cookies for tracking (only for functional localStorage)</li>
+                <li>Profile you or build user dossiers</li>
+                <li>Collect telemetry data</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Open Source & Auditable</h2>
+            <p>
+                This tool is <strong>open source</strong>. The complete source code is available on GitHub at 
+                <a href="https://github.com/acidgreenservers/CasaOS-Generator" target="_blank">acidgreenservers/CasaOS-Generator</a>. 
+                You can review every line of code to verify these claims. You're encouraged to audit it, fork it, or deploy your own instance.
+            </p>
+        </section>
+
+        <section>
+            <h2>Hosting & Availability</h2>
+            <p>
+                This tool is hosted on GitHub Pages, which means:
+            </p>
+            <ul>
+                <li>Your browser downloads the application code and runs it locally</li>
+                <li>GitHub Pages does not store your configurations or data</li>
+                <li>GitHub's general privacy policy applies to the hosting infrastructure (see <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement" target="_blank">GitHub Privacy Statement</a>)</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Your Responsibility</h2>
+            <p>
+                Since this tool generates configurations that may contain sensitive data (database credentials, API keys, secrets, etc.):
+            </p>
+            <ul>
+                <li><strong>Be mindful of what you enter.</strong> Treat generated configs like you would any sensitive configuration file.</li>
+                <li><strong>Don't commit secrets to public repositories.</strong> If you export configs with credentials, keep them private.</li>
+                <li><strong>Clear your browser cache</strong> if you're using a shared device.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Questions or Concerns?</h2>
+            <p>
+                If you have questions about this privacy notice, or if you find a security concern, please open an issue on GitHub:
+                <a href="https://github.com/acidgreenservers/CasaOS-Generator/issues" target="_blank">acidgreenservers/CasaOS-Generator/issues</a>
+            </p>
+        </section>
+
+        <a href="../index.html" class="back-link">← Back to Generator</a>
+    </div>
+</body>
+</html>
