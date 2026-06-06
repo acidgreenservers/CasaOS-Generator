@@ -4,48 +4,82 @@ Welcome to the **CasaOS Generator** documentation hub. This wiki is the semantic
 
 ---
 
-## 🧭 Core Navigation
+## 📚 Documentation Map
 
+Start with **Getting Started**, then follow the learning path that matches your needs:
+
+### **1. Onboarding**
 ### **[Getting Started](./Getting-Started)**
 New to CasaOS Generator? Start here.
 - Installation & setup (static hosting)
 - Your first app configuration
 - Understanding YAML structure basics
 
-### **[User Guide](./User-Guide)**
-How to use the generator effectively.
-- **Step-by-step workflow** — From basic config to export
-- **Field reference** — Every input field explained
-- **Live preview** — How real-time YAML generation works
-- **ZIP export** — Packaging and deployment
+---
 
-### **[Architecture & Design](./Architecture-Design)**
-How the system is built and why.
-- **Client-side philosophy** — Why nothing leaves your device
-- **Module structure** — Code organization and patterns
-- **Data flow** — How configurations become YAML
-- **Design system** — UI/UX decisions and patterns
+### **2. Core Knowledge**
+### **[CasaOS Concepts](./CasaOS-Concepts)**
+Understand the foundational ideas that shape YAML configurations.
+- File storage model and `/DATA/` directory structure
+- Two-level metadata architecture (`x-casaos` layers)
+- Network modes (bridge vs. host) and why they matter
+- Validation model and the four corners of consistency
+- Memory reservations, language codes, and multi-service apps
 
-### **[Contributing](./Contributing)**
-Help shape the future of CasaOS Generator.
-- Development guidelines (see `AGENTS.md`)
-- Architecture decision process
-- How to propose features or fixes
-- Security and privacy considerations
+---
 
-### **[FAQ & Troubleshooting](./FAQ-Troubleshooting)**
-Common questions and solutions.
-- Browser compatibility
-- Export issues
-- YAML validation errors
-- CasaOS app deployment
+### **3. Reference**
+### **[Ultimate Guide](./Ultimate-Guide)**
+Complete field-by-field reference for every YAML field.
+- YAML structure specification
+- Root, service, and root-level x-casaos fields
+- Multi-service app patterns
+- Validation rules & common errors
+- Best practices and four common architectural patterns
 
-### **[Privacy & Security](./Privacy-Security)**
-Your data, your device, your control.
-- Privacy commitment (read full notice in `docs/privacy-notice.html`)
-- How localStorage works
-- No tracking, no cookies, no collection
-- Code is auditable—open source means transparent
+---
+
+### **4. Advanced Architecture**
+### **[Advanced Patterns](./Advanced-Patterns)**
+Sophisticated setups for complex applications.
+- Custom networks (multi-service communication)
+- Health checks (automated reliability)
+- Resource limits (memory and CPU caps)
+- Logging configuration (manage output)
+- Linux capabilities (fine-grained permissions)
+- Device mounts (GPU and hardware access)
+- Startup order control with dependencies
+- Migration patterns (Docker run → CasaOS)
+
+---
+
+### **5. Diagnostics**
+### **[Troubleshooting & Advanced Setups](./Troubleshooting-Advanced-Setups)**
+Diagnose problems, understand failures, and learn migration strategies.
+- Troubleshooting flowchart
+- 5 major issue categories with diagnostic checklists
+- Common validation errors & fixes
+- Store-specific considerations (official vs. third-party vs. personal)
+- Pre-deployment testing checklist
+
+---
+
+## 🧭 How to Use This Wiki
+
+**I just want to generate my first app:**
+→ Start with [Getting Started](./Getting-Started), then reference [CasaOS Concepts](./CasaOS-Concepts)
+
+**I need to look up a specific field:**
+→ Use [Ultimate Guide](./Ultimate-Guide) (search by field name)
+
+**I'm building something complex:**
+→ Read [CasaOS Concepts](./CasaOS-Concepts), then explore [Advanced Patterns](./Advanced-Patterns)
+
+**Something isn't working:**
+→ Check [Troubleshooting & Advanced Setups](./Troubleshooting-Advanced-Setups) for diagnostics
+
+**I'm migrating from Docker:**
+→ See the migration patterns in [Advanced Patterns](./Advanced-Patterns)
 
 ---
 
@@ -70,13 +104,6 @@ Your data, your device, your control.
 | `AGENTS.md` | Development role & contribution guidelines |
 | `PRIVACY.md` | Full privacy policy |
 | `LICENSE` | MIT License |
-
----
-
-## 🚀 Recent Additions
-
-- See the [ROADMAP](./ROADMAP) for upcoming features
-- Check [Contributing](./Contributing) for open issues and how to help
 
 ---
 
