@@ -5,7 +5,7 @@
 
 **CasaOS Generator** is a professional, 100% client-side utility designed to help you create standards-compliant YAML configurations for custom CasaOS appstores with ease.
 
-![CasaOS Generator Preview](assets/preview.png) *(Note: Add a preview image to assets/ if available)*
+![Landing](public/screenshots/landing-1.png)
 
 ## ✨ Features
 
