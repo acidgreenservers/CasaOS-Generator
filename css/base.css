@@ -400,3 +400,139 @@ textarea.form-input {
         padding: 20px;
     }
 }
+
+/* =========================
+   PRIVACY BANNER & SWITCHES
+========================= */
+.privacy-banner {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    right: 24px;
+    background: #0f1524;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 20px 24px;
+    z-index: 2000;
+    display: none;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.privacy-banner-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.privacy-banner-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.privacy-banner-text {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.5;
+}
+
+.privacy-banner-text a {
+    color: #5fe0ff;
+    text-decoration: none;
+}
+
+.privacy-banner-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.privacy-options {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.privacy-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: #e8edf5;
+}
+
+/* Switch styling */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 36px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: rgba(255,255,255,0.1);
+    transition: .3s;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 2px;
+    bottom: 2px;
+    background-color: #ffffff;
+    transition: .3s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #1f7fc4;
+}
+
+input:checked + .slider:before {
+    transform: translateX(16px);
+}
+
+input:disabled + .slider {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .privacy-banner {
+        bottom: 16px;
+        left: 16px;
+        right: 16px;
+        padding: 16px;
+    }
+    .privacy-banner-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .privacy-options {
+        justify-content: space-between;
+    }
+}
