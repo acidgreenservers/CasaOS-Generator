@@ -218,6 +218,10 @@
         import { getAssets, saveAssets } from '../modules/storage.js';
         import { processImageToPng } from '../modules/asset-processor.js';
         import { formatFileSize } from '../modules/ui-utils.js';
+        import { initPrivacyBanner } from '../modules/privacy-banner.js';
+
+        // Initialize privacy banner
+        document.addEventListener('DOMContentLoaded', () => initPrivacyBanner('../'));
 
         class IconManager {
             constructor() {

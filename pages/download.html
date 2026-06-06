@@ -549,7 +549,12 @@
         <div class="progress-step completed"></div>
     </div>
 
-    <script>
+    <script type="module">
+        import { initPrivacyBanner } from '../modules/privacy-banner.js';
+
+        // Initialize privacy banner
+        document.addEventListener('DOMContentLoaded', () => initPrivacyBanner('../'));
+
         class DownloadManager {
             constructor() {
                 this.config = null;

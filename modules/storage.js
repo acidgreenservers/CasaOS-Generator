@@ -8,26 +8,41 @@
 
 const CONFIG_KEY = 'casaos-generator-config';
 const ASSETS_KEY = 'casaos-generator-assets';
+const PERSISTENCE_KEY = 'persistenceAllowed';
 
 /**
- * Save generator configuration to localStorage.
+ * Check if the user has allowed localStorage persistence.
+ * @returns {boolean}
+ */
+export function isPersistenceAllowed() {
+    return localStorage.getItem(PERSISTENCE_KEY) === 'true';
+}
+
+/**
+ * Save generator configuration to storage.
  * @param {Object} config - { network, services, yaml, timestamp }
  */
 export function saveConfig(config) {
     try {
-        localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+        if (isPersistenceAllowed()) {
+            localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+        } else {
+            sessionStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+        }
     } catch (e) {
         console.error('Failed to save config:', e);
     }
 }
 
 /**
- * Load generator configuration from localStorage.
+ * Load generator configuration from storage.
  * @returns {Object|null} The saved config, or null if none exists.
  */
 export function loadConfig() {
     try {
-        const saved = localStorage.getItem(CONFIG_KEY);
+        const saved = isPersistenceAllowed()
+            ? localStorage.getItem(CONFIG_KEY)
+            : sessionStorage.getItem(CONFIG_KEY);
         return saved ? JSON.parse(saved) : null;
     } catch (e) {
         console.error('Failed to load config:', e);
@@ -36,11 +51,12 @@ export function loadConfig() {
 }
 
 /**
- * Clear generator configuration from localStorage.
+ * Clear generator configuration from storage.
  */
 export function clearConfig() {
     try {
         localStorage.removeItem(CONFIG_KEY);
+        sessionStorage.removeItem(CONFIG_KEY);
     } catch (e) {
         console.error('Failed to clear config:', e);
     }
@@ -52,7 +68,9 @@ export function clearConfig() {
  */
 export function getAssets() {
     try {
-        const saved = localStorage.getItem(ASSETS_KEY);
+        const saved = isPersistenceAllowed()
+            ? localStorage.getItem(ASSETS_KEY)
+            : sessionStorage.getItem(ASSETS_KEY);
         return saved ? JSON.parse(saved) : { icons: [], screenshots: [] };
     } catch (e) {
         console.error('Failed to get assets:', e);
@@ -61,24 +79,30 @@ export function getAssets() {
 }
 
 /**
- * Save the assets object to localStorage.
+ * Save the assets object to storage.
  * @param {{ icons: Array, screenshots: Array }} assets
  */
 export function saveAssets(assets) {
     try {
-        localStorage.setItem(ASSETS_KEY, JSON.stringify(assets));
+        if (isPersistenceAllowed()) {
+            localStorage.setItem(ASSETS_KEY, JSON.stringify(assets));
+        } else {
+            sessionStorage.setItem(ASSETS_KEY, JSON.stringify(assets));
+        }
     } catch (e) {
         console.error('Failed to save assets:', e);
     }
 }
 
 /**
- * Clear all generator data from localStorage.
+ * Clear all generator data from storage.
  */
 export function clearAll() {
     try {
         localStorage.removeItem(CONFIG_KEY);
         localStorage.removeItem(ASSETS_KEY);
+        sessionStorage.removeItem(CONFIG_KEY);
+        sessionStorage.removeItem(ASSETS_KEY);
     } catch (e) {
         console.error('Failed to clear all:', e);
     }
