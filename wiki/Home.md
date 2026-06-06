@@ -9,7 +9,7 @@ Welcome to the **CasaOS Generator** documentation hub. This wiki is the semantic
 Start with **Getting Started**, then follow the learning path that matches your needs:
 
 ### **1. Onboarding**
-### **[Getting Started](./Getting-Started)**
+### **[Getting Started](Getting-Started)**
 New to CasaOS Generator? Start here.
 - Installation & setup (static hosting)
 - Your first app configuration
@@ -18,7 +18,7 @@ New to CasaOS Generator? Start here.
 ---
 
 ### **2. Core Knowledge**
-### **[CasaOS Concepts](./CasaOS-Concepts)**
+### **[CasaOS Concepts](CasaOS-Concepts)**
 Understand the foundational ideas that shape YAML configurations.
 - File storage model and `/DATA/` directory structure
 - Two-level metadata architecture (`x-casaos` layers)
@@ -29,7 +29,7 @@ Understand the foundational ideas that shape YAML configurations.
 ---
 
 ### **3. Reference**
-### **[Ultimate Guide](./Ultimate-Guide)**
+### **[Ultimate Guide](Ultimate-Guide)**
 Complete field-by-field reference for every YAML field.
 - YAML structure specification
 - Root, service, and root-level x-casaos fields
@@ -40,7 +40,7 @@ Complete field-by-field reference for every YAML field.
 ---
 
 ### **4. Advanced Architecture**
-### **[Advanced Patterns](./Advanced-Patterns)**
+### **[Advanced Patterns](Advanced-Patterns)**
 Sophisticated setups for complex applications.
 - Custom networks (multi-service communication)
 - Health checks (automated reliability)
@@ -54,7 +54,7 @@ Sophisticated setups for complex applications.
 ---
 
 ### **5. Diagnostics**
-### **[Troubleshooting & Advanced Setups](./Troubleshooting-Advanced-Setups)**
+### **[Troubleshooting & Advanced Setups](Troubleshooting-Advanced-Setups)**
 Diagnose problems, understand failures, and learn migration strategies.
 - Troubleshooting flowchart
 - 5 major issue categories with diagnostic checklists
@@ -67,19 +67,19 @@ Diagnose problems, understand failures, and learn migration strategies.
 ## 🧭 How to Use This Wiki
 
 **I just want to generate my first app:**
-→ Start with [Getting Started](./Getting-Started), then reference [CasaOS Concepts](./CasaOS-Concepts)
+→ Start with [Getting Started](Getting-Started), then reference [CasaOS Concepts](CasaOS-Concepts)
 
 **I need to look up a specific field:**
-→ Use [Ultimate Guide](./Ultimate-Guide) (search by field name)
+→ Use [Ultimate Guide](Ultimate-Guide) (search by field name)
 
 **I'm building something complex:**
-→ Read [CasaOS Concepts](./CasaOS-Concepts), then explore [Advanced Patterns](./Advanced-Patterns)
+→ Read [CasaOS Concepts](CasaOS-Concepts), then explore [Advanced Patterns](Advanced-Patterns)
 
 **Something isn't working:**
-→ Check [Troubleshooting & Advanced Setups](./Troubleshooting-Advanced-Setups) for diagnostics
+→ Check [Troubleshooting & Advanced Setups](Troubleshooting-Advanced-Setups) for diagnostics
 
 **I'm migrating from Docker:**
-→ See the migration patterns in [Advanced Patterns](./Advanced-Patterns)
+→ See the migration patterns in [Advanced Patterns](Advanced-Patterns)
 
 ---
 
