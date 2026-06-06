@@ -40,8 +40,9 @@ export function saveConfig(config) {
  */
 export function loadConfig() {
     try {
-        const saved = isPersistenceAllowed()
-            ? localStorage.getItem(CONFIG_KEY)
+        const persistenceSet = localStorage.getItem(PERSISTENCE_KEY) !== null;
+        const saved = (!persistenceSet || isPersistenceAllowed())
+            ? (localStorage.getItem(CONFIG_KEY) || sessionStorage.getItem(CONFIG_KEY))
             : sessionStorage.getItem(CONFIG_KEY);
         return saved ? JSON.parse(saved) : null;
     } catch (e) {
@@ -68,8 +69,9 @@ export function clearConfig() {
  */
 export function getAssets() {
     try {
-        const saved = isPersistenceAllowed()
-            ? localStorage.getItem(ASSETS_KEY)
+        const persistenceSet = localStorage.getItem(PERSISTENCE_KEY) !== null;
+        const saved = (!persistenceSet || isPersistenceAllowed())
+            ? (localStorage.getItem(ASSETS_KEY) || sessionStorage.getItem(ASSETS_KEY))
             : sessionStorage.getItem(ASSETS_KEY);
         return saved ? JSON.parse(saved) : { icons: [], screenshots: [] };
     } catch (e) {
