@@ -230,33 +230,19 @@
         </div>
     </header>
 
-    <!-- Privacy Banner -->
+    <!-- Privacy Notification -->
     <div id="privacyBanner" class="privacy-banner">
         <div class="privacy-banner-content">
-            <div class="privacy-banner-title">🛡️ Privacy & Cookies</div>
+            <div class="privacy-banner-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px; color: #5fe0ff;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Privacy Notice
+            </div>
             <div class="privacy-banner-text">
-                This tool is 100% client-side. Your data never leaves your device. We use local storage for functional purposes only.
-                <a href="docs/privacy-notice.html">Learn more about our privacy policy.</a>
+                This tool is 100% client-side. Your data never leaves your device. We use local storage for functional purposes only. <a href="docs/privacy-notice.html">Learn more.</a>
             </div>
         </div>
         <div class="privacy-banner-actions">
-            <div class="privacy-options">
-                <div class="privacy-option">
-                    <span>Essential</span>
-                    <label class="switch">
-                        <input type="checkbox" checked disabled>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div class="privacy-option">
-                    <span>Functional</span>
-                    <label class="switch">
-                        <input type="checkbox" id="functionalToggle">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-            </div>
-            <button class="btn btn-primary" onclick="dismissPrivacyBanner()" style="flex: 1;">Accept & Close</button>
+            <button onclick="dismissPrivacyBanner()" class="btn btn-primary" style="width: 100%;">Got It</button>
         </div>
     </div>
 
@@ -340,34 +326,23 @@
         function initPrivacyBanner() {
             const banner = document.getElementById('privacyBanner');
             const isDismissed = localStorage.getItem('privacyBannerDismissed');
-            const functionalEnabled = localStorage.getItem('functionalPrivacyEnabled');
-            const toggle = document.getElementById('functionalToggle');
             
             if (isDismissed === 'true') {
                 banner.style.display = 'none';
             } else {
                 banner.style.display = 'flex';
             }
-
-            if (functionalEnabled === 'true' && toggle) {
-                toggle.checked = true;
-            }
         }
 
         function dismissPrivacyBanner() {
             const banner = document.getElementById('privacyBanner');
-            const toggle = document.getElementById('functionalToggle');
-
-            localStorage.setItem('privacyBannerDismissed', 'true');
-            if (toggle) {
-                localStorage.setItem('functionalPrivacyEnabled', toggle.checked ? 'true' : 'false');
-            }
 
             banner.style.opacity = '0';
-            banner.style.transform = 'translateY(20px)';
+            banner.style.transform = 'translate(-50%, 20px)';
             setTimeout(() => {
                 banner.style.display = 'none';
-            }, 400);
+                localStorage.setItem('privacyBannerDismissed', 'true');
+            }, 300);
         }
 
         // Initialize banner on page load
