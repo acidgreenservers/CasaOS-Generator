@@ -5,8 +5,6 @@
 
 **CasaOS Generator** is a professional, 100% client-side utility designed to help you create standards-compliant YAML configurations for custom CasaOS appstores with ease.
 
-![Landing](public/screenshots/landing-1.png)
-
 ## ✨ Features
 
 - **100% Client-Side**: Your data never leaves your device. All generation and processing happen in your browser.
@@ -37,6 +35,31 @@ Since this is a static client-side application, there is no installation require
    Simply open the `index.html` file in any modern web browser.
 3. **Start Generating**:
    Follow the on-screen steps to build your CasaOS app configuration.
+
+## 📸 Screenshots
+
+<details>
+<summary><strong>View Gallery</strong> — Click to expand and see the application in action</summary>
+
+### Landing Page
+![Landing Page 1](public/screenshots/landing-1.png)
+![Landing Page 2](public/screenshots/landing-2.png)
+
+### Generator Steps
+**Step 1 - Basic Configuration**
+![Step 1 Part 1](public/screenshots/step-1-1.png)
+![Step 1 Part 2](public/screenshots/step-1-2.png)
+
+**Step 2 - Volumes & Ports**
+![Step 2](public/screenshots/step-2.png)
+
+**Step 3 - Advanced Options**
+![Step 3](public/screenshots/step-3.png)
+
+**Step 4 - Review & Export**
+![Step 4](public/screenshots/step-4.png)
+
+</details>
 
 ## 📂 Project Structure
 
