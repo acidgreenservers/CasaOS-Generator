@@ -8,119 +8,47 @@
 
 ## Priority Order (Highest First)
 
-| # | Gap | Effort | Impact |
-|---|-----|--------|--------|
-| 1 | Service-level `x-casaos` blocks missing | Medium | **Critical** — YAML is incomplete without it |
-| 2 | Port/volume description UI fields missing | Medium | Blocks #1 (needs input for descriptions) |
-| 3 | `depends_on` for multi-service apps | Small | Important for multi-service correctness |
-| 4 | Empty tips produce `null` clutter in YAML | Trivial | Clean output |
-| 5 | Client-side validation missing | Medium | Prevents errors before generation |
-| 6 | `thumbnail` field hardcoded to `""` | Small | Per spec compliance |
-| 7 | Custom network definitions unsupported | Small | Advanced YAML feature |
-| 8 | Advanced Docker features (healthcheck, cap_add, devices, logging, limits) | Medium | Power-user features |
-| 9 | Saved Applications & Application Store Export | High | **Feature** — App lifecycle management, persistence, full-store export |
+| # | Gap | Effort | Impact | Status |
+|---|-----|--------|--------|--------|
+| 1 | Service-level `x-casaos` blocks missing | Medium | **Critical** — YAML is incomplete without it | ✅ Done |
+| 2 | Port/volume description UI fields missing | Medium | Blocks #1 (needs input for descriptions) | ✅ Done |
+| 3 | `depends_on` for multi-service apps | Small | Important for multi-service correctness | ❌ Pending |
+| 4 | Empty tips produce `null` clutter in YAML | Trivial | Clean output | ✅ Done |
+| 5 | Client-side validation missing | Medium | Prevents errors before generation | ❌ Pending |
+| 6 | `thumbnail` field hardcoded to `""` | Small | Per spec compliance | ✅ Done |
+| 7 | Custom network definitions unsupported | Small | Advanced YAML feature | ❌ Pending |
+| 8 | Advanced Docker features (healthcheck, cap_add, devices, logging, limits) | Medium | Power-user features | ❌ Pending |
+| 9 | Saved Applications & Application Store Export | High | **Feature** — App lifecycle management, persistence, full-store export | 🔶 Partial |
+| 10 | Docker Run/Compose Importer | Medium | **New workflow paradigm** — bi-directional tooling, migration automation | ❌ Pending |
+
+---
+
+## Execution Order (Dependency-Aware)
+
+The tasks should be implemented in this order to respect dependency chains:
+
+1. **Task 7** — Custom Network Definitions (needed by Importer to populate network configs)
+2. **Task 8** — Advanced Docker Features (needed by Importer to populate healthcheck, devices, cap_add, logging, limits)
+3. **Task 3** — `depends_on` (simple, no dependencies)
+4. **Task 5** — Client-Side Validation (independent, valuable before Importer to validate imported data)
+5. **Task 10** — Docker Run/Compose Importer (builds on Tasks 7, 8, 5 — new bi-directional workflow)
+6. **Task 9** — Saved Applications & Application Store Export (separate feature track, can be parallel)
 
 ---
 
 ## Task 1 — Service-Level `x-casaos` Blocks
 
-**Gap:** The YAML generator emits ports and volumes at the service level, but never emits the accompanying `x-casaos` block that describes them. The CasaOS spec requires this for the UI to show meaningful port/volume descriptions.
+**Status: ✅ Done**
 
-**What needs to change:**
-
-### 1a. Data model (`pages/generator.html` — Vue `data`)
-
-Each port and volume object needs a `description` field:
-
-```js
-// Ports currently: { target: '', published: '', protocol: 'tcp' }
-// Need to become:  { target: '', published: '', protocol: 'tcp', description: '' }
-
-// Volumes currently: { type: 'bind', source: '', target: '' }
-// Need to become:    { type: 'bind', source: '', target: '', description: '' }
-```
-
-Update the default empty objects in `addMultiPort()`, `addMultiVolume()`, and the initial `multiServices[0]` data.
-
-### 1b. UI inputs (`pages/generator.html` — Vue template)
-
-Add a `<input>` or `<textarea>` for description in each port and volume row:
-
-```
-[Ports section — currently: target | published | protocol | remove]
-[Add: description input below or inline]
-
-[Volumes section — currently: type | source | target | remove]
-[Add: description input below or inline]
-```
-
-### 1c. Generator logic (`modules/yaml-generator.js`)
-
-In the service rendering loop (around line 56-90), add an `x-casaos` block under each service:
-
-```js
-serviceObj['x-casaos'] = {
-    ports: service.ports
-        .filter(p => p.target && p.published && p.protocol)
-        .map(p => ({
-            container: String(p.target),
-            description: { en_us: p.description || `Port ${p.target}` }
-        })),
-    volumes: service.volumes
-        .filter(v => v.type && v.source && v.target)
-        .map(v => ({
-            container: v.target,
-            description: { en_us: v.description || `Volume at ${v.target}` }
-        }))
-};
-```
-
-**Fallback:** If `description` is empty, use `"Port {target}"` or `"Volume {target}"`.
-
-**Success criteria:**
-
-- Generated YAML includes `x-casaos` block under each service
-- Each port entry has `container` (string) and `description.en_us` (string)
-- Each volume entry has `container` and `description.en_us`
-- Empty descriptions get a sensible fallback
-- Multi-service apps each get their own independent `x-casaos` block
+The YAML generator emits `x-casaos` blocks under each service with port/volume descriptions. Implemented in `modules/yaml-generator.js` (lines 99-108) and `pages/generator.html` (description inputs).
 
 ---
 
 ## Task 2 — Port & Volume Description UI Fields
 
-**Gap:** The generator has no text fields for users to describe what each port or volume does.
+**Status: ✅ Done**
 
-**What needs to change:**
-
-### 2a. Port row UI (`pages/generator.html`)
-
-After the existing port inputs (target, published, protocol), add:
-
-```html
-<input v-model="port.description" class="form-input"
-       placeholder="e.g., WebUI HTTP port" style="width:100%; margin-top:4px;">
-```
-
-### 2b. Volume row UI
-
-After the existing volume inputs (type, source, target), add:
-
-```html
-<input v-model="volume.description" class="form-input"
-       placeholder="e.g., Configuration directory" style="width:100%; margin-top:4px;">
-```
-
-### 2c. Max length
-
-Enforce 200 chars on these fields (add `maxlength="200"`).
-
-**Success criteria:**
-
-- Each port row has a "Description" text field
-- Each volume row has a "Description" text field
-- Input is saved into the port/volume data object
-- 200-char max enforced client-side
+Each port and volume row has a description input with 200-char max length. Implemented in `pages/generator.html` (lines 279-281, 300-302).
 
 ---
 
@@ -128,7 +56,7 @@ Enforce 200 chars on these fields (add `maxlength="200"`).
 
 **Gap:** When a user creates multiple services (e.g., app + database), there's no way to express that the app depends on the database starting first.
 
-**What needs to change:**
+**Effort:** Small | **Status:** ❌ Pending
 
 ### 3a. Data model (`pages/generator.html` — Vue `data`)
 
@@ -176,34 +104,9 @@ if (service.depends_on && service.depends_on.length) {
 
 ## Task 4 — Clean Null Tips from YAML Output
 
-**Gap:** When tips are disabled, the YAML still contains `tips: { before_install: null, custom: null }`.
+**Status: ✅ Done**
 
-**What needs to change:**
-
-### 4a. Generator logic (`modules/yaml-generator.js` — around line 40-47)
-
-Replace the current unconditional tips block with conditional emission:
-
-```js
-// Build tips only if at least one tip is enabled and has content
-const tips = {};
-if (firstService.tips?.enable_before_install && firstService.tips.before_install?.en_US) {
-    tips.before_install = { en_us: firstService.tips.before_install.en_US + '\n' };
-}
-if (firstService.tips?.enable_custom && firstService.tips.custom?.en_US) {
-    tips.custom = { en_us: firstService.tips.custom.en_US + '\n' };
-}
-if (Object.keys(tips).length > 0) {
-    ymlObject['x-casaos'].tips = tips;
-}
-```
-
-**Success criteria:**
-
-- Tips disabled → no `tips` key in YAML at all
-- One tip enabled → only that tip field appears
-- Both enabled → both appear
-- No `null` values anywhere in YAML output
+Tips are conditionally emitted — disabled tips produce no `tips` key in YAML. Implemented in `modules/yaml-generator.js` (lines 23-29, 49-52).
 
 ---
 
@@ -211,7 +114,7 @@ if (Object.keys(tips).length > 0) {
 
 **Gap:** No validation runs before the YAML is generated. The guide specifies required fields, format rules, and cross-field consistency checks.
 
-**What needs to change:**
+**Effort:** Medium | **Status:** ❌ Pending
 
 ### 5a. Create `modules/validation.js`
 
@@ -232,12 +135,12 @@ export function validateConfig(config) {
         if (!s.appId) errors.push({ field: `service[${i}].appId`, message: 'AppID is required' });
         else if (!/^[a-z0-9-]+$/.test(s.appId))
             errors.push({ field: `service[${i}].appId`, message: 'AppID must be lowercase with hyphens only' });
-        
+
         // Image required
         if (!s.image) errors.push({ field: `service[${i}].image`, message: 'Docker image is required' });
         else if (!s.image.includes('/'))
             errors.push({ field: `service[${i}].image`, message: 'Image should include namespace (e.g., namespace/image:tag)' });
-        
+
         // Port checks if bridge mode
         if (network === 'bridge') {
             s.ports.forEach((p, pi) => {
@@ -245,11 +148,11 @@ export function validateConfig(config) {
                     errors.push({ field: `service[${i}].ports[${pi}].target`, message: 'Port target must be 1-65535' });
             });
         }
-        
+
         // Memory format
         if (s.reservationsMemory && !/^\d+$/.test(s.reservationsMemory))
             errors.push({ field: `service[${i}].reservationsMemory`, message: 'Memory must be a number' });
-        
+
         // Required root metadata (first service only)
         if (i === 0) {
             if (!s.title?.en_US) errors.push({ field: 'title', message: 'Title is required' });
@@ -288,54 +191,17 @@ Add a `hasErrors` computed property that disables the "Next" button when validat
 
 ## Task 6 — Thumbnail URL Field
 
-**Gap:** The `thumbnail` field is hardcoded to `""`. The spec says it's optional but should be a URL.
+**Status: ✅ Done**
 
-**What needs to change:**
-
-### 6a. UI input (`pages/generator.html` — CasaOS Metadata section)
-
-Add a text input:
-
-```html
-<div class="form-group">
-    <label class="form-label">Thumbnail URL (optional):</label>
-    <input v-model="multiServices[0].thumbnail" class="form-input"
-           placeholder="https://example.com/thumbnail.png">
-    <small class="text-muted">Optional larger preview image URL</small>
-</div>
-```
-
-### 6b. Data model
-
-Add `thumbnail: ''` to the default service object in Vue data.
-
-### 6c. Generator logic (`modules/yaml-generator.js`)
-
-Replace:
-
-```js
-thumbnail: '',
-```
-
-With:
-
-```js
-thumbnail: firstService.thumbnail || '',
-```
-
-**Success criteria:**
-
-- Text input appears in CasaOS Metadata section
-- URL value is passed through to YAML output
-- Empty = `""` in YAML (unchanged behavior)
+Text input in CasaOS Metadata section, URL passed through to YAML output. Implemented in `pages/generator.html` (lines 403-407) and `modules/yaml-generator.js` (line 42).
 
 ---
 
 ## Task 7 — Custom Network Definitions
 
-**Gap:** The guide shows `networks: {}` at the root level for multi-service apps. Currently not supported.
+**Gap:** The guide shows `networks: {}` at the root level for multi-service apps. Currently not supported. With this implemented, the Docker Importer (Task 10) will be able to populate network configs when importing compose files.
 
-**What needs to change:**
+**Effort:** Small | **Status:** ❌ Pending
 
 ### 7a. Data model (`pages/generator.html`)
 
@@ -400,6 +266,10 @@ if (service.networks && service.networks.length) {
 }
 ```
 
+### 7e. Importer dependency note
+
+The Docker Importer (Task 10) will use the same `customNetworks` YAML field to inject parsed network definitions from imported `docker-compose.yml` files, so this must be implemented first.
+
 **Success criteria:**
 
 - Custom networks textarea accepts YAML
@@ -411,9 +281,9 @@ if (service.networks && service.networks.length) {
 
 ## Task 8 — Advanced Docker Features
 
-**Gap:** `healthcheck`, `cap_add`, `devices`, `logging`, and resource `limits` are not collected.
+**Gap:** `healthcheck`, `cap_add`, `devices`, `logging`, and resource `limits` are not collected. With this implemented, the Docker Importer (Task 10) will be able to populate these advanced fields from imported `docker run` commands and compose files.
 
-**What needs to change:**
+**Effort:** Medium | **Status:** ❌ Pending
 
 ### 8a. Data model per service
 
@@ -518,7 +388,7 @@ if (service.cap_add?.length) {
 
 // Devices
 if (service.devices?.length) {
-    serviceObj.devices = service.devices.map(d => d);  // already array of strings
+    serviceObj.devices = service.devices.map(d => d);
 }
 
 // Logging
@@ -586,162 +456,59 @@ cpu_limit: ''
 
 **Gap:** The app is a single-shot generator — users create YAML, download it, and have no way to revisit, edit, or manage their applications. There's no persistence lifecycle.
 
+**Effort:** High | **Status:** 🔶 Partial (module stubs exist)
+
 **Feature:** Saved Applications management with a dedicated page, a purpose-built editor for tweaking saved apps, and an "Application Store Export" system that bundles all saved apps into a ready-to-use CasaOS app store.
 
 ### What needs to change:
 
 ### 9a. Create `modules/saved-apps.js`
 
-A new ES6 module that handles all CRUD operations for saved applications in localStorage:
-
-```js
-const STORAGE_KEY = 'casaos_saved_apps';
-
-export function saveApp(config) {
-    const apps = loadApps();
-    const idx = apps.findIndex(a => a.id === config.id);
-    if (idx >= 0) apps[idx] = { ...config, updatedAt: Date.now() };
-    else apps.push({ ...config, id: generateId(), createdAt: Date.now(), updatedAt: Date.now(), starred: false });
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(apps));
-    return apps;
-}
-
-export function loadApps() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-    catch { return []; }
-}
-
-export function deleteApp(id) {
-    const apps = loadApps().filter(a => a.id !== id);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(apps));
-    return apps;
-}
-
-export function toggleStar(id) {
-    const apps = loadApps();
-    const app = apps.find(a => a.id === id);
-    if (app) app.starred = !app.starred;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(apps));
-    return apps;
-}
-
-export function getApp(id) {
-    return loadApps().find(a => a.id === id) || null;
-}
-
-function generateId() {
-    return 'app_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
-}
-```
+A new ES6 module that handles all CRUD operations for saved applications in localStorage.
 
 ### 9b. Create `pages/applications.html`
 
 A new page that displays saved applications in a grid or list view (toggleable). Features:
-
 - **Header:** "Saved Applications" title with a "Back to Generator" link
 - **View toggle:** Grid/List toggle buttons
 - **Starred row:** Horizontally scrollable row of starred apps at the top, with blue circular left/right arrow buttons for smooth scrolling
-- **Card entries:** Each app displayed as a card with:
-  - App title, tagline, category
-  - Icon thumbnail (if available)
-  - Action buttons: **Remove** (delete), **Edit** (navigate to editor), **Star** (toggle pin)
+- **Card entries:** Each app displayed as a card with action buttons: **Remove**, **Edit**, **Star**
 - **Export All button:** Triggers a zip download of all apps as directories
-- **Export modal:** Simple modal explaining the exported zip can be uploaded to GitHub and used as a CasaOS app store right away
+- **Export modal:** Simple modal explaining the exported zip can be uploaded to GitHub as a CasaOS app store
 
 ### 9c. Create `pages/editor.html`
 
-A purpose-built single-page editor for modifying saved applications:
-
-- Loads an app by ID from query params
-- Single page layout (not stepped wizard) with all fields visible:
-  - AppID, Title, Tagline, Description, Category, Developer, URL
-  - Architecture selectors
-  - Ports, Volumes, Environment variables management
-  - Icon upload/replacement
-  - Screenshots gallery management
-  - YAML code preview block (reuses step 1's code block style)
-- Modals for icon and screenshot management
-- "Save" button writes back to localStorage → navigates back to `applications.html`
-- "Back" button navigates back without saving
+A purpose-built single-page editor for modifying saved applications, loaded by ID from query params.
 
 ### 9d. Extend `modules/zip-export.js`
 
-Add `exportAllApps()` function:
-
-```js
-export async function exportAllApps(apps) {
-    const zip = new JSZip();
-    
-    for (const app of apps) {
-        if (!app.appId) continue;
-        const folder = zip.folder(app.appId);
-        
-        // Add docker-compose.yml
-        const yaml = generateYamlFromConfig(app);
-        folder.file('docker-compose.yml', yaml);
-        
-        // Add icon if available
-        if (app.iconData) {
-            folder.file('icon.png', app.iconData, { base64: true });
-        }
-        
-        // Add screenshots
-        if (app.screenshots?.length) {
-            const screenshotsFolder = folder.folder('screenshots');
-            app.screenshots.forEach((s, i) => {
-                const ext = s.name?.split('.').pop() || 'png';
-                screenshotsFolder.file(`screenshot-${i + 1}.${ext}`, s.data, { base64: true });
-            });
-        }
-    }
-    
-    const blob = await zip.generateAsync({ type: 'blob' });
-    downloadBlob(blob, 'casaos-app-store.zip');
-}
-```
+Add `exportAllApps()` function that bundles all saved apps into a zip with `docker-compose.yml`, `icon.png`, and `screenshots/`.
 
 ### 9e. Update header on all pages
 
-Add "Saved Applications" button to the navigation header on every page (`index.html`, `generator.html`, `icon.html`, `screenshots.html`, `preview.html`, `download.html`):
-
-```html
-<a href="applications.html" class="btn btn-ghost">Saved Applications</a>
-```
-
-Placed just before the "Start Generating" button.
+Add "📁 Saved" navigation link to every page header.
 
 ### 9f. Update `css/base.css`
 
-Add new styles for:
-- `.saved-apps-grid` / `.saved-apps-list` — grid and list layout containers
-- `.app-card` — individual card styling
-- `.starred-row` — horizontal scrolling container for starred apps
-- `.star-scroll-btn` — blue circular arrow buttons
-- `.app-card-actions` — Remove, Edit, Star button row
-- `.export-modal` — modal overlay for export explanation
-- `.view-toggle` — grid/list toggle button group
+Add styles for: `.saved-apps-grid`, `.saved-apps-list`, `.app-card`, `.starred-row`, `.star-scroll-btn`, `.app-card-actions`, `.export-modal`, `.view-toggle`.
 
-### 9g. Update `modules/storage.js`
-
-If needed, add a convenience method that wraps `saved-apps.js` save on the current generator config, so the "Save" button in the generator can call it directly.
-
-### 9h. Update documentation
+### 9g. Update documentation
 
 - **`PROJECT.md`** — Add "Saved Applications" and "Application Store Export" to features list
 - **`README.md`** — Add to feature highlights with brief description
 
 ### Architecture notes
 
-- **State ownership:** Saved apps live in localStorage under `casaos_saved_apps` key. Each app entry is a full config snapshot (all service data, metadata, icon as base64, screenshots as base64).
-- **Feedback:** Toast notifications on save/delete/export. Starred state visually reflects immediately. Export provides download feedback with browser download.
-- **Blast radius:** Zero. All new files, no modifications to existing page logic. Only header changes touch existing pages (and those are DOM additions, not logic changes).
-- **Timing:** All synchronous localStorage operations. Export All is async (JSZip) but non-blocking.
+- **State ownership:** Saved apps live in localStorage under `casaos_saved_apps` key
+- **Feedback:** Toast notifications on save/delete/export
+- **Blast radius:** Zero — all new files, header changes only touch existing pages
+- **Timing:** All synchronous localStorage operations; Export All is async (JSZip)
 
 ### Future expansion (post-MVP)
 
-- **Application Store Export Wizard:** A guided step-by-step wizard that generates proper CasaOS store metadata (store.json, category definitions, etc.) and packages everything into a ready-to-publish GitHub repo.
-- **Import:** Allow users to import applications from a saved JSON/zip file.
-- **Cloud sync:** Optional sync to GitHub Gist or similar.
+- **Application Store Export Wizard:** A guided step-by-step wizard that generates proper CasaOS store metadata (store.json, category definitions)
+- **Import:** Allow users to import applications from a saved JSON/zip file
+- **Cloud sync:** Optional sync to GitHub Gist or similar
 
 **Success criteria:**
 
@@ -755,15 +522,280 @@ If needed, add a convenience method that wraps `saved-apps.js` save on the curre
 
 ---
 
+## Task 10 — Docker Run/Compose Importer
+
+**Gap:** The wiki's "Migration Patterns" section documents the *manual* process for converting `docker run` commands to CasaOS YAML, but there's no automated tooling. Users must manually map flags to form fields. This is a new workflow paradigm — the tool is currently "create from scratch" only; import makes it bi-directional.
+
+**Effort:** Medium | **Status:** ❌ Pending
+
+**Dependencies:** Requires Tasks 7 (Custom Networks) and 8 (Advanced Docker Features) — otherwise the importer can't populate network configs, healthcheck, devices, or capabilities.
+
+**Design: Import Modal** (not a separate page) — a modal triggered from a button on `generator.html`. Two tabs:
+
+```
+┌─────────────────────────────────────────────────┐
+│  📥 Import from Docker Run / Compose             │
+│                                                   │
+│  ┌──────────────┬──────────────┐                  │
+│  │ 🐳 docker run │ 📋 Compose   │  ← Tab Buttons  │
+│  └──────────────┴──────────────┘                  │
+│                                                   │
+│  [Tab Content — see below]                        │
+│                                                   │
+│  [Cancel]  [Import]                               │
+└─────────────────────────────────────────────────┘
+```
+
+### 10a. Create `modules/docker-importer.js`
+
+A new ES6 module with two export functions:
+
+```js
+/**
+ * Parse a `docker run` command into generator service config.
+ * @param {string} cmd - The raw docker run command string
+ * @returns {Object|null} Partial service config object, or null if unparseable
+ */
+export function parseDockerRun(cmd) { }
+
+/**
+ * Parse a docker-compose YAML string into generator multi-service config.
+ * @param {string} yamlStr - Raw docker-compose YAML
+ * @returns {Array|null} Array of service config objects, or null if unparseable
+ */
+export function parseDockerCompose(yamlStr) { }
+```
+
+#### `parseDockerRun()` — Flag Mapping
+
+Parse the following `docker run` flags:
+
+| `docker run` flag | Generator field |
+|---|---|
+| `--name` | `service.appId` + `container_name` |
+| `IMAGE` (positional) | `service.image` |
+| `-p HOST:CONTAINER/PROTO` | `service.ports[]` |
+| `-v HOST:CONTAINER` | `service.volumes[]` (bind type) |
+| `-e KEY=VALUE` | `service.environment[]` |
+| `--network` | `service.network_mode` (bridge/host) |
+| `--restart` | Map to `restart` field |
+| `--device HOST:CONTAINER` | `service.devices[]` |
+| `--cap-add CAP` | `service.cap_add[]` |
+| `--memory LIMIT` | `service.memory_limit` |
+| `--cpus CPUS` | `service.cpu_limit` |
+| `--health-cmd`, `--health-interval`, etc. | `service.healthcheck` (build YAML block) |
+| `--log-driver`, `--log-opt` | `service.logging` (build YAML block) |
+
+#### `parseDockerCompose()` — YAML Mapping
+
+Parse a standard docker-compose YAML into the generator's data model:
+
+| Compose field | Generator field |
+|---|---|
+| `services.<name>.image` | `service.image` |
+| `services.<name>.ports[]` | `service.ports[]` (convert short to long syntax) |
+| `services.<name>.volumes[]` | `service.volumes[]` (convert short to long syntax) |
+| `services.<name>.environment` | `service.environment[]` |
+| `services.<name>.depends_on` | `service.depends_on` |
+| `services.<name>.healthcheck` | `service.healthcheck` (serialize to YAML) |
+| `services.<name>.cap_add` | `service.cap_add[]` |
+| `services.<name>.devices[]` | `service.devices[]` |
+| `services.<name>.logging` | `service.logging` (serialize to YAML) |
+| `services.<name>.deploy.resources.limits.memory` | `service.memory_limit` (strip suffix) |
+| `services.<name>.deploy.resources.limits.cpus` | `service.cpu_limit` |
+| `services.<name>.networks` | `service.networks[]` |
+| `networks` (root) | `customNetworks` (serialize to YAML string) |
+| `services.<name>.container_name` | Generate `appId` from name or image |
+| `services.<name>.command` | `service.command` |
+
+### 10b. Add Import Modal to `pages/generator.html`
+
+Place the modal markup at the bottom of the generator form section:
+
+```html
+<!-- Import Modal -->
+<div v-if="showImportModal" class="modal-overlay" @click.self="showImportModal = false">
+    <div class="modal-content" style="max-width:700px;">
+        <div class="modal-header">
+            <h3>📥 Import from Docker Run / Compose</h3>
+            <button type="button" @click="showImportModal = false" class="btn btn-icon">×</button>
+        </div>
+
+        <div class="tab-bar">
+            <button :class="['tab-btn', { active: importTab === 'docker-run' }]"
+                    @click="importTab = 'docker-run'">🐳 docker run</button>
+            <button :class="['tab-btn', { active: importTab === 'compose' }]"
+                    @click="importTab = 'compose'">📋 docker-compose.yml</button>
+        </div>
+
+        <!-- docker run tab -->
+        <div v-if="importTab === 'docker-run'" class="tab-content">
+            <div class="form-group">
+                <label class="form-label">Paste your docker run command:</label>
+                <textarea v-model="importRunCommand" class="form-input" rows="6"
+                          placeholder="docker run -d --name=jellyfin -p 8096:8096 -v /path:/config jellyfin/jellyfin:latest"></textarea>
+            </div>
+        </div>
+
+        <!-- Compose tab -->
+        <div v-if="importTab === 'compose'" class="tab-content">
+            <div class="form-group">
+                <label class="form-label">Paste your docker-compose.yml:</label>
+                <textarea v-model="importComposeYaml" class="form-input" rows="6"
+                          placeholder="version: '3'&#10;services:&#10;  app:&#10;    image: myapp:latest&#10;    ports: ..."></textarea>
+            </div>
+        </div>
+
+        <div v-if="importErrors.length" class="warning-box">
+            <div v-for="err in importErrors" class="text-warning">{{ err }}</div>
+        </div>
+
+        <div class="modal-actions">
+            <button type="button" @click="showImportModal = false" class="btn btn-ghost">Cancel</button>
+            <button type="button" @click="executeImport()" class="btn btn-primary">Import</button>
+        </div>
+    </div>
+</div>
+```
+
+### 10c. Add to Vue data
+
+```js
+showImportModal: false,
+importTab: 'docker-run',
+importRunCommand: '',
+importComposeYaml: '',
+importErrors: []
+```
+
+### 10d. Add import button to generator UI
+
+Near the "Services" section header, add:
+
+```html
+<button type="button" @click="showImportModal = true" class="btn btn-ghost btn-sm">
+    📥 Import
+</button>
+```
+
+### 10e. Add `executeImport()` method to Vue
+
+```js
+executeImport() {
+    this.importErrors = [];
+    let result = null;
+
+    if (this.importTab === 'docker-run') {
+        if (!this.importRunCommand.trim()) {
+            this.importErrors.push('Please paste a docker run command.');
+            return;
+        }
+        result = parseDockerRun(this.importRunCommand.trim());
+        if (result) {
+            // Merge into first service (or create one)
+            if (this.multiServices.length === 0 || !this.multiServices[0].image) {
+                this.multiServices = [result];
+            } else {
+                // If first service already has data, add as additional service
+                this.multiServices.push(result);
+            }
+        }
+    } else if (this.importTab === 'compose') {
+        if (!this.importComposeYaml.trim()) {
+            this.importErrors.push('Please paste a docker-compose YAML.');
+            return;
+        }
+        result = parseDockerCompose(this.importComposeYaml.trim());
+        if (result && result.length) {
+            this.multiServices = result;
+        }
+    }
+
+    if (!result) {
+        this.importErrors.push('Could not parse the input. Check the format and try again.');
+        return;
+    }
+
+    this.showImportModal = false;
+    this.importRunCommand = '';
+    this.importComposeYaml = '';
+    this.generateMultiCompose();
+    this.autoSave();
+}
+```
+
+### 10f. Update `css/base.css`
+
+Add styles for:
+- `.modal-overlay` — full-screen semi-transparent backdrop
+- `.modal-content` — centered modal panel
+- `.modal-header` — title + close button row
+- `.tab-bar` / `.tab-btn` / `.tab-btn.active` — tab navigation
+- `.tab-content` — tab body panels
+- `.modal-actions` — button row at bottom
+
+### 10g. Importer test cases
+
+**`docker run` examples to parse correctly:**
+
+```bash
+# Basic
+docker run -d --name=jellyfin -p 8096:8096 -v /config:/config jellyfin/jellyfin:latest
+
+# With advanced features
+docker run -d --name=vpn-app --cap-add=NET_ADMIN --device=/dev/tun:/dev/tun --memory=512m alpine:latest
+
+# Complex
+docker run -d --name=app -p 8080:80 -p 8443:443 -e DB_HOST=db -e DB_PORT=5432 -v /data:/data --restart=unless-stopped --network=bridge nginx:latest
+```
+
+**Compose YAML examples to parse correctly:**
+
+```yaml
+version: '3'
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    volumes:
+      - ./html:/usr/share/nginx/html
+    depends_on:
+      - db
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: secret
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+```
+
+**Success criteria:**
+
+- Import button visible on the generator page
+- Modal opens with two tabs: "docker run" and "docker-compose.yml"
+- `docker run` flags are parsed into generator service fields
+- Compose YAML services are parsed into generator multi-service data model
+- Advanced fields (devices, cap_add, healthcheck, logging, limits, networks) are populated
+- Imported data populates the generator form and YAML preview updates
+- Error message displayed if parsing fails
+- Modal closes on successful import
+- No new pages — import lives entirely in the modal
+- Module is a pure ES6 module with no DOM dependencies
+
+---
+
 ## Summary of Files That Need Changes
 
 | File | Tasks |
 |------|-------|
-| `modules/yaml-generator.js` | 1, 3, 4, 6, 7, 8 |
+| `modules/yaml-generator.js` | 3, 7, 8 |
 | `modules/validation.js` (new) | 5 |
+| `modules/docker-importer.js` (new) | 10 |
 | `modules/saved-apps.js` (new) | 9 |
 | `modules/zip-export.js` | 9 (extend) |
-| `pages/generator.html` | 1, 2, 3, 4, 5, 6, 7, 8 |
+| `pages/generator.html` | 3, 5, 7, 8, 10 |
 | `pages/applications.html` (new) | 9 |
 | `pages/editor.html` (new) | 9 |
 | `index.html` | 9 (header button) |
@@ -771,6 +803,6 @@ If needed, add a convenience method that wraps `saved-apps.js` save on the curre
 | `pages/icon.html` | 9 (header button) |
 | `pages/screenshots.html` | 9 (header button) |
 | `pages/preview.html` | 9 (header button) |
-| `css/base.css` | 9 (card styles, grid/list, star carousel, modal) |
-| `PROJECT.md` | 9 (feature description) |
-| `README.md` | 9 (feature description) |
+| `css/base.css` | 7, 8, 9, 10 (modal styles, advanced section, cards, tabs) |
+| `PROJECT.md` | 9, 10 (feature descriptions) |
+| `README.md` | 9, 10 (feature highlights) |
