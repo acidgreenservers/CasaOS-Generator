@@ -18,6 +18,7 @@
 | 6 | `thumbnail` field hardcoded to `""` | Small | Per spec compliance |
 | 7 | Custom network definitions unsupported | Small | Advanced YAML feature |
 | 8 | Advanced Docker features (healthcheck, cap_add, devices, logging, limits) | Medium | Power-user features |
+| 9 | Saved Applications & Application Store Export | High | **Feature** — App lifecycle management, persistence, full-store export |
 
 ---
 
@@ -581,12 +582,195 @@ cpu_limit: ''
 
 ---
 
+## Task 9 — Saved Applications & Application Store Export
+
+**Gap:** The app is a single-shot generator — users create YAML, download it, and have no way to revisit, edit, or manage their applications. There's no persistence lifecycle.
+
+**Feature:** Saved Applications management with a dedicated page, a purpose-built editor for tweaking saved apps, and an "Application Store Export" system that bundles all saved apps into a ready-to-use CasaOS app store.
+
+### What needs to change:
+
+### 9a. Create `modules/saved-apps.js`
+
+A new ES6 module that handles all CRUD operations for saved applications in localStorage:
+
+```js
+const STORAGE_KEY = 'casaos_saved_apps';
+
+export function saveApp(config) {
+    const apps = loadApps();
+    const idx = apps.findIndex(a => a.id === config.id);
+    if (idx >= 0) apps[idx] = { ...config, updatedAt: Date.now() };
+    else apps.push({ ...config, id: generateId(), createdAt: Date.now(), updatedAt: Date.now(), starred: false });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(apps));
+    return apps;
+}
+
+export function loadApps() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch { return []; }
+}
+
+export function deleteApp(id) {
+    const apps = loadApps().filter(a => a.id !== id);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(apps));
+    return apps;
+}
+
+export function toggleStar(id) {
+    const apps = loadApps();
+    const app = apps.find(a => a.id === id);
+    if (app) app.starred = !app.starred;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(apps));
+    return apps;
+}
+
+export function getApp(id) {
+    return loadApps().find(a => a.id === id) || null;
+}
+
+function generateId() {
+    return 'app_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+}
+```
+
+### 9b. Create `pages/applications.html`
+
+A new page that displays saved applications in a grid or list view (toggleable). Features:
+
+- **Header:** "Saved Applications" title with a "Back to Generator" link
+- **View toggle:** Grid/List toggle buttons
+- **Starred row:** Horizontally scrollable row of starred apps at the top, with blue circular left/right arrow buttons for smooth scrolling
+- **Card entries:** Each app displayed as a card with:
+  - App title, tagline, category
+  - Icon thumbnail (if available)
+  - Action buttons: **Remove** (delete), **Edit** (navigate to editor), **Star** (toggle pin)
+- **Export All button:** Triggers a zip download of all apps as directories
+- **Export modal:** Simple modal explaining the exported zip can be uploaded to GitHub and used as a CasaOS app store right away
+
+### 9c. Create `pages/editor.html`
+
+A purpose-built single-page editor for modifying saved applications:
+
+- Loads an app by ID from query params
+- Single page layout (not stepped wizard) with all fields visible:
+  - AppID, Title, Tagline, Description, Category, Developer, URL
+  - Architecture selectors
+  - Ports, Volumes, Environment variables management
+  - Icon upload/replacement
+  - Screenshots gallery management
+  - YAML code preview block (reuses step 1's code block style)
+- Modals for icon and screenshot management
+- "Save" button writes back to localStorage → navigates back to `applications.html`
+- "Back" button navigates back without saving
+
+### 9d. Extend `modules/zip-export.js`
+
+Add `exportAllApps()` function:
+
+```js
+export async function exportAllApps(apps) {
+    const zip = new JSZip();
+    
+    for (const app of apps) {
+        if (!app.appId) continue;
+        const folder = zip.folder(app.appId);
+        
+        // Add docker-compose.yml
+        const yaml = generateYamlFromConfig(app);
+        folder.file('docker-compose.yml', yaml);
+        
+        // Add icon if available
+        if (app.iconData) {
+            folder.file('icon.png', app.iconData, { base64: true });
+        }
+        
+        // Add screenshots
+        if (app.screenshots?.length) {
+            const screenshotsFolder = folder.folder('screenshots');
+            app.screenshots.forEach((s, i) => {
+                const ext = s.name?.split('.').pop() || 'png';
+                screenshotsFolder.file(`screenshot-${i + 1}.${ext}`, s.data, { base64: true });
+            });
+        }
+    }
+    
+    const blob = await zip.generateAsync({ type: 'blob' });
+    downloadBlob(blob, 'casaos-app-store.zip');
+}
+```
+
+### 9e. Update header on all pages
+
+Add "Saved Applications" button to the navigation header on every page (`index.html`, `generator.html`, `icon.html`, `screenshots.html`, `preview.html`, `download.html`):
+
+```html
+<a href="applications.html" class="btn btn-ghost">Saved Applications</a>
+```
+
+Placed just before the "Start Generating" button.
+
+### 9f. Update `css/base.css`
+
+Add new styles for:
+- `.saved-apps-grid` / `.saved-apps-list` — grid and list layout containers
+- `.app-card` — individual card styling
+- `.starred-row` — horizontal scrolling container for starred apps
+- `.star-scroll-btn` — blue circular arrow buttons
+- `.app-card-actions` — Remove, Edit, Star button row
+- `.export-modal` — modal overlay for export explanation
+- `.view-toggle` — grid/list toggle button group
+
+### 9g. Update `modules/storage.js`
+
+If needed, add a convenience method that wraps `saved-apps.js` save on the current generator config, so the "Save" button in the generator can call it directly.
+
+### 9h. Update documentation
+
+- **`PROJECT.md`** — Add "Saved Applications" and "Application Store Export" to features list
+- **`README.md`** — Add to feature highlights with brief description
+
+### Architecture notes
+
+- **State ownership:** Saved apps live in localStorage under `casaos_saved_apps` key. Each app entry is a full config snapshot (all service data, metadata, icon as base64, screenshots as base64).
+- **Feedback:** Toast notifications on save/delete/export. Starred state visually reflects immediately. Export provides download feedback with browser download.
+- **Blast radius:** Zero. All new files, no modifications to existing page logic. Only header changes touch existing pages (and those are DOM additions, not logic changes).
+- **Timing:** All synchronous localStorage operations. Export All is async (JSZip) but non-blocking.
+
+### Future expansion (post-MVP)
+
+- **Application Store Export Wizard:** A guided step-by-step wizard that generates proper CasaOS store metadata (store.json, category definitions, etc.) and packages everything into a ready-to-publish GitHub repo.
+- **Import:** Allow users to import applications from a saved JSON/zip file.
+- **Cloud sync:** Optional sync to GitHub Gist or similar.
+
+**Success criteria:**
+
+- Users can save applications from the generator
+- Saved apps appear in `applications.html` as cards in grid/list view
+- Starred apps appear in a horizontal scrollable row at the top
+- Clicking Edit opens `editor.html` with the app pre-populated
+- Clicking Export All downloads a zip with each app in its own directory
+- Export modal explains the zip can be used as a CasaOS store
+- All header navigation includes the "Saved Applications" link
+
+---
+
 ## Summary of Files That Need Changes
 
 | File | Tasks |
 |------|-------|
 | `modules/yaml-generator.js` | 1, 3, 4, 6, 7, 8 |
 | `modules/validation.js` (new) | 5 |
+| `modules/saved-apps.js` (new) | 9 |
+| `modules/zip-export.js` | 9 (extend) |
 | `pages/generator.html` | 1, 2, 3, 4, 5, 6, 7, 8 |
-
-No other files need changes. The icon, screenshots, and preview pages are independent.
+| `pages/applications.html` (new) | 9 |
+| `pages/editor.html` (new) | 9 |
+| `index.html` | 9 (header button) |
+| `pages/download.html` | 9 (header button) |
+| `pages/icon.html` | 9 (header button) |
+| `pages/screenshots.html` | 9 (header button) |
+| `pages/preview.html` | 9 (header button) |
+| `css/base.css` | 9 (card styles, grid/list, star carousel, modal) |
+| `PROJECT.md` | 9 (feature description) |
+| `README.md` | 9 (feature description) |

@@ -10,7 +10,10 @@
 - **100% Client-Side**: Your data never leaves your device. All generation and processing happen in your browser.
 - **Intuitive Workflow**: A multi-step generator guides you from basic setup to advanced features (volumes, ports, environment variables).
 - **Live Preview**: Real-time YAML generation with syntax highlighting via CodeMirror.
-- **ZIP Export**: Download your completed configuration as a ready-to-use ZIP package.
+- **Saved Applications** (`pages/applications.html`): Persist your created applications in localStorage. Grid/list toggleable view with starred app carousel, edit, and delete controls.
+- **Application Editor** (`pages/editor.html`): Purpose-built single-page editor for modifying saved applications — all fields in one layout with YAML code preview.
+- **Application Store Export**: Download all saved apps as a single ZIP archive, each in its own directory with `docker-compose.yml`, icon, and screenshots — ready to upload to GitHub as a CasaOS app store.
+- **ZIP Export**: Download individual configurations as ready-to-use ZIP packages.
 - **Modern UI**: A sleek, dark-themed interface built for clarity and efficiency, following professional design standards.
 - **Privacy First**: Zero cookies, zero tracking, and zero data collection.
 
@@ -64,10 +67,12 @@ Since this is a static client-side application, there is no installation require
 ## 📂 Project Structure
 
 - `index.html`: The landing page and entry point.
-- `pages/`: Contains the core generator application.
+- `pages/`: Contains the core generator (`generator.html`), saved applications list (`applications.html`), application editor (`editor.html`), and supporting pages (`icon.html`, `screenshots.html`, `preview.html`, `download.html`).
 - `css/`: The centralized design system and base styles.
-- `modules/`: Modular JavaScript logic for YAML generation and ZIP handling.
+- `modules/`: Modular JavaScript logic for YAML generation, ZIP handling, app persistence, and UI utilities.
 - `docs/`: Documentation and legal notices (e.g., Privacy Notice).
+- `public/screenshots/`: Application screenshots for the README gallery.
+- `wiki/`: GitHub-style wiki pages (Getting Started, CasaOS Concepts, Advanced Patterns).
 
 ## 🔒 Privacy & Security
 
