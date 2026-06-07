@@ -402,21 +402,21 @@ textarea.form-input {
 }
 
 /* =========================
-   PRIVACY BANNER & SWITCHES
+   APPLICATION NOTICE (Consent & Persistence)
 ========================= */
-.privacy-banner {
+.app-notice {
     position: fixed;
-    bottom: 32px;
+    bottom: 80px; /* Offset from progress dots at 20px */
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
-    max-width: 440px; /* 1.4x footprint of a small toast */
+    max-width: 440px;
     background: #0f1524;
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 16px;
     padding: 24px;
     z-index: 2000;
-    display: none;
+    display: none; /* Controlled by JS to prevent flash */
     flex-direction: column;
     gap: 16px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
@@ -429,44 +429,63 @@ textarea.form-input {
     to { transform: translate(-50%, 0); opacity: 1; }
 }
 
-.privacy-banner-content {
+.app-notice-content {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
 }
 
-.privacy-banner-title {
+.app-notice-title {
     font-size: 1.1rem;
     font-weight: 600;
     color: #ffffff;
 }
 
-.privacy-banner-text {
+.app-notice-text {
     font-size: 0.9rem;
     color: rgba(255,255,255,0.7);
     line-height: 1.5;
 }
 
-.privacy-banner-text a {
+.app-notice-text a {
     color: #5fe0ff;
     text-decoration: none;
 }
 
-.privacy-banner-actions {
+.app-notice-options {
+    padding-top: 4px;
+}
+
+.app-notice-switch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.app-notice-switch input[type="checkbox"] {
+    accent-color: #2b9fd8;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.app-notice-switch-text {
+    font-size: 0.9rem;
+    color: #e8edf5;
+}
+
+.app-notice-actions {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 16px;
 }
 
 @media (max-width: 768px) {
-    .privacy-banner {
-        bottom: 16px;
+    .app-notice {
+        bottom: 70px;
         width: calc(100% - 32px);
         padding: 20px;
-    }
-    .privacy-banner-actions {
-        flex-direction: column;
-        align-items: stretch;
     }
 }
