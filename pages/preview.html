@@ -80,65 +80,7 @@
             margin-bottom: 20px;
         }
 
-        .export-section {
-            background: #141c2e;
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-
-        .export-title { font-size: 1.15rem; font-weight: 600; margin-bottom: 16px; }
-        .export-buttons { display: flex; gap: 15px; flex-wrap: wrap; }
-
-        .export-btn {
-            flex: 1;
-            min-width: 200px;
-            padding: 15px;
-            border: none;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            text-align: center;
-        }
-
-        .btn-copy {
-            background: linear-gradient(135deg, #15759e 0%, #1f8fc7 100%);
-            color: white;
-        }
-        .btn-copy:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(21,117,158,0.35); }
-
-        .btn-download {
-            background: linear-gradient(135deg, #1e8e3e 0%, #28a745 100%);
-            color: white;
-        }
-        .btn-download:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(30,142,62,0.35); }
-
-        .btn-edit {
-            background: linear-gradient(135deg, #d4a017 0%, #e8962e 100%);
-            color: #1a1a2e;
-            padding: 8px 16px;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            border: none;
-            cursor: pointer;
-            transition: all 0.25s ease;
-        }
-
-        .btn-edit:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(212,160,23,0.3); }
-
         .preview-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-
-        @keyframes copySuccess {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.04); }
-            100% { transform: scale(1); }
-        }
-
-        .success-flash { animation: copySuccess 0.3s ease-in-out; }
 
         @media (max-width: 1024px) {
             .container { grid-template-columns: 1fr; gap: 30px; }
@@ -147,8 +89,6 @@
 
         @media (max-width: 768px) {
             body { padding: 80px 15px 20px; }
-            .export-buttons { flex-direction: column; }
-            .export-btn { min-width: auto; }
         }
     </style>
 </head>
@@ -208,9 +148,7 @@
                 <div class="preview-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
                     <h3 class="panel-title" style="margin-bottom:0;">docker-compose.yml</h3>
                     <div class="preview-actions">
-                        <button id="editBtn" class="btn-edit">✏️ Edit</button>
-                        <button id="copyBtn" class="btn btn-ghost btn-sm" style="border-color:#1f8fc7; color:#1f8fc7;">📋 Copy YAML</button>
-                        <button id="downloadBtn" class="btn btn-success btn-sm">📦 Download ZIP</button>
+                        <a href="download.html" class="btn btn-primary btn-sm">🚀 Final Step →</a>
                     </div>
                 </div>
 
@@ -229,19 +167,6 @@
 
                 <div id="code-editor"></div>
 
-                <div class="export-section">
-                    <div class="export-title">Export Options</div>
-                    <div class="export-buttons">
-                        <button id="copyOnlyBtn" class="export-btn btn-copy">
-                            <div>📋 Copy YAML</div>
-                            <small style="opacity:0.8;">Use directly in CasaOS</small>
-                        </button>
-                        <button id="downloadOnlyBtn" class="export-btn btn-download">
-                            <div>📦 Download ZIP</div>
-                            <small style="opacity:0.8;">Complete package for app store</small>
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -259,7 +184,6 @@
     <script type="module">
         import { loadConfig, getAssets } from '../modules/storage.js';
         import { generateYamlString } from '../modules/yaml-generator.js';
-        import { createAppZip, triggerDownload } from '../modules/zip-export.js';
         import { initAppNotice } from '../modules/app-notice.js';
 
         document.addEventListener('DOMContentLoaded', initAppNotice);
@@ -269,13 +193,11 @@
                 this.config = null;
                 this.assets = null;
                 this.editor = null;
-                this.isEditing = false;
                 this.init();
             }
 
             init() {
                 this.loadData();
-                this.setupEventListeners();
                 this.initializeEditor();
                 this.updateProgress();
             }
@@ -286,17 +208,6 @@
                 this.assets = getAssets();
                 if (this.assets) this.displayAssets();
                 if (this.config) this.generateYAML();
-            }
-
-            setupEventListeners() {
-                ['editBtn','copyBtn','downloadBtn','copyOnlyBtn','downloadOnlyBtn'].forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el) el.addEventListener('click', (e) => {
-                        if (id === 'editBtn') this.toggleEditMode();
-                        else if (id === 'copyBtn' || id === 'copyOnlyBtn') this.copyYAML();
-                        else if (id === 'downloadBtn' || id === 'downloadOnlyBtn') this.downloadZIP();
-                    });
-                });
             }
 
             initializeEditor() {
@@ -354,57 +265,7 @@
                 this.updateEditorStatus('Generated');
             }
 
-            toggleEditMode() {
-                if (!this.editor) return;
-                this.isEditing = !this.isEditing;
-                const btn = document.getElementById('editBtn');
-                if (this.isEditing) {
-                    this.editor.setOption('readOnly', false);
-                    btn.innerHTML = '💾 Save'; btn.style.background = 'linear-gradient(135deg, #1e8e3e 0%, #28a745 100%)';
-                    this.updateEditorStatus('Editing');
-                } else {
-                    this.editor.setOption('readOnly', true);
-                    btn.innerHTML = '✏️ Edit'; btn.style.background = '';
-                    this.updateEditorStatus('Read-only');
-                }
-            }
-
             updateEditorStatus(s) { const el = document.getElementById('editorStatus'); if (el) el.textContent = s; }
-
-            copyYAML() {
-                if (!this.editor) return;
-                navigator.clipboard?.writeText(this.editor.getValue()).then(() => this.flashCopy());
-            }
-
-            flashCopy() {
-                ['copyBtn','copyOnlyBtn'].forEach(id => {
-                    const el = document.getElementById(id);
-                    if (!el) return;
-                    el.classList.add('success-flash');
-                    const ot = el.innerHTML;
-                    el.innerHTML = '✅ Copied!';
-                    setTimeout(() => { el.innerHTML = ot; el.classList.remove('success-flash'); }, 1800);
-                });
-            }
-
-            async downloadZIP() {
-                if (!this.editor || !this.assets || !this.config) return;
-                try {
-                    const blob = await createAppZip(this.editor.getValue(), this.assets, this.config.services[0]?.appId || 'casaos-app');
-                    triggerDownload(blob, `${this.config.services[0]?.appId || 'casaos-app'}.zip`);
-                    this.flashDownload();
-                } catch (err) { alert('ZIP failed: ' + err.message); }
-            }
-
-            flashDownload() {
-                ['downloadBtn','downloadOnlyBtn'].forEach(id => {
-                    const el = document.getElementById(id);
-                    if (!el) return;
-                    el.classList.add('success-flash');
-                    el.innerHTML = '✅ Downloaded!';
-                    setTimeout(() => { el.innerHTML = id === 'downloadBtn' ? '📦 Download ZIP' : '<div>📦 Download ZIP</div><small style="opacity:0.8;">Complete package for app store</small>'; el.classList.remove('success-flash'); }, 1800);
-                });
-            }
 
             updateProgress() { document.querySelectorAll('.progress-step').forEach((s,i) => { if (i <= 4) s.classList.add('completed'); if (i === 4) s.classList.add('active'); }); }
         }
