@@ -433,12 +433,13 @@ textarea.form-input {
     border-radius: 16px;
     padding: 24px;
     z-index: 2000;
-    display: none; /* Controlled by JS */
+    display: none;
     flex-direction: column;
     gap: 16px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     animation: slideUpCenter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0; /* Start at 0 for the animation to take over */
 }
 
 @keyframes slideUpCenter {
