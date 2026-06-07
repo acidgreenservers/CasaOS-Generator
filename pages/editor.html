@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Application - CasaOS Generator</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
+    <link rel="shortcut icon" type="image/svg+xml" href="../assets/logo.svg">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Shared Base Styles -->
+    <link rel="stylesheet" href="../css/base.css">
+
+    <!-- External Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/yaml/yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+    <style>
+        body {
+            padding: 80px 20px 40px;
+        }
+
+        .editor-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .editor-header h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .editor-section {
+            margin-bottom: 24px;
+        }
+
+        .editor-section h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #2a3050;
+            color: #c8d0dc;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            min-width: 160px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        .input-group .form-input {
+            flex: 1;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            color: #c8d0dc;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            accent-color: #1e90ff;
+        }
+
+        /* Preview section */
+        .preview-section {
+            position: sticky;
+            top: 100px;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .preview-header h2 {
+            margin: 0;
+        }
+
+        .btn-save {
+            background: #2ea043;
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .btn-save:hover {
+            background: #238636;
+        }
+
+        /* Icon & Screenshot modals */
+        .icon-upload-area {
+            border: 2px dashed #2a3050;
+            border-radius: 10px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            margin-bottom: 16px;
+        }
+
+        .icon-upload-area:hover {
+            border-color: #1e90ff;
+        }
+
+        .icon-upload-area img {
+            max-width: 120px;
+            max-height: 120px;
+            border-radius: 8px;
+        }
+
+        .screenshot-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .screenshot-item {
+            position: relative;
+            border-radius: 6px;
+            overflow: hidden;
+            aspect-ratio: 16/10;
+            background: #1a1f35;
+        }
+
+        .screenshot-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .screenshot-item .remove-screenshot {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(224, 85, 85, 0.9);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #1a1f35;
+            border: 1px solid #2a3050;
+            color: #c8d0dc;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            z-index: 2000;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <a href="../index.html" class="brand">
+            <div class="brand-logo">
+                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="20" cy="32" r="12" fill="#87CEEB" style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));"/>
+                    <circle cx="32" cy="28" r="18" fill="#1E90FF" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));"/>
+                    <circle cx="44" cy="32" r="12" fill="#87CEEB" style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));"/>
+                </svg>
+            </div>
+            casaos
+        </a>
+        <div style="display:flex; gap:8px; align-items:center;">
+            <a href="applications.html" class="btn btn-ghost btn-sm">← Saved Apps</a>
+            <a href="generator.html" class="btn btn-primary btn-sm">+ New App</a>
+        </div>
+    </header>
+
+    <div class="editor-container">
+
+        <!-- Form Section -->
+        <div>
+            <div class="editor-header">
+                <h1 id="editorTitle">Edit Application</h1>
+                <div>
+                    <button id="saveBtn" class="btn-save">💾 Save Changes</button>
+                </div>
+            </div>
+
+            <!-- App Metadata -->
+            <div class="editor-section">
+                <h2>Basic Information</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">App ID</label>
+                        <input id="appId" class="form-input" placeholder="my-app" pattern="[a-z0-9-]+">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <input id="category" class="form-input" placeholder="Utilities">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Title (en_US)</label>
+                        <input id="title" class="form-input" placeholder="My Application">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Developer</label>
+                        <input id="developer" class="form-input" placeholder="Developer name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tagline (en_US)</label>
+                    <input id="tagline" class="form-input" placeholder="A short description">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description (en_US)</label>
+                    <textarea id="description" class="form-input" rows="3" placeholder="Full description of the application"></textarea>
+                </div>
+            </div>
+
+            <!-- Architecture & Docker -->
+            <div class="editor-section">
+                <h2>Platform & Docker</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Docker Image</label>
+                        <input id="image" class="form-input" placeholder="namespace/image:tag">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Memory (MB)</label>
+                        <input id="memory" type="number" class="form-input" placeholder="256">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Architectures</label>
+                    <div class="checkbox-group" id="archGroup">
+                        <label class="checkbox-label"><input type="checkbox" value="amd64"> amd64</label>
+                        <label class="checkbox-label"><input type="checkbox" value="arm64"> arm64</label>
+                        <label class="checkbox-label"><input type="checkbox" value="armv7"> armv7</label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Index Path</label>
+                        <input id="index" class="form-input" placeholder="/">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Scheme</label>
+                        <select id="scheme" class="form-input">
+                            <option value="http">http</option>
+                            <option value="https">https</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ports -->
+            <div class="editor-section">
+                <h2>Ports</h2>
+                <div id="portsContainer"></div>
+                <button id="addPort" class="btn btn-ghost" style="margin-top:8px;">+ Add Port</button>
+            </div>
+
+            <!-- Volumes -->
+            <div class="editor-section">
+                <h2>Volumes</h2>
+                <div id="volumesContainer"></div>
+                <button id="addVolume" class="btn btn-ghost" style="margin-top:8px;">+ Add Volume</button>
+            </div>
+
+            <!-- Environment -->
+            <div class="editor-section">
+                <h2>Environment Variables</h2>
+                <div id="envContainer"></div>
+                <button id="addEnv" class="btn btn-ghost" style="margin-top:8px;">+ Add Variable</button>
+            </div>
+
+            <!-- Icon & Screenshots -->
+            <div class="editor-section">
+                <h2>Icon</h2>
+                <div class="icon-upload-area" id="iconUploadArea">
+                    <div id="iconPreview">Click to upload icon (PNG, 256x256 recommended)</div>
+                </div>
+                <input type="file" id="iconInput" accept="image/png,image/jpeg,image/webp,image/svg+xml" style="display:none;">
+            </div>
+
+            <div class="editor-section">
+                <h2>Screenshots</h2>
+                <div class="screenshot-list" id="screenshotList"></div>
+                <button id="addScreenshot" class="btn btn-ghost">+ Add Screenshot</button>
+                <input type="file" id="screenshotInput" accept="image/png,image/jpeg,image/webp" multiple style="display:none;">
+            </div>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="preview-section">
+            <div class="preview-header">
+                <h2>YAML Preview</h2>
+                <button id="downloadBtn" class="btn btn-primary btn-sm">⬇ Download</button>
+            </div>
+            <div id="yamlPreview" style="border:1px solid #2a3050; border-radius:8px; overflow:hidden;">
+                <textarea id="codeEditor" style="display:none;"></textarea>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script type="module">
+        import { getApp, saveApp } from '../modules/saved-apps.js';
+        import { generateYamlString } from '../modules/yaml-generator.js';
+        import { createAppZip, triggerDownload } from '../modules/zip-export.js';
+        import { getAssets } from '../modules/storage.js';
+
+        // State
+        let appData = null;
+        let editor = null;
+        let currentIcon = null;
+
+        // Form elements
+        const els = {
+            appId: document.getElementById('appId'),
+            title: document.getElementById('title'),
+            tagline: document.getElementById('tagline'),
+            description: document.getElementById('description'),
+            category: document.getElementById('category'),
+            developer: document.getElementById('developer'),
+            image: document.getElementById('image'),
+            memory: document.getElementById('memory'),
+            index: document.getElementById('index'),
+            scheme: document.getElementById('scheme'),
+            archGroup: document.getElementById('archGroup'),
+        };
+
+        // Ports, Volumes, Env state
+        let ports = [];
+        let volumes = [];
+        let envVars = [];
+        let screenshots = [];
+
+        // Load app
+        const params = new URLSearchParams(window.location.search);
+        const appIdParam = params.get('id');
+
+        if (appIdParam) {
+            appData = getApp(appIdParam);
+            if (appData) {
+                document.getElementById('editorTitle').textContent = `Edit: ${appData.title?.en_US || appData.appId}`;
+                populateForm(appData);
+            } else {
+                showToast('Application not found');
+            }
+        } else {
+            showToast('No application ID specified');
+        }
+
+        function populateForm(data) {
+            els.appId.value = data.appId || '';
+            els.title.value = data.title?.en_US || '';
+            els.tagline.value = data.tagline?.en_US || '';
+            els.description.value = data.description?.en_US || '';
+            els.category.value = data.category || '';
+            els.developer.value = data.developer || '';
+            els.image.value = data.image || '';
+            els.memory.value = data.reservationsMemory || '';
+            els.index.value = data.index || '/';
+            els.scheme.value = data.scheme || 'http';
+
+            // Architectures
+            els.archGroup.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.checked = (data.architectures || []).includes(cb.value);
+            });
+
+            // Ports
+            ports = (data.ports || []).map(p => ({ ...p }));
+            renderPorts();
+
+            // Volumes
+            volumes = (data.volumes || []).map(v => ({ ...v }));
+            renderVolumes();
+
+            // Environment
+            envVars = (data.environment || []).map(e => ({ ...e }));
+            renderEnv();
+
+            // Icon
+            if (data.iconData) {
+                currentIcon = data.iconData;
+                document.getElementById('iconPreview').innerHTML = `<img src="${data.iconData}" alt="Icon" style="max-width:120px;max-height:120px;border-radius:8px;">`;
+            }
+
+            // Screenshots
+            screenshots = (data.screenshots || []).map(s => ({ ...s }));
+            renderScreenshots();
+
+            updatePreview();
+        }
+
+        function collectFormData() {
+            const architectures = [];
+            els.archGroup.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                architectures.push(cb.value);
+            });
+
+            return {
+                id: appData?.id || null,
+                appId: els.appId.value,
+                title: { en_US: els.title.value },
+                tagline: { en_US: els.tagline.value },
+                description: { en_US: els.description.value },
+                category: els.category.value,
+                developer: els.developer.value,
+                author: els.developer.value,
+                image: els.image.value,
+                reservationsMemory: els.memory.value,
+                index: els.index.value || '/',
+                scheme: els.scheme.value,
+                architectures,
+                ports: ports.filter(p => p.target && p.published),
+                volumes: volumes.filter(v => v.source && v.target),
+                environment: envVars.filter(e => e.key),
+                iconData: currentIcon,
+                screenshots,
+            };
+        }
+
+        function updatePreview() {
+            const data = collectFormData();
+            const services = [{
+                appId: data.appId,
+                image: data.image,
+                title: data.title,
+                tagline: data.tagline,
+                description: data.description,
+                category: data.category,
+                developer: data.developer,
+                author: data.developer,
+                architectures: data.architectures,
+                reservationsMemory: data.reservationsMemory,
+                index: data.index,
+                scheme: data.scheme,
+                thumbnail: '',
+                ports: data.ports,
+                volumes: data.volumes,
+                environment: data.environment,
+                tips: { enable_before_install: false, enable_custom: false },
+            }];
+
+            // Build assets object from screenshots
+            const assets = {
+                icons: currentIcon ? [{ data: currentIcon }] : [],
+                screenshots: screenshots.map(s => ({ data: s.data })),
+            };
+
+            const yaml = generateYamlString(services, 'bridge', assets);
+            if (editor) {
+                editor.setValue(yaml);
+            }
+        }
+
+        // ---- Ports ----
+        function renderPorts() {
+            const container = document.getElementById('portsContainer');
+            container.innerHTML = ports.map((p, i) => `
+                <div class="input-group">
+                    <input class="form-input" value="${p.target || ''}" placeholder="Target" data-idx="${i}" data-field="target" style="width:80px;">
+                    <input class="form-input" value="${p.published || ''}" placeholder="Published" data-idx="${i}" data-field="published" style="width:80px;">
+                    <select class="form-input" data-idx="${i}" data-field="protocol" style="width:80px;">
+                        <option value="tcp" ${p.protocol === 'tcp' ? 'selected' : ''}>tcp</option>
+                        <option value="udp" ${p.protocol === 'udp' ? 'selected' : ''}>udp</option>
+                    </select>
+                    <input class="form-input" value="${p.description || ''}" placeholder="Description" data-idx="${i}" data-field="description" style="flex:1;">
+                    <button class="btn btn-danger btn-icon remove-port" data-idx="${i}">×</button>
+                </div>
+            `).join('');
+
+            container.querySelectorAll('input, select').forEach(el => {
+                el.addEventListener('input', () => {
+                    const idx = parseInt(el.dataset.idx);
+                    const field = el.dataset.field;
+                    if (ports[idx]) {
+                        if (field === 'protocol') {
+                            ports[idx][field] = el.value;
+                        } else {
+                            ports[idx][field] = el.value;
+                        }
+                        updatePreview();
+                    }
+                });
+            });
+
+            container.querySelectorAll('.remove-port').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    ports.splice(parseInt(btn.dataset.idx), 1);
+                    renderPorts();
+                    updatePreview();
+                });
+            });
+        }
+
+        document.getElementById('addPort').addEventListener('click', () => {
+            ports.push({ target: '', published: '', protocol: 'tcp', description: '' });
+            renderPorts();
+            updatePreview();
+        });
+
+        // ---- Volumes ----
+        function renderVolumes() {
+            const container = document.getElementById('volumesContainer');
+            container.innerHTML = volumes.map((v, i) => `
+                <div class="input-group">
+                    <select class="form-input" data-idx="${i}" data-field="type" style="width:80px;">
+                        <option value="bind" ${v.type === 'bind' ? 'selected' : ''}>bind</option>
+                        <option value="volume" ${v.type === 'volume' ? 'selected' : ''}>volume</option>
+                    </select>
+                    <input class="form-input" value="${v.source || ''}" placeholder="Source" data-idx="${i}" data-field="source">
+                    <input class="form-input" value="${v.target || ''}" placeholder="Target" data-idx="${i}" data-field="target">
+                    <input class="form-input" value="${v.description || ''}" placeholder="Description" data-idx="${i}" data-field="description" style="flex:1;">
+                    <button class="btn btn-danger btn-icon remove-volume" data-idx="${i}">×</button>
+                </div>
+            `).join('');
+
+            container.querySelectorAll('input, select').forEach(el => {
+                el.addEventListener('input', () => {
+                    const idx = parseInt(el.dataset.idx);
+                    const field = el.dataset.field;
+                    if (volumes[idx]) {
+                        volumes[idx][field] = el.value;
+                        updatePreview();
+                    }
+                });
+            });
+
+            container.querySelectorAll('.remove-volume').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    volumes.splice(parseInt(btn.dataset.idx), 1);
+                    renderVolumes();
+                    updatePreview();
+                });
+            });
+        }
+
+        document.getElementById('addVolume').addEventListener('click', () => {
+            volumes.push({ type: 'bind', source: '', target: '', description: '' });
+            renderVolumes();
+            updatePreview();
+        });
+
+        // ---- Environment ----
+        function renderEnv() {
+            const container = document.getElementById('envContainer');
+            container.innerHTML = envVars.map((e, i) => `
+                <div class="input-group">
+                    <input class="form-input" value="${e.key || ''}" placeholder="Key" data-idx="${i}" data-field="key" style="flex:1;">
+                    <input class="form-input" value="${e.value || ''}" placeholder="Value" data-idx="${i}" data-field="value" style="flex:1;">
+                    <button class="btn btn-danger btn-icon remove-env" data-idx="${i}">×</button>
+                </div>
+            `).join('');
+
+            container.querySelectorAll('input').forEach(el => {
+                el.addEventListener('input', () => {
+                    const idx = parseInt(el.dataset.idx);
+                    const field = el.dataset.field;
+                    if (envVars[idx]) {
+                        envVars[idx][field] = el.value;
+                        updatePreview();
+                    }
+                });
+            });
+
+            container.querySelectorAll('.remove-env').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    envVars.splice(parseInt(btn.dataset.idx), 1);
+                    renderEnv();
+                    updatePreview();
+                });
+            });
+        }
+
+        document.getElementById('addEnv').addEventListener('click', () => {
+            envVars.push({ key: '', value: '' });
+            renderEnv();
+            updatePreview();
+        });
+
+        // ---- Icon Upload ----
+        document.getElementById('iconUploadArea').addEventListener('click', () => {
+            document.getElementById('iconInput').click();
+        });
+
+        document.getElementById('iconInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                currentIcon = ev.target.result;
+                document.getElementById('iconPreview').innerHTML = `<img src="${currentIcon}" alt="Icon" style="max-width:120px;max-height:120px;border-radius:8px;">`;
+                updatePreview();
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // ---- Screenshots ----
+        function renderScreenshots() {
+            const container = document.getElementById('screenshotList');
+            if (screenshots.length === 0) {
+                container.innerHTML = '<p style="color:#8b95ad; font-size:0.85rem;">No screenshots added yet.</p>';
+                return;
+            }
+            container.innerHTML = screenshots.map((s, i) => `
+                <div class="screenshot-item">
+                    <img src="${s.data}" alt="Screenshot ${i + 1}">
+                    <button class="remove-screenshot" data-idx="${i}">×</button>
+                </div>
+            `).join('');
+
+            container.querySelectorAll('.remove-screenshot').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    screenshots.splice(parseInt(btn.dataset.idx), 1);
+                    renderScreenshots();
+                    updatePreview();
+                });
+            });
+        }
+
+        document.getElementById('addScreenshot').addEventListener('click', () => {
+            document.getElementById('screenshotInput').click();
+        });
+
+        document.getElementById('screenshotInput').addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    screenshots.push({ data: ev.target.result, name: file.name });
+                    renderScreenshots();
+                    updatePreview();
+                };
+                reader.readAsDataURL(file);
+            });
+            e.target.value = '';
+        });
+
+        // ---- Save ----
+        document.getElementById('saveBtn').addEventListener('click', () => {
+            if (!els.appId.value) {
+                showToast('App ID is required');
+                return;
+            }
+            const data = collectFormData();
+            saveApp(data);
+            showToast('Application saved!');
+            setTimeout(() => {
+                window.location.href = 'applications.html';
+            }, 800);
+        });
+
+        // ---- Download ----
+        document.getElementById('downloadBtn').addEventListener('click', async () => {
+            const data = collectFormData();
+            const services = [{
+                appId: data.appId,
+                image: data.image,
+                title: data.title,
+                tagline: data.tagline,
+                description: data.description,
+                category: data.category,
+                developer: data.developer,
+                author: data.developer,
+                architectures: data.architectures,
+                reservationsMemory: data.reservationsMemory,
+                index: data.index,
+                scheme: data.scheme,
+                thumbnail: '',
+                ports: data.ports,
+                volumes: data.volumes,
+                environment: data.environment,
+                tips: { enable_before_install: false, enable_custom: false },
+            }];
+
+            const assets = {
+                icons: currentIcon ? [{ data: currentIcon }] : [],
+                screenshots: screenshots.map(s => ({ data: s.data })),
+            };
+
+            const yaml = generateYamlString(services, 'bridge', assets);
+            try {
+                const blob = await createAppZip(yaml, assets, data.appId || 'app');
+                triggerDownload(blob, `${data.appId || 'app'}.zip`);
+                showToast('Download started');
+            } catch (err) {
+                showToast('Download failed: ' + err.message);
+            }
+        });
+
+        // ---- CodeMirror ----
+        function initEditor() {
+            if (typeof CodeMirror !== 'undefined') {
+                editor = CodeMirror.fromTextArea(document.getElementById('codeEditor'), {
+                    mode: 'yaml',
+                    theme: 'material-darker',
+                    lineNumbers: true,
+                    readOnly: true,
+                    viewportMargin: Infinity,
+                });
+                editor.setSize('100%', '600px');
+                updatePreview();
+            }
+        }
+
+        // ---- Toast ----
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // ---- Init ----
+        initEditor();
+    </script>
+
+</body>
+</html>

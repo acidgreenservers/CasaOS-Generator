@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Applications - CasaOS Generator</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
+    <link rel="shortcut icon" type="image/svg+xml" href="../assets/logo.svg">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Shared Base Styles -->
+    <link rel="stylesheet" href="../css/base.css">
+
+    <!-- External Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+
+    <style>
+        body {
+            padding: 80px 20px 40px;
+        }
+
+        .applications-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .apps-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .apps-header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .apps-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 0;
+            border: 1px solid #2a3050;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .view-toggle button {
+            background: transparent;
+            border: none;
+            color: #8b95ad;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .view-toggle button.active {
+            background: #1e90ff;
+            color: #fff;
+        }
+
+        .view-toggle button:not(.active):hover {
+            background: #1a1f35;
+            color: #c8d0dc;
+        }
+
+        /* Starred carousel row */
+        .starred-section {
+            margin-bottom: 32px;
+        }
+
+        .starred-section h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #8b95ad;
+            margin-bottom: 12px;
+        }
+
+        .starred-row-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .starred-row {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 8px 4px 16px;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            flex: 1;
+        }
+
+        .starred-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .star-scroll-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid #1e90ff;
+            background: transparent;
+            color: #1e90ff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            z-index: 1;
+        }
+
+        .star-scroll-btn:hover {
+            background: #1e90ff;
+            color: #fff;
+        }
+
+        .star-card {
+            min-width: 200px;
+            max-width: 200px;
+            background: #121729;
+            border: 1px solid #2a3050;
+            border-radius: 10px;
+            padding: 16px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .star-card:hover {
+            border-color: #1e90ff;
+        }
+
+        .star-card .star-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            background: #1a1f35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .star-card .star-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .star-card .star-category {
+            font-size: 0.75rem;
+            color: #8b95ad;
+        }
+
+        /* Grid / List */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .apps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .app-card {
+            background: #121729;
+            border: 1px solid #2a3050;
+            border-radius: 10px;
+            padding: 20px;
+            transition: border-color 0.2s;
+        }
+
+        .app-card:hover {
+            border-color: #3a4570;
+        }
+
+        .app-card-header {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .app-card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 10px;
+            background: #1a1f35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .app-card-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .app-card-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .app-card-info h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin: 0 0 4px;
+        }
+
+        .app-card-info .tagline {
+            font-size: 0.85rem;
+            color: #8b95ad;
+            margin: 0 0 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .app-card-info .meta {
+            font-size: 0.75rem;
+            color: #5a6580;
+        }
+
+        .app-card-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .app-card-actions button {
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-edit {
+            background: #1e90ff;
+            color: #fff;
+        }
+
+        .btn-edit:hover {
+            background: #1878d4;
+        }
+
+        .btn-star {
+            background: transparent;
+            border: 1px solid #2a3050 !important;
+            color: #8b95ad;
+        }
+
+        .btn-star:hover {
+            border-color: #ffd700 !important;
+            color: #ffd700;
+        }
+
+        .btn-star.starred {
+            border-color: #ffd700 !important;
+            color: #ffd700;
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .btn-delete {
+            background: transparent;
+            border: 1px solid #5a1a1a !important;
+            color: #e05555;
+        }
+
+        .btn-delete:hover {
+            background: rgba(224, 85, 85, 0.1);
+            border-color: #e05555 !important;
+        }
+
+        .btn-export-all {
+            background: #2ea043;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .btn-export-all:hover {
+            background: #238636;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #8b95ad;
+        }
+
+        .empty-state h2 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            color: #c8d0dc;
+        }
+
+        .empty-state p {
+            margin-bottom: 20px;
+        }
+
+        /* Persistence Banner */
+        .persistence-banner {
+            background: rgba(255, 215, 0, 0.08);
+            border: 1px solid rgba(255, 215, 0, 0.25);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .persistence-banner p {
+            color: #e8edf5;
+            font-size: 0.9rem;
+            margin: 0;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .persistence-banner-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .btn-enable {
+            background: #ffd700;
+            color: #0a0e1a;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-enable:hover {
+            background: #ffed4a;
+        }
+
+        .btn-dismiss-persist {
+            background: transparent;
+            color: #8b95ad;
+            border: 1px solid #2a3050;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-dismiss-persist:hover {
+            color: #c8d0dc;
+            border-color: #3a4570;
+        }
+
+        /* Export Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #121729;
+            border: 1px solid #2a3050;
+            border-radius: 12px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-content h2 {
+            font-size: 1.3rem;
+            margin-bottom: 16px;
+        }
+
+        .modal-content p {
+            color: #8b95ad;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .modal-content code {
+            background: #1a1f35;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #5fe0ff;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
+        .modal-actions button {
+            padding: 8px 20px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .modal-close {
+            background: #2a3050;
+            color: #c8d0dc;
+        }
+
+        .modal-close:hover {
+            background: #3a4570;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #1a1f35;
+            border: 1px solid #2a3050;
+            color: #c8d0dc;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            z-index: 2000;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <a href="../index.html" class="brand">
+            <div class="brand-logo">
+                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="20" cy="32" r="12" fill="#87CEEB" style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));"/>
+                    <circle cx="32" cy="28" r="18" fill="#1E90FF" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));"/>
+                    <circle cx="44" cy="32" r="12" fill="#87CEEB" style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));"/>
+                </svg>
+            </div>
+            casaos
+        </a>
+        <div style="display:flex; gap:8px; align-items:center;">
+            <a href="../index.html" class="btn btn-ghost btn-sm">← Home</a>
+            <a href="generator.html" class="btn btn-primary btn-sm">+ New App</a>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="applications-container">
+
+        <div class="apps-header">
+            <h1>Saved Applications</h1>
+            <div class="apps-toolbar">
+                <div class="view-toggle" id="viewToggle">
+                    <button class="active" data-view="grid" title="Grid view">⊞ Grid</button>
+                    <button data-view="list" title="List view">≡ List</button>
+                </div>
+                <button id="exportAllBtn" class="btn-export-all">📦 Export All</button>
+            </div>
+        </div>
+
+        <!-- Persistence Banner -->
+        <div class="persistence-banner" id="persistenceBanner">
+            <p id="persistenceMessage"></p>
+            <div class="persistence-banner-actions">
+                <button class="btn-enable" id="enablePersistenceBtn">✅ Enable Persistence</button>
+                <button class="btn-dismiss-persist" id="dismissPersistenceBtn">Dismiss</button>
+            </div>
+        </div>
+
+        <!-- Starred Section -->
+        <div class="starred-section" id="starredSection" style="display:none;">
+            <h2>⭐ Starred Applications</h2>
+            <div class="starred-row-wrapper">
+                <button class="star-scroll-btn" id="starScrollLeft">‹</button>
+                <div class="starred-row" id="starredRow"></div>
+                <button class="star-scroll-btn" id="starScrollRight">›</button>
+            </div>
+        </div>
+
+        <!-- Apps Container -->
+        <div id="appsContainer"></div>
+
+        <!-- Export Modal -->
+        <div class="modal-overlay" id="exportModal">
+            <div class="modal-content">
+                <h2>📦 Application Store Export</h2>
+                <p>
+                    Your exported ZIP contains every saved application organized into its own directory.
+                    Each directory includes:
+                </p>
+                <ul style="color:#8b95ad; line-height:1.8; margin-bottom:16px; padding-left:20px;">
+                    <li><code>docker-compose.yml</code> — The full CasaOS app configuration</li>
+                    <li><code>icon.png</code> — Application icon (if available)</li>
+                    <li><code>screenshots/</code> — Application screenshots (if available)</li>
+                </ul>
+                <p>
+                    <strong>Ready to use as a CasaOS app store.</strong> Upload the extracted contents to a GitHub repository,
+                    configure your CasaOS to point to it, and your applications will appear as installable apps — no additional transformation needed.
+                </p>
+                <div class="modal-actions">
+                    <button class="modal-close" id="closeModal">Got it</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script type="module">
+        import { loadApps, deleteApp, toggleStar } from '../modules/saved-apps.js';
+        import { exportAllApps } from '../modules/zip-export.js';
+        import { getPersistencePreference, setPersistencePreference } from '../modules/storage.js';
+
+        let currentView = 'grid';
+        let apps = [];
+
+        // Check persistence state on load
+        function checkPersistence() {
+            const pref = getPersistencePreference();
+            const banner = document.getElementById('persistenceBanner');
+            if (pref === true) {
+                banner.style.display = 'none';
+                return;
+            }
+            // pref is null (never asked) or false (explicitly denied)
+            banner.style.display = 'block';
+            document.getElementById('persistenceMessage').textContent = pref === null
+                ? '💾 Saved Applications need browser storage to work. Enable persistence to keep your apps across sessions.'
+                : '💾 Persistence is currently turned off. Saved apps will not survive a browser restart. Enable it to keep your applications permanently.';
+        }
+
+        document.getElementById('enablePersistenceBtn').addEventListener('click', () => {
+            setPersistencePreference(true);
+            document.getElementById('persistenceBanner').style.display = 'none';
+            render();
+        });
+
+        document.getElementById('dismissPersistenceBtn').addEventListener('click', () => {
+            document.getElementById('persistenceBanner').style.display = 'none';
+        });
+
+        function render() {
+            apps = loadApps();
+            const starred = apps.filter(a => a.starred);
+            const unstarred = apps.filter(a => !a.starred);
+            const sorted = [...starred, ...unstarred];
+
+            // Starred section
+            const starredSection = document.getElementById('starredSection');
+            const starredRow = document.getElementById('starredRow');
+            if (starred.length > 0) {
+                starredSection.style.display = 'block';
+                starredRow.innerHTML = starred.map(app => `
+                    <div class="star-card" data-id="${app.id}">
+                        <div class="star-icon">${app.iconData ? `<img src="${app.iconData}" alt="">` : '📦'}</div>
+                        <div class="star-title">${escapeHtml(app.title?.en_US || app.appId || 'Untitled')}</div>
+                        <div class="star-category">${escapeHtml(app.category || '')}</div>
+                    </div>
+                `).join('');
+                // Click star card to edit
+                starredRow.querySelectorAll('.star-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const id = card.dataset.id;
+                        window.location.href = `editor.html?id=${encodeURIComponent(id)}`;
+                    });
+                });
+            } else {
+                starredSection.style.display = 'none';
+            }
+
+            // Main list
+            const container = document.getElementById('appsContainer');
+            if (sorted.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h2>No saved applications yet</h2>
+                        <p>Create your first app in the generator, then come back here to manage them.</p>
+                        <a href="generator.html" class="btn btn-primary">Start Generating →</a>
+                    </div>
+                `;
+                return;
+            }
+
+            const className = currentView === 'grid' ? 'apps-grid' : 'apps-list';
+            container.innerHTML = `
+                <div class="${className}">
+                    ${sorted.map(app => renderCard(app)).join('')}
+                </div>
+            `;
+
+            // Attach event listeners
+            container.querySelectorAll('.btn-edit').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    window.location.href = `editor.html?id=${encodeURIComponent(btn.dataset.id)}`;
+                });
+            });
+
+            container.querySelectorAll('.btn-delete').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.dataset.id;
+                    if (confirm('Delete this application?')) {
+                        deleteApp(id);
+                        showToast('Application deleted');
+                        render();
+                    }
+                });
+            });
+
+            container.querySelectorAll('.btn-star').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.dataset.id;
+                    toggleStar(id);
+                    render();
+                });
+            });
+        }
+
+        function renderCard(app) {
+            const starredClass = app.starred ? 'starred' : '';
+            const title = escapeHtml(app.title?.en_US || app.appId || 'Untitled');
+            const tagline = escapeHtml(app.tagline?.en_US || '');
+            const category = escapeHtml(app.category || '');
+            const updated = new Date(app.updatedAt || Date.now()).toLocaleDateString();
+            const iconHtml = app.iconData
+                ? `<img src="${app.iconData}" alt="">`
+                : '📦';
+
+            return `
+                <div class="app-card">
+                    <div class="app-card-header">
+                        <div class="app-card-icon">${iconHtml}</div>
+                        <div class="app-card-info">
+                            <h3>${title}</h3>
+                            <div class="tagline">${tagline}</div>
+                            <div class="meta">${category} · Saved ${updated}</div>
+                        </div>
+                    </div>
+                    <div class="app-card-actions">
+                        <button class="btn-edit" data-id="${app.id}">✏️ Edit</button>
+                        <button class="btn-star ${starredClass}" data-id="${app.id}">⭐</button>
+                        <button class="btn-delete" data-id="${app.id}">🗑️ Remove</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // View toggle
+        document.getElementById('viewToggle').addEventListener('click', (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            document.querySelectorAll('#viewToggle button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentView = btn.dataset.view;
+            render();
+        });
+
+        // Starred scroll
+        document.getElementById('starScrollLeft').addEventListener('click', () => {
+            document.getElementById('starredRow').scrollBy({ left: -260, behavior: 'smooth' });
+        });
+        document.getElementById('starScrollRight').addEventListener('click', () => {
+            document.getElementById('starredRow').scrollBy({ left: 260, behavior: 'smooth' });
+        });
+
+        // Export All
+        document.getElementById('exportAllBtn').addEventListener('click', async () => {
+            const apps = loadApps();
+            if (apps.length === 0) {
+                showToast('No applications to export');
+                return;
+            }
+            try {
+                await exportAllApps(apps);
+                // Show modal after successful download
+                document.getElementById('exportModal').classList.add('active');
+            } catch (err) {
+                showToast('Export failed: ' + err.message);
+            }
+        });
+
+        document.getElementById('closeModal').addEventListener('click', () => {
+            document.getElementById('exportModal').classList.remove('active');
+        });
+
+        // Check persistence state, then render
+        checkPersistence();
+        render();
+    </script>
+
+</body>
+</html>

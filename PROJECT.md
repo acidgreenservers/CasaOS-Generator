@@ -31,6 +31,23 @@ The project follows a tiered development approach:
 2. **The Bridge**: Mapping dependencies between the UI inputs and the YAML output schema.
 3. **The Ceiling**: Integrating final polish, animations, and professional documentation.
 
+## 🧩 Core Features
+
+### YAML Generator
+Multi-step wizard that collects application metadata, icon, screenshots, and Docker configuration to produce CasaOS-compliant `docker-compose.yml` files.
+
+### Saved Applications (`pages/applications.html`)
+Persistent local storage of created applications. Grid/list toggleable view with:
+- **Starred row** — Horizontally scrollable pinned apps with smooth arrow controls
+- **Card entries** — Each app displayed with title, tagline, icon, and action buttons (Remove, Edit, Star)
+- **Export All** — Download all saved apps as a ready-to-use CasaOS app store (ZIP archive)
+
+### Application Editor (`pages/editor.html`)
+Purpose-built single-page editor for modifying saved applications. Presents all generator fields in a unified layout with a live YAML code preview, modal-based icon and screenshot management.
+
+### Application Store Export
+The "Export All" feature bundles every saved application as its own top-level directory containing `docker-compose.yml`, icon, and screenshots. The resulting ZIP can be uploaded to GitHub and used immediately as a CasaOS app store — no additional transformation needed.
+
 ## 🚀 Vision
 
-To provide the CasaOS community with the most reliable, private, and professional tool for expanding the ecosystem of self-hosted applications.
+To provide the CasaOS community with the most reliable, private, and professional tool for expanding the ecosystem of self-hosted applications — from single YAML generation to full app store creation.
