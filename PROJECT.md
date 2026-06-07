@@ -1,3 +1,9 @@
+---
+Version: 0.1 - semantic versioning
+Prupose: Generate CasaOS Applications & Create CasaOS Application Appstores
+Docmentation: docs/ wiki/
+---
+
 # Project Overview: CasaOS Generator
 
 ## 🏛️ Application Architecture
