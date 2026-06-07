@@ -218,6 +218,9 @@
         import { getAssets, saveAssets } from '../modules/storage.js';
         import { processImageToPng } from '../modules/asset-processor.js';
         import { formatFileSize } from '../modules/ui-utils.js';
+        import { initAppNotice } from '../modules/app-notice.js';
+
+        document.addEventListener('DOMContentLoaded', initAppNotice);
 
         class IconManager {
             constructor() {

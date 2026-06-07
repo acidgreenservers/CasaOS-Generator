@@ -480,6 +480,9 @@
     <script type="module">
         import { saveConfig, loadConfig } from '../modules/storage.js';
         import { generateYamlString } from '../modules/yaml-generator.js';
+        import { initAppNotice } from '../modules/app-notice.js';
+
+        document.addEventListener('DOMContentLoaded', initAppNotice);
 
         new Vue({
             el: '#app',
@@ -511,9 +514,17 @@
                 editor: null
             },
             watch: {
-                multiNetwork: 'generateMultiCompose',
+                multiNetwork: {
+                    handler() {
+                        this.generateMultiCompose();
+                        this.autoSave();
+                    }
+                },
                 multiServices: {
-                    handler: 'generateMultiCompose',
+                    handler() {
+                        this.generateMultiCompose();
+                        this.autoSave();
+                    },
                     deep: true
                 },
                 multiDockerComposeResult: 'updateEditor'
@@ -592,7 +603,7 @@
                     this.multiDockerComposeResult = generateYamlString(this.multiServices, this.multiNetwork, assets);
                 },
 
-                nextStep() {
+                autoSave() {
                     const configToSave = {
                         network: this.multiNetwork,
                         services: this.multiServices,
@@ -600,6 +611,10 @@
                         timestamp: Date.now()
                     };
                     saveConfig(configToSave);
+                },
+
+                nextStep() {
+                    this.autoSave();
                     window.location.href = 'icon.html';
                 },
 
@@ -666,7 +681,9 @@
                 if (saved) {
                     this.multiNetwork = saved.network;
                     this.multiServices = saved.services;
-                    this.multiDockerComposeResult = saved.yaml;
+                    if (saved.yaml) {
+                        this.multiDockerComposeResult = saved.yaml;
+                    }
                 }
 
                 this.$nextTick(() => {

@@ -230,21 +230,6 @@
         </div>
     </header>
 
-    <!-- Privacy Notification -->
-    <div id="privacyBanner" class="privacy-banner">
-        <div class="privacy-banner-content">
-            <div class="privacy-banner-title">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px; color: #5fe0ff;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                Privacy Notice
-            </div>
-            <div class="privacy-banner-text">
-                This tool is 100% client-side. Your data never leaves your device. We use local storage for functional purposes only. <a href="docs/privacy-notice.html">Learn more.</a>
-            </div>
-        </div>
-        <div class="privacy-banner-actions">
-            <button onclick="dismissPrivacyBanner()" class="btn btn-primary" style="width: 100%;">Got It</button>
-        </div>
-    </div>
 
     <!-- Content Well -->
     <div class="content-well">
@@ -321,33 +306,12 @@
         </div>
     </footer>
 
+    <script type="module">
+        import { initAppNotice } from './modules/app-notice.js';
+        document.addEventListener('DOMContentLoaded', initAppNotice);
+    </script>
+
     <script>
-        // Privacy banner dismissal (localStorage)
-        function initPrivacyBanner() {
-            const banner = document.getElementById('privacyBanner');
-            const isDismissed = localStorage.getItem('privacyBannerDismissed');
-            
-            if (isDismissed === 'true') {
-                banner.style.display = 'none';
-            } else {
-                banner.style.display = 'flex';
-            }
-        }
-
-        function dismissPrivacyBanner() {
-            const banner = document.getElementById('privacyBanner');
-
-            banner.style.opacity = '0';
-            banner.style.transform = 'translate(-50%, 20px)';
-            setTimeout(() => {
-                banner.style.display = 'none';
-                localStorage.setItem('privacyBannerDismissed', 'true');
-            }, 300);
-        }
-
-        // Initialize banner on page load
-        document.addEventListener('DOMContentLoaded', initPrivacyBanner);
-
         // Smooth scrolling for features
         const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
 
