@@ -250,8 +250,12 @@
         import { processScreenshot } from '../modules/asset-processor.js';
         import { initAppNotice } from '../modules/app-notice.js';
 
+<<<<<<< HEAD
         // Initialize app notice
         document.addEventListener('DOMContentLoaded', () => initAppNotice('../'));
+=======
+        document.addEventListener('DOMContentLoaded', initAppNotice);
+>>>>>>> feat/app-notice-persistence-11899867412720330057
 
         class ScreenshotManager {
             constructor() { this.screenshots = []; this.init(); }

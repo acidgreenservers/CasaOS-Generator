@@ -230,6 +230,10 @@
         </div>
     </header>
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> feat/app-notice-persistence-11899867412720330057
     <!-- Content Well -->
     <div class="content-well">
 
@@ -307,6 +311,7 @@
 
     <script type="module">
         import { initAppNotice } from './modules/app-notice.js';
+<<<<<<< HEAD
 
         // Initialize notice on page load
         document.addEventListener('DOMContentLoaded', () => initAppNotice());
@@ -329,6 +334,21 @@
                 card.style.transform = 'translateY(30px)';
                 card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
                 observer.observe(card);
+=======
+        document.addEventListener('DOMContentLoaded', initAppNotice);
+    </script>
+
+    <script>
+        // Smooth scrolling for features
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+>>>>>>> feat/app-notice-persistence-11899867412720330057
             });
         });
     </script>
