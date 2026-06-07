@@ -259,10 +259,10 @@
         import { loadConfig, getAssets } from '../modules/storage.js';
         import { generateYamlString } from '../modules/yaml-generator.js';
         import { createAppZip, triggerDownload } from '../modules/zip-export.js';
-        import { initPrivacyBanner } from '../modules/privacy-banner.js';
+        import { initAppNotice } from '../modules/app-notice.js';
 
-        // Initialize privacy banner
-        document.addEventListener('DOMContentLoaded', () => initPrivacyBanner('../'));
+        // Initialize app notice
+        document.addEventListener('DOMContentLoaded', () => initAppNotice('../'));
 
         class PreviewManager {
             constructor() {

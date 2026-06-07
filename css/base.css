@@ -419,15 +419,15 @@ textarea.form-input {
 }
 
 /* =========================
-   PRIVACY BANNER & SWITCHES
+   APP NOTICE TOAST & SWITCHES
 ========================= */
-.privacy-banner {
+.app-notice {
     position: fixed;
-    bottom: 32px;
+    bottom: 80px;
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
-    max-width: 440px; /* 1.4x footprint of a small toast */
+    max-width: 440px;
     background: #0f1524;
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 16px;
@@ -446,30 +446,30 @@ textarea.form-input {
     to { transform: translate(-50%, 0); opacity: 1; }
 }
 
-.privacy-banner-content {
+.app-notice-body {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.privacy-banner-title {
+.app-notice-head {
     font-size: 1.1rem;
     font-weight: 600;
     color: #ffffff;
 }
 
-.privacy-banner-text {
+.app-notice-msg {
     font-size: 0.9rem;
     color: rgba(255,255,255,0.7);
     line-height: 1.5;
 }
 
-.privacy-banner-text a {
+.app-notice-msg a {
     color: #5fe0ff;
     text-decoration: none;
 }
 
-.privacy-banner-actions {
+.app-notice-btns {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -477,12 +477,12 @@ textarea.form-input {
 }
 
 @media (max-width: 768px) {
-    .privacy-banner {
+    .app-notice {
         bottom: 16px;
         width: calc(100% - 32px);
         padding: 20px;
     }
-    .privacy-banner-actions {
+    .app-notice-btns {
         flex-direction: column;
         align-items: stretch;
     }

@@ -480,10 +480,10 @@
     <script type="module">
         import { saveConfig, loadConfig } from '../modules/storage.js';
         import { generateYamlString } from '../modules/yaml-generator.js';
-        import { initPrivacyBanner } from '../modules/privacy-banner.js';
+        import { initAppNotice } from '../modules/app-notice.js';
 
-        // Initialize privacy banner
-        document.addEventListener('DOMContentLoaded', () => initPrivacyBanner('../'));
+        // Initialize app notice
+        document.addEventListener('DOMContentLoaded', () => initAppNotice('../'));
 
         new Vue({
             el: '#app',

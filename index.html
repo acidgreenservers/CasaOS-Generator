@@ -306,28 +306,30 @@
     </footer>
 
     <script type="module">
-        import { initPrivacyBanner } from './modules/privacy-banner.js';
+        import { initAppNotice } from './modules/app-notice.js';
 
-        // Initialize banner on page load
-        document.addEventListener('DOMContentLoaded', () => initPrivacyBanner());
+        // Initialize notice on page load
+        document.addEventListener('DOMContentLoaded', () => initAppNotice());
 
-        // Smooth scrolling for features
-        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+        // Smooth scrolling animations for features
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
 
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.feature-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
             });
-        }, observerOptions);
-
-        document.querySelectorAll('.feature-card').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(30px)';
-            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(card);
         });
     </script>
 </body>

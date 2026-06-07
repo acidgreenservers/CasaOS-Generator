@@ -248,10 +248,10 @@
     <script type="module">
         import { getAssets, saveAssets } from '../modules/storage.js';
         import { processScreenshot } from '../modules/asset-processor.js';
-        import { initPrivacyBanner } from '../modules/privacy-banner.js';
+        import { initAppNotice } from '../modules/app-notice.js';
 
-        // Initialize privacy banner
-        document.addEventListener('DOMContentLoaded', () => initPrivacyBanner('../'));
+        // Initialize app notice
+        document.addEventListener('DOMContentLoaded', () => initAppNotice('../'));
 
         class ScreenshotManager {
             constructor() { this.screenshots = []; this.init(); }
