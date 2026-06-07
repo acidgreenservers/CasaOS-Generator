@@ -64,6 +64,19 @@ Diagnose problems, understand failures, and learn migration strategies.
 
 ---
 
+### **6. Application Lifecycle**
+### **[Saved Applications & Store Export](Saved-Applications-Store-Export.md)**
+Manage your applications beyond generation — persist, edit, and export as a full app store.
+- **Saved Applications** (`pages/applications.html`) — Grid/list view with star favourites, edit, and delete controls
+- **Application Editor** (`pages/editor.html`) — Purpose-built single-page editor with live YAML preview
+- **Application Store Export** — Export all saved apps as a single ZIP, each in its own directory, ready to upload to GitHub as a CasaOS app store
+- **Creating a CasaOS App Store** — Complete workflow from fork to registration, including `category-list.json` metadata, required file structure, and CasaOS registration steps
+- **Third-Party Community Stores** — Registering pre-built stores (LinuxServer, Edge, HomeAutomation)
+- **App Store Metadata Reference** — Complete field reference for both compose-level and service-level `x-casaos` metadata
+- **Persistence management** — Enable/disable data persistence from the privacy notice
+
+---
+
 ## 🧭 How to Use This Wiki
 
 **I just want to generate my first app:**

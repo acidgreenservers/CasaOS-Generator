@@ -146,6 +146,56 @@ For a deeper dive, see [YAML Official Docs](https://yaml.org/).
 
 ---
 
+## 💾 Application Lifecycle Management
+
+Beyond single-use generation, CasaOS Generator now lets you persist, browse, edit, and export your applications as a full app store.
+
+### Save Your Application
+While reviewing your YAML in the generator, save the configuration. This stores the full app data — services, ports, volumes, environment variables, icons, and screenshots — into your browser's localStorage.
+
+### Step 5: Manage Saved Applications
+Once you've saved one or more apps, navigate to **Saved Applications** via the header button (📁 Saved Apps) to manage them.
+
+**Features of the Saved Applications page** (`pages/applications.html`):
+- **Grid/List Toggle** — Switch between card grid and compact list views
+- **Star Favourites** — Click the ⭐ button on any app card to pin it. Starred apps appear in a horizontally scrollable carousel at the top of the page with smooth left/right arrow controls
+- **Edit** — Opens the purpose-built editor to modify any saved app
+- **Remove** — Deletes the app from localStorage permanently
+- **Export All** — Downloads all saved apps as a single ZIP archive
+
+### Step 6: Edit a Saved Application
+Clicking **Edit** on any saved app opens the **Application Editor** (`pages/editor.html`):
+- Single-page layout (not a stepped wizard) with all configuration fields visible at once
+- Modify AppID, Title, Tagline, Description, Category, Developer, Docker Image, Architectures
+- Manage Ports, Volumes, and Environment Variables
+- Upload or replace Icons and Screenshots
+- Live YAML preview updates in real-time via CodeMirror
+- **Save** writes changes back to localStorage and returns to the saved apps list
+- **Download** exports the individual app as a ZIP package
+
+### Step 7: Export Your App Store
+The **Export All** button on the Saved Applications page creates a single ZIP archive named `casaos-app-store.zip` containing every saved application:
+
+```
+casaos-app-store.zip
+├── my-app/
+│   ├── docker-compose.yml
+│   ├── icon.png
+│   └── screenshots/
+│       ├── screenshot-1.png
+│       └── screenshot-2.png
+├── another-app/
+│   ├── docker-compose.yml
+│   └── icon.png
+└── ...
+```
+
+**Each app** is in its own top-level directory named by its AppID, containing a complete CasaOS app configuration. Extract the ZIP and push the contents to a GitHub repository — CasaOS can consume it as a custom app store immediately, with no additional transformation.
+
+An export modal explains this workflow after the download completes.
+
+---
+
 ## ✅ Common First Steps
 
 ### 1. Create a Simple App Config
