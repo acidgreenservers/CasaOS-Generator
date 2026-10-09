@@ -40,7 +40,7 @@ export function buildYamlObject(services, network, assets) {
         scheme: firstService.scheme || 'http',
         icon: `https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/${firstService.appId}.png`,
         thumbnail: firstService.thumbnail || '',
-        screenshot_link: (assets?.screenshots || []).map((_, idx) => `screenshot-${idx + 1}.png`),
+        screenshot_link: (assets?.screenshots || []).map((_, idx) => `screenshots/screenshot-${idx + 1}.png`),
         tagline: { en_us: firstService.tagline?.en_US || '' },
         description: { en_us: (firstService.description?.en_US || '') + '\n' },
         index: firstService.index || '/',

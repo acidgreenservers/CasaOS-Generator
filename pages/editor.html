@@ -20,6 +20,7 @@
     <!-- External Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/material-darker.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/yaml/yaml.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
@@ -383,6 +384,7 @@
         import { generateYamlString } from '../modules/yaml-generator.js';
         import { createAppZip, triggerDownload } from '../modules/zip-export.js';
         import { getAssets } from '../modules/storage.js';
+        import { processImageToPng, processScreenshot } from '../modules/asset-processor.js';
 
         // State
         let appData = null;
@@ -664,10 +666,15 @@
             const file = e.target.files[0];
             if (!file) return;
             const reader = new FileReader();
-            reader.onload = (ev) => {
-                currentIcon = ev.target.result;
-                document.getElementById('iconPreview').innerHTML = `<img src="${currentIcon}" alt="Icon" style="max-width:120px;max-height:120px;border-radius:8px;">`;
-                updatePreview();
+            reader.onload = async (ev) => {
+                try {
+                    const processed = await processImageToPng(ev.target.result);
+                    currentIcon = processed.dataUrl;
+                    document.getElementById('iconPreview').innerHTML = `<img src="${currentIcon}" alt="Icon" style="max-width:120px;max-height:120px;border-radius:8px;">`;
+                    updatePreview();
+                } catch (err) {
+                    showToast('Failed to process icon: ' + err.message);
+                }
             };
             reader.readAsDataURL(file);
         });
@@ -703,10 +710,15 @@
             const files = Array.from(e.target.files);
             files.forEach(file => {
                 const reader = new FileReader();
-                reader.onload = (ev) => {
-                    screenshots.push({ data: ev.target.result, name: file.name });
-                    renderScreenshots();
-                    updatePreview();
+                reader.onload = async (ev) => {
+                    try {
+                        const processed = await processScreenshot(ev.target.result);
+                        screenshots.push({ data: processed.dataUrl, name: file.name });
+                        renderScreenshots();
+                        updatePreview();
+                    } catch (err) {
+                        showToast('Failed to process screenshot: ' + err.message);
+                    }
                 };
                 reader.readAsDataURL(file);
             });
