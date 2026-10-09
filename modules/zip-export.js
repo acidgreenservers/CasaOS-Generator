@@ -5,6 +5,8 @@
  * Requires `JSZip` to be loaded globally via CDN before this module is used.
  */
 
+import { generateYamlString } from './yaml-generator.js';
+
 /**
  * Create a ZIP blob containing the full CasaOS app package.
  * @param {string} yamlContent - The docker-compose.yml content
@@ -31,10 +33,11 @@ export async function createAppZip(yamlContent, assets, appId) {
 
     // Add screenshots if available
     if (assets.screenshots && assets.screenshots.length > 0) {
+        const screenshotsFolder = zip.folder('screenshots');
         assets.screenshots.forEach((screenshot, index) => {
             const screenshotData = screenshot.data;
             const screenshotBase64 = screenshotData.split(',')[1];
-            zip.file(`screenshot-${index + 1}.png`, screenshotBase64, { base64: true });
+            screenshotsFolder.file(`screenshot-${index + 1}.png`, screenshotBase64, { base64: true });
         });
     }
 
@@ -103,7 +106,6 @@ export async function exportAllApps(apps) {
             screenshots: (app.screenshots || []).map(s => ({ data: s.data })),
         };
 
-        const { generateYamlString } = await import('./yaml-generator.js');
         const yaml = generateYamlString(services, 'bridge', assets);
         folder.file('docker-compose.yml', yaml);
 
